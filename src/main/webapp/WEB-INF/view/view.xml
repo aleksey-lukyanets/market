@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+   "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+   "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+   
+<tiles-definitions>
+    
+    <!-- Общий шаблон страниц внешнего интерфейса, без главного меню -->
+    <definition name="*" extends="frontend">
+        <put-attribute name="content" value="/WEB-INF/view/{1}.jsp" />
+    </definition>
+    
+    <!-- Шаблон главной страницы -->
+    <definition name="index" extends="frontend">
+        <put-attribute name="content" value="/WEB-INF/view/index.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/templates/frontend/menu.jsp" />
+    </definition>
+    
+    <!-- Шаблон страницы корзины -->
+    <definition name="cart" extends="frontend">
+        <put-attribute name="content" value="/WEB-INF/view/cart.jsp" />
+        <put-attribute name="menu" value="/WEB-INF/view/templates/frontend/menu.jsp" />
+    </definition>
+    
+    <!-- Шаблон страницы товаров региона -->
+    <definition name="regions" extends="frontend">
+        <put-attribute name="content">
+            <definition template="/WEB-INF/view/regions.jsp">
+                <put-attribute name="filter-panel" value="/WEB-INF/view/templates/frontend/products-filter.jsp" />
+                <put-attribute name="pagination" value="/WEB-INF/view/templates/pagination.jsp" />
+            </definition>
+        </put-attribute>
+        <put-attribute name="menu" value="/WEB-INF/view/templates/frontend/menu.jsp" />
+    </definition>
+    
+</tiles-definitions>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+   "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+   "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+   
+<tiles-definitions>
+    
+    <!-- Шаблон страницы панели управления -->
+    <definition name="backend" template="/WEB-INF/view/templates/backend/template.jsp">
+        <put-attribute name="menu" value="/WEB-INF/view/templates/backend/menu.jsp" />
+    </definition>
+    
+</tiles-definitions>

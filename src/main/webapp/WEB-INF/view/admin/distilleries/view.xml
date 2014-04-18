@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+   "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+   "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+   
+<tiles-definitions>
+    
+    <!--  -->
+    <definition name="distillery-edit" template="/WEB-INF/view/admin/distilleries/edit.jsp">
+        <put-attribute name="form-fields" value="/WEB-INF/view/admin/distilleries/distillery-form.jsp" />
+    </definition>
+    <definition name="distillery-new" template="/WEB-INF/view/admin/distilleries/new.jsp">
+        <put-attribute name="form-fields" value="/WEB-INF/view/admin/distilleries/distillery-form.jsp" />
+    </definition>
+    
+    <!--  -->
+    <definition name="admin/distilleries/edit" extends="backend">
+        <put-attribute name="content" value="distillery-edit" />
+    </definition>
+    
+    <!--  -->
+    <definition name="admin/distilleries/new" extends="backend">
+        <put-attribute name="content" value="distillery-new" />
+    </definition>
+    
+</tiles-definitions>

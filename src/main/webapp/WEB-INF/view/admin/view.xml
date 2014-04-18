@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+   "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+   "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+   
+<tiles-definitions>
+    
+    <!--  -->
+    <definition name="admin/*" extends="backend">
+        <put-attribute name="content" value="/WEB-INF/view/admin/{1}.jsp" />
+    </definition>
+    
+    <!--  -->
+    <definition name="admin/products" extends="backend">
+        <put-attribute name="content">
+            <definition template="/WEB-INF/view/admin/products.jsp">
+                <put-attribute name="filter" value="/WEB-INF/view/templates/backend/products-filter.jsp" />
+                <put-attribute name="pagination" value="/WEB-INF/view/templates/pagination.jsp" />
+            </definition>
+        </put-attribute>
+    </definition>
+    
+    <!--  -->
+    <definition name="admin/storage" extends="backend">
+        <put-attribute name="content">
+            <definition template="/WEB-INF/view/admin/storage.jsp">
+                <put-attribute name="filter" value="/WEB-INF/view/templates/backend/storage-filter.jsp" />
+                <put-attribute name="pagination" value="/WEB-INF/view/templates/pagination.jsp" />
+            </definition>
+        </put-attribute>
+    </definition>
+    
+    <!--  -->
+    <definition name="admin/orders" extends="backend">
+        <put-attribute name="content">
+            <definition template="/WEB-INF/view/admin/orders.jsp">
+                <put-attribute name="filter" value="/WEB-INF/view/templates/backend/orders-filter.jsp" />
+                <put-attribute name="pagination" value="/WEB-INF/view/templates/pagination.jsp" />
+            </definition>
+        </put-attribute>
+    </definition>
+    
+</tiles-definitions>

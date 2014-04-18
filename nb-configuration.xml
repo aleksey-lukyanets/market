@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-shared-configuration>
+    <!--
+This file contains additional configuration written by modules in the NetBeans IDE.
+The configuration is intended to be shared among all the users of project and
+therefore it is assumed to be part of version control checkout.
+Without this configuration present, some functionality in the IDE may be limited or fail altogether.
+-->
+    <spring-data xmlns="http://www.netbeans.org/ns/spring-data/1">
+        <config-files>
+            <config-file>src/main/webapp/WEB-INF/spring/marketServlet/servlet-context.xml</config-file>
+            <config-file>src/main/webapp/WEB-INF/view/view.xml</config-file>
+        </config-files>
+        <config-file-groups/>
+    </spring-data>
+    <properties xmlns="http://www.netbeans.org/ns/maven-properties-data/1">
+        <!--
+Properties that influence various parts of the IDE, especially code formatting and the like. 
+You can copy and paste the single properties, into the pom.xml file and the IDE will pick them up.
+That way multiple projects can share the same settings (useful for formatting rules for example).
+Any value defined here will override the pom.xml file value but is only applicable to the current project.
+-->
+        <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.7-web</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
+        <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>Tomcat</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>
+        <org-netbeans-modules-html-editor-lib.default-xhtml-public-id>XHTML5</org-netbeans-modules-html-editor-lib.default-xhtml-public-id>
+        <org-netbeans-modules-web-clientproject-api.js_2e_libs_2e_folder>resources/js</org-netbeans-modules-web-clientproject-api.js_2e_libs_2e_folder>
+    </properties>
+</project-shared-configuration>
