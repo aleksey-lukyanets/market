@@ -32,7 +32,7 @@ public class OrdersWS {
         String login = principal.getName();
         return orderService.getUserOrders(login);
     }
-    
+
     @RequestMapping(value = "/{id}",
             method = RequestMethod.GET,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
