@@ -15,8 +15,13 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import market.domain.dto.CartDTO;
 import market.domain.dto.CartItemDTO;
+import market.exception.ProductNotFoundException;
+import market.rest.ContactsWS;
+import market.rest.PaymentWS;
+import market.rest.ProductsWS;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 /**
  * Корзина.
@@ -100,6 +105,8 @@ public class Cart implements Serializable {
     public CartDTO createDTO(int deliveryСost) {
         CartDTO dto = createAnonymousDTO(deliveryСost);
         dto.setUser(userAccount.getEmail());
+        dto.add(linkTo(ContactsWS.class).withRel("Customer contacts"));
+        dto.add(linkTo(PaymentWS.class).slash("card").withRel("Payment"));
         return dto;
     }
     
@@ -121,7 +128,11 @@ public class Cart implements Serializable {
     private List<CartItemDTO> createCartItemsDtoList(List<CartItem> items) {
         List<CartItemDTO> dtos = new ArrayList<>();
         for (CartItem item : items) {
-            dtos.add(new CartItemDTO(item));
+            CartItemDTO dto = new CartItemDTO(item);
+            try {
+                dto.add(linkTo(methodOn(ProductsWS.class).getProduct(dto.getProductId())).withSelfRel());
+                dtos.add(dto);
+            } catch (ProductNotFoundException ex) {}
         }
         return dtos;
     }

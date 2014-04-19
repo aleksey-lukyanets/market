@@ -3,11 +3,12 @@ package market.domain.dto;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.hateoas.ResourceSupport;
 
 /**
  * Контактные данные пользователя.
  */
-public class ContactsDTO {
+public class ContactsDTO extends ResourceSupport {
 
     @Size(max = 20)
     @Pattern(regexp = "^\\+[1-9][0-9]?[\\s]*\\(?\\d{3}\\)?[-\\s]?\\d{3}[-\\s]?\\d{2}[-\\s]?\\d{2}$")

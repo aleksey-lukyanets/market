@@ -74,7 +74,6 @@ public class ProductsWSTest {
      */
     @Test
     public void getProduct_Ok() throws Exception {
-        
         mockMvc.perform(get("/rest/products/{id}", MarketData.PRODUCT_ID)
                 .accept(TestUtil.APPLICATION_JSON_UTF8)
         )

@@ -1,11 +1,12 @@
 package market.domain.dto;
 
 import java.util.List;
+import org.springframework.hateoas.ResourceSupport;
 
 /**
  * Адаптер товара.
  */
-public class CartDTO {
+public class CartDTO extends ResourceSupport {
     
     private String user;
     private List<CartItemDTO> items;

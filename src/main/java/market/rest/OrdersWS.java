@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 
  */
 @Controller
-@ExposesResourceFor(OrderDTO.class)
 @RequestMapping(value = "/rest/customer/orders")
+@ExposesResourceFor(OrderDTO.class)
 public class OrdersWS {
     
     @Autowired
