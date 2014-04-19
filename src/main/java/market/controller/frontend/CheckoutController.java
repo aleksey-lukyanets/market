@@ -55,11 +55,7 @@ public class CheckoutController {
     //--------------------------------------------- Изменение контактных данных
     
     /**
-     * Страница изменения данных.
-     *
-     * @param principal
-     * @param model
-     * @return
+     * Страница изменения контактных данных.
      */
     @RequestMapping(value = "/details", method = RequestMethod.GET)
     public String details(Principal principal, Model model) {
@@ -73,12 +69,12 @@ public class CheckoutController {
     }
 
     /**
-     * Внесение изменений.
+     * Внесение изменений в контактные данные.
      *
+     * @param contacts новые контакты
+     * @param bindingResult ошибки валидации контактов
+     * @param infoOption подтверждение изменения
      * @param principal
-     * @param contacts
-     * @param bindingResult
-     * @param infoOption
      * @return
      */
     @RequestMapping(value = "/details", method = RequestMethod.PUT)
@@ -102,12 +98,7 @@ public class CheckoutController {
     
     /**
      * Страница оплаты.
-     *
-     * @param principal
-     * @param model
-     * @return
      */
-        
     @RequestMapping(value = "/payment", method = RequestMethod.GET)
     public String payment(Principal principal, Model model) {
         String login = principal.getName();
@@ -127,14 +118,19 @@ public class CheckoutController {
     /**
      * Обработка формы оплаты.
      *
-     * @param principal
-     * @param creditCard
-     * @param bindingResult
+     * @param creditCard данные карты
+     * @param bindingResult ошибки валидации данных карты
      * @param request
+     * @param principal
      * @return
      */
     @RequestMapping(value = "/payment", method = RequestMethod.POST)
-    public String paymentPost(Principal principal, @Valid CreditCardDTO creditCard, BindingResult bindingResult, HttpServletRequest request) {
+    public String paymentPost(
+            Principal principal,
+            @Valid CreditCardDTO creditCard,
+            BindingResult bindingResult,
+            HttpServletRequest request
+    ) {
         String view = "checkout/payment";
         if (bindingResult.hasErrors()) {
             return view;
@@ -155,13 +151,17 @@ public class CheckoutController {
     /**
      * Подтверждение и благодарность.
      *
+     * @param createdOrder созданный заказ
      * @param principal
      * @param model
-     * @param createdOrder
      * @return
      */
     @RequestMapping(value = "/confirmation", method = RequestMethod.GET)
-    public String purchase(Principal principal, Model model, @ModelAttribute(value = "createdOrder") Order createdOrder) {
+    public String purchase(
+            Principal principal,
+            Model model,
+            @ModelAttribute(value = "createdOrder") Order createdOrder
+    ) {
         String login = principal.getName();
         model.addAttribute("userAccount", userAccountService.getUserAccount(login));
         model.addAttribute("userDetails", contactsService.getUserContacts(login));

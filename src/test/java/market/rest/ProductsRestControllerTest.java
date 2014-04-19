@@ -34,7 +34,7 @@ import org.springframework.web.context.WebApplicationContext;
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class})
 @WebAppConfiguration
-public class ProductsWSTest {
+public class ProductsRestControllerTest {
 
     private MockMvc mockMvc;
     
@@ -92,7 +92,7 @@ public class ProductsWSTest {
     @Test
     public void getProduct_NotFound() throws Exception {
         
-        mockMvc.perform(get("/rest/products/{id}", 100500)
+        mockMvc.perform(get("/rest/products/{id}", MarketData.IMPROBABLE_ID)
                 .accept(TestUtil.APPLICATION_JSON_UTF8)
         )
                 .andExpect(status().isNotFound());

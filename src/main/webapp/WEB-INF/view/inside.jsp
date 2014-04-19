@@ -33,7 +33,7 @@
     <li>авторизация пользователей: Spring Security</li>
     <li>доступ к данным: Hibernate, Spring Data JPA</li>
     <li>веб-служба в стиле REST</li>
-    <li>тесты: Spring Test, JUnit, Mockito, Hamcrest, JSONPath;</li>
+    <li>тесты: Spring Test, JUnit, Hamcrest, JSONPath;</li>
     <li>веб-интерфейс: jQuery, jQuery Validate Plugin, Bootstrap</li>
     <li>база данных: PostgreSQL</li>
     <li>контейнер сервлетов: Apache Tomcat</li>

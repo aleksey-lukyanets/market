@@ -3,7 +3,7 @@ package market.exception;
 import org.springframework.validation.FieldError;
 
 /**
- * 
+ * Пользователь с указанным адресом уже существует.
  */
 public class EmailExistsException extends Exception {
     

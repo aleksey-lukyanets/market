@@ -3,7 +3,7 @@ package market.exception;
 import org.springframework.validation.FieldError;
 
 /**
- * 
+ * Заказ не может быть оформлен: корзина пуста.
  */
 public class EmptyCartException extends Exception {
     

@@ -61,7 +61,7 @@
                     <li>сервлет: Spring MVC, JavaServer Pages, Arache Tiles;</li>
                     <li>авторизация пользователей: Spring Security;</li>
                     <li>доступ к данным: Hibernate, Spring Data JPA;</li>
-                    <li>тесты: Spring Test, JUnit, Mockito, Hamcrest, JSONPath;</li>
+                    <li>тесты: Spring Test, JUnit, Hamcrest, JSONPath;</li>
                     <li>веб-интерфейс: jQuery, AJAX, jQuery Validate, Bootstrap Framework;</li>
                     <li>база данных: PostgreSQL;</li>
                     <li>контейнер сервлетов: Apache Tomcat.</li>

@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class RegionController {
     
-    @Autowired private RegionService regionService;
+    @Autowired
+    private RegionService regionService;
 
     /**
      * Перечень регионов.

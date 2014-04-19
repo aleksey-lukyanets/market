@@ -17,6 +17,8 @@ public class MarketData {
     public static final int PRODUCT_UNIT_COST = 4030;
     public static final String PRODUCT_DISTILLERY = "Ardbeg";
     public static final String PRODUCT_NAME = "Ten";
+    
+    public static final int IMPROBABLE_ID = 100500;
 
     public static CartItemDTO getCartItemDTO() {
         return new CartItemDTO(PRODUCT_ID, (short)PRODUCT_QUANTITY);

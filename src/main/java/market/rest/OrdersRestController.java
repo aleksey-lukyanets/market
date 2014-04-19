@@ -14,16 +14,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 
+ * REST-контроллер истории заказов покупателя.
  */
 @Controller
 @RequestMapping(value = "/rest/customer/orders")
 @ExposesResourceFor(OrderDTO.class)
-public class OrdersWS {
+public class OrdersRestController {
     
     @Autowired
     private OrderService orderService;
 
+    /**
+     * Просмотр всех заказов покупателя.
+     * 
+     * @return список заказов
+     */
     @RequestMapping(
             method = RequestMethod.GET,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
@@ -33,6 +38,14 @@ public class OrdersWS {
         return orderService.getUserOrders(login);
     }
 
+    /**
+     * Просмотр одного заказа покупателя.
+     * 
+     * @param id идентификатор заказа
+     * @param principal
+     * @return запрошенный заказ покупателя
+     * @throws OrderNotFoundException если заказ не существует у текущего покупателя
+     */
     @RequestMapping(value = "/{id}",
             method = RequestMethod.GET,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)

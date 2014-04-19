@@ -8,7 +8,7 @@
 <h1>Веб-служба REST</h1>
 
 <p>REST-интерфейс приложения предоставляет доступ к ресурсам магазина: позволяет
-    регистрировать нового покупателя, изменять его контактные данные, запрашивать
+    регистрировать покупателей, изменять их контактные данные, запрашивать
     сведения о товарах, добавлять товары в корзину и оформлять заказы.</p>
 <p>Обмен данными между клиентом и веб-службой магазина осуществляется в формате JSON,
     аутентификация выполняется средствами Basic Authentication.</p>
@@ -32,8 +32,7 @@
 <br>
 <h5>Регистрация покупателя</h5>
 
-<p>Регистрация нового покупателя осуществляется отправкой POST-запроса к
-    <code>/signup</code>:</p>
+<p>Регистрация нового покупателя осуществляется отправкой запроса <code>POST /signup</code>:</p>
 <pre style="width: 75%;">заголовок:   Content-Type: application/json; charset=UTF-8<br>тело:        {<br>                 "email": "ivan.petrov@yandex.ru",<br>                 "name": "Иван Петров",<br>                 "password": "Иван Петров",<br>                 "phone": "+7 123 456 67 89",<br>                 "address": "ул. Итальянская, д. 7"<br>             }</pre>
 <p>Ответ приложения при успешном создании аккаунта: <code>200 Ok</code>.</p>
 <p>Если покупатель с указанным адресом электронной почты уже существует в магазине,
@@ -42,21 +41,20 @@
 <p>Например, об ошибке в имени <code>"name": "name@#$%^"</code>
     сервер уведомит ответом:</p>
 <pre style="width: 95%;">{<br>    "fieldErrors":<br>    [{<br>        "field": "name",<br>        "message": "В имени допустимы только буквы, пробел, дефис и апостроф."<br>    }]<br>}</pre>
-<p>Узнать или изменить контактные данные можно обращением к ресурсу
-    <code>/customer/contacts</code>.</p>
+<p>Получить или изменить контактные данные можно обращением к ресурсу соответственно
+    <code>/customer/contacts</code> запросами GET или PUT.</p>
 
 <br>
-<h5>Оформление заказа</h5>
+<h5>Формирование заказа</h5>
 
-<p>Зарегистрированный покупатель может добавить товар в корзину PUT-запросом
-    к <code>/cart</code>:</p>
+<p>Зарегистрированный покупатель может добавить товар в корзину запросом <code>PUT /cart</code>:</p>
 <pre style="width: 95%;">заголовок:   Content-Type: application/json; charset=UTF-8<br>             Authorization: Basic aXZhbi5wZXRyb3ZAeWFuZGV4LnJ10nBldHJvdg==<br>тело:        {"productId": 2, "quantity": 1}</pre>
 <p>В ответе приложение вернёт изменённую корзину:</p>
 <pre style="width: 75%;">заголовок:   Status Code: 200 Ok<br>             Content-Type: application/json; charset=UTF-8<br>тело:        {<br>                 "user": "ivan.petrov@yandex.ru",<br>                 "items": [<br>                     {<br>                         "productId": 2, "quantity": 1<br>                     }<br>                 ],<br>                 "productsCost": 4100,<br>                 "deliveryCost": 400,<br>                 "deliveryIncluded": true,<br>                 "totalCost": 4500<br>             }</pre>
-<p>Опция доставки может быть изменена POST-запросом к <code>/cart/delivery/{boolean}</code>.</p>
+<p>Опция доставки может быть изменена запросом <code>PUT /cart/delivery/{boolean}</code>.</p>
 <br>
 <p>Для оформления заказа следует отправить номер банковской карты, с которой
-    будет оплачен заказ, POST-запросом к <code>/payment/card</code>:</p>
+    будет оплачен заказ, запросом <code>POST /cart/payment</code>:</p>
 <pre style="width: 95%;">заголовок:   Content-Type: application/json; charset=UTF-8<br>             Authorization: Basic aXZhbi5wZXRyb3ZAeWFuZGV4LnJ10nBldHJvdg==<br>тело:        {"number": "4444 3333 2222 1111"}</pre>
 <p>Приложение вернёт подтверждение об оплате и приёме заказа:</p>
 <pre style="width: 75%;">заголовок:   Status Code: 201 Created<br>             Location: http://market.jelasticloud.com/rest/customer/orders/13<br>             Content-Type: application/json; charset=UTF-8<br>тело:        {<br>                  "id": 13,<br>                  "user": "ivan.petrov@yandex.ru",<br>                  "billNumber": 525553712,<br>                  "dateCreated": 1397559589798,<br>                  "productsCost": 4100,<br>                  "deliveryCost": 400,<br>                  "deliveryIncluded": true,<br>                  "totalCost": 4500,<br>                  "payed": true,<br>                  "executed": false<br>             }</pre>
@@ -117,25 +115,12 @@
             <td>200 — корзина очищена, обновлённая корзина находится в теле ответа</td>
         </tr>
         <tr>
-            <td>POST /cart/delivery/:boolean</td>
+            <td>PUT /cart/delivery/:boolean</td>
             <td>Включает в заказ доставку</td>
             <td>200 — опция доставки изменена, обновлённая корзина находится в теле ответа</td>
         </tr>
-    </tbody>
-</table>
-
-<h4>Оформление заказа (требует авторизации)</h4>
-<table class="table table-marked">
-    <thead>
         <tr>
-            <th width="200">ресурс</th>
-            <th width="170">описание</th>
-            <th>статусы ответа</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>POST /payment/card</td>
+            <td>POST /cart/payment</td>
             <td>Подтверждает заказ и оплачивает его картой с указанным номером</td>
             <td>201 — заказ оплачен и принят, ссылка на заказ находится в заголовке, детали заказа — в теле ответа,<br>
                 406 — некорректный формат номера карты, либо корзина пуста; пояснения в теле ответа</td>
@@ -178,7 +163,7 @@
             <td>200 — контактные данные возвращены в теле ответа</td>
         </tr>
         <tr>
-            <td>POST /customer/contacts</td>
+            <td>PUT /customer/contacts</td>
             <td>Изменяет контактные данные покупателя</td>
             <td>200 — данные изменены, обновлённые возвращены в теле ответа,<br>
                 406 — некорректный формат полученных данных; пояснения в теле ответа</td>

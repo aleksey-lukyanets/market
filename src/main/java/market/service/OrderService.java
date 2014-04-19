@@ -16,12 +16,6 @@ import org.springframework.data.domain.Pageable;
  * Сервис заказа.
  */
 public interface OrderService {
-    
-    Order createUserOrder(CreditCardDTO card, String userLogin, int deliveryCost) throws EmptyCartException;
-    
-    List<OrderDTO> getUserOrders(String userLogin);
-    
-    OrderDTO getUserOrder(String userLogin, long id) throws OrderNotFoundException;
 
     void save(Order order);
     
@@ -42,4 +36,35 @@ public interface OrderService {
     Page<Order> findByDateCreatedGreaterThan(Date created, Pageable pageable);
 
     Page<Order> fetchFilteredAndPaged(String executed, String created, PageRequest request);
+    
+    //---------------------------------------- Операции с заказами пользователя
+    
+    /**
+     * Оформление нового заказа.
+     *
+     * @param card данные банковской карты для оплаты заказа
+     * @param userLogin логин покупателя
+     * @param deliveryCost цена доставки
+     * @return вновь созданный заказ
+     * @throws EmptyCartException если оплачивается пустая корзина
+     */
+    Order createUserOrder(CreditCardDTO card, String userLogin, int deliveryCost) throws EmptyCartException;
+    
+    /**
+     * Получение всех заказов покупателя.
+     *
+     * @param userLogin логин покупателя
+     * @return список заказов
+     */
+    List<OrderDTO> getUserOrders(String userLogin);
+    
+    /**
+     * Получение одного заказа покупателя.
+     *
+     * @param userLogin логин покупателя
+     * @param id идентификатор заказа
+     * @return заказ с запрошенным id
+     * @throws OrderNotFoundException если у пользователя не существует запрошенного заказа
+     */
+    OrderDTO getUserOrder(String userLogin, long id) throws OrderNotFoundException;
 }

@@ -1,13 +1,25 @@
 package market.rest;
 
+import java.net.URI;
 import java.security.Principal;
+import javax.validation.Valid;
 import market.domain.Cart;
+import market.domain.Order;
 import market.domain.dto.CartDTO;
 import market.domain.dto.CartItemDTO;
+import market.domain.dto.CreditCardDTO;
+import market.domain.dto.OrderDTO;
+import market.exception.EmptyCartException;
 import market.exception.UnknownProductException;
 import market.service.CartService;
+import market.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.EntityLinks;
+import org.springframework.hateoas.Link;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,23 +28,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Контроллер корзины.
+ * REST-контроллер корзины.
  */
 @Controller
 @RequestMapping(value = "/rest/cart")
-public class CartWS {
+public class CartRestController {
 
     @Value("${deliveryCost}")
     private int deliveryCost;
     
     @Autowired
     private CartService cartService;
+    
+    @Autowired
+    private OrderService orderService;
+    
+    @Autowired
+    EntityLinks entityLinks;
 
     /**
      * Просмотр корзины.
      * 
-     * @param principal
-     * @return 
+     * @return корзина
      */
     @RequestMapping(
             method = RequestMethod.GET,
@@ -46,10 +63,10 @@ public class CartWS {
     /**
      * Добавление товара.
      * 
+     * @param item добавляемый элемент корзины
      * @param principal
-     * @param item
-     * @return 
-     * @throws UnknownProductException 
+     * @return обновлённая корзина
+     * @throws UnknownProductException при добавлении неизвестного товара
      */
     @RequestMapping(
             method = RequestMethod.PUT,
@@ -65,8 +82,7 @@ public class CartWS {
     /**
      * Очистка корзины.
      * 
-     * @param principal
-     * @return 
+     * @return пустая корзина
      */
     @RequestMapping(
             method = RequestMethod.DELETE,
@@ -80,12 +96,12 @@ public class CartWS {
     /**
      * Установка способа доставки.
      * 
+     * @param delivery значение опции доставки
      * @param principal
-     * @param delivery
-     * @return 
+     * @return изменённая корзина
      */
     @RequestMapping(value = "/delivery/{delivery}",
-            method = RequestMethod.POST,
+            method = RequestMethod.PUT,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public CartDTO setDelivery(Principal principal, @PathVariable String delivery) {
@@ -93,5 +109,29 @@ public class CartWS {
         Boolean included = Boolean.valueOf(delivery);
         Cart cart = cartService.setUserCartDelivery(login, included);
         return cart.createDTO(deliveryCost);
+    }
+
+    /**
+     * Оформление заказа.
+     *
+     * @param card данные банковской карты
+     * @param principal
+     * @return созданный заказ
+     * @throws EmptyCartException при оплате пустой корзины
+     */
+    @RequestMapping(value = "/payment",
+            method = RequestMethod.POST,
+            consumes = MediaUtf8.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseEntity<OrderDTO> payByCard(Principal principal, @Valid @RequestBody CreditCardDTO card) throws EmptyCartException {
+        String login = principal.getName();
+        Order order = orderService.createUserOrder(card, login, deliveryCost);
+        OrderDTO dto = order.createDTO();
+        
+        HttpHeaders headers = new HttpHeaders();
+        Link link = entityLinks.linkToSingleResource(OrderDTO.class, dto.getId());
+        headers.setLocation(URI.create(link.getHref()));
+        return new ResponseEntity<>(dto, headers, HttpStatus.CREATED);
     }
 }

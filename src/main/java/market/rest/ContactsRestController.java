@@ -12,15 +12,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 
+ * REST-контроллер контактных данных покупателя.
  */
 @Controller
 @RequestMapping(value = "/rest/customer/contacts")
-public class ContactsWS {
+public class ContactsRestController {
     
     @Autowired
     private ContactsService contactsService;
 
+    /**
+     * Просмотр контактов покупателя.
+     * 
+     * @return текущие контакты покупателя
+     */
     @RequestMapping(
             method = RequestMethod.GET,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
@@ -30,13 +35,20 @@ public class ContactsWS {
         return contactsService.getUserContacts(login);
     }
 
+    /**
+     * Изменение контактов покупателя.
+     *
+     * @param contacts новые контактные данные
+     * @param principal
+     * @return обновлённые контактные данные
+     */
     @RequestMapping(
-            method = RequestMethod.POST,
+            method = RequestMethod.PUT,
             consumes = MediaUtf8.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ContactsDTO postContacts(Principal principal, @Valid @RequestBody ContactsDTO dto) {
+    public ContactsDTO postContacts(Principal principal, @Valid @RequestBody ContactsDTO contacts) {
         String login = principal.getName();
-        return contactsService.updateUserContacts(login, dto);
+        return contactsService.updateUserContacts(login, contacts);
     }
 }

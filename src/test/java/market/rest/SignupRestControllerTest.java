@@ -39,7 +39,7 @@ import org.springframework.web.context.WebApplicationContext;
         TransactionalTestExecutionListener.class})
 @WebAppConfiguration
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SignupWSTest {
+public class SignupRestControllerTest {
 
     private MockMvc mockMvc;
     

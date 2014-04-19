@@ -3,7 +3,7 @@ package market.exception;
 import org.springframework.validation.FieldError;
 
 /**
- * 
+ * Попытка сослаться на неизвестный товар.
  */
 public class UnknownProductException extends Exception {
     

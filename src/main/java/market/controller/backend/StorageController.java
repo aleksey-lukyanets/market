@@ -27,6 +27,7 @@ public class StorageController {
 
     @Autowired
     private StorageService storageService;
+    
     @Autowired
     private ISortingOptions<Storage> storageSorting;
 

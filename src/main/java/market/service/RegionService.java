@@ -17,5 +17,4 @@ public interface RegionService {
     List<Region> findAllOrderById();
 
     List<Region> findAllOrderByName();
-    
 }

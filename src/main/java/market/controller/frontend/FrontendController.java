@@ -21,9 +21,6 @@ public class FrontendController {
 
     /**
      * Главная страница.
-     *
-     * @param model
-     * @return
      */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(Model model) {
@@ -34,8 +31,6 @@ public class FrontendController {
     
     /**
      * Страница входа в магазин.
-     *
-     * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
@@ -43,9 +38,7 @@ public class FrontendController {
     }
 
     /**
-     * Детали реализации.
-     *
-     * @return
+     * Описание реализации магазина.
      */
     @RequestMapping(method = RequestMethod.GET, value = "/inside")
     public String whatsInside() {
@@ -54,8 +47,6 @@ public class FrontendController {
 
     /**
      * Описание веб-службы REST.
-     *
-     * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/rest-api")
     public String restApi() {

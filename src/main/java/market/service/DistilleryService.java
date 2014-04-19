@@ -20,5 +20,4 @@ public interface DistilleryService {
     List<Distillery> findAllOrderById();
 
     List<Distillery> findAllOrderByTitle();
-
 }

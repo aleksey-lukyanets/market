@@ -24,5 +24,4 @@ public interface StorageService {
     Page<Storage> findByAvailable(boolean available, Pageable pageable);
 
     Page<Storage> fetchFilteredAndPaged(String available, PageRequest request);
-    
 }

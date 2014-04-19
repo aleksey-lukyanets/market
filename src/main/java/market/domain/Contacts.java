@@ -9,7 +9,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import market.domain.dto.ContactsDTO;
-import market.rest.CartWS;
+import market.rest.CartRestController;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -53,7 +53,7 @@ public class Contacts implements Serializable {
     
     public ContactsDTO createDTO() {
         ContactsDTO dto = new ContactsDTO(phone, address);
-        dto.add(linkTo(CartWS.class).withRel("Shopping cart"));
+        dto.add(linkTo(CartRestController.class).withRel("Shopping cart"));
         return dto;
     }
 

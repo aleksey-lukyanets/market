@@ -38,11 +38,11 @@ public class ShowcaseController {
     private ISortingOptions<Product> productSorting;
     
     /**
-     * Страница товаров региона.
+     * Страница товаров региона. Фильтрация по винокурне и сортировка.
      *
-     * @param regionId
-     * @param sortingValues
-     * @param distilleryId
+     * @param regionId идентификатор региона
+     * @param sortingValues параметры сортировки
+     * @param distilleryId идентификатор винокурни
      * @param model
      * @return
      */

@@ -32,7 +32,7 @@ public class SpringExceptionHandler {
     //-------------------------------------------------- Обработчики исключений
     
     /**
-     * @param ex исключение
+     * Пользователь REST-службы не авторизован.
      */
     @ExceptionHandler(RestNotAuthenticatedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -41,8 +41,7 @@ public class SpringExceptionHandler {
     }
     
     /**
-     * Попытка сослаться на несуществующую страну.
-     * @param ex исключение
+     * Пользователь с указанным адресом уже существует.
      * @return перечень нарушенных ограничений
      */
     @ExceptionHandler(EmailExistsException.class)
@@ -54,8 +53,7 @@ public class SpringExceptionHandler {
     }
     
     /**
-     * Попытка сослаться на несуществующую страну.
-     * @param ex исключение
+     * Заказ не может быть оформлен: корзина пуста.
      * @return перечень нарушенных ограничений
      */
     @ExceptionHandler(EmptyCartException.class)
@@ -67,8 +65,7 @@ public class SpringExceptionHandler {
     }
     
     /**
-     * Попытка сослаться на несуществующую страну.
-     * @param ex исключение
+     * Попытка сослаться на неизвестный товар.
      * @return перечень нарушенных ограничений
      */
     @ExceptionHandler(UnknownProductException.class)
@@ -80,9 +77,7 @@ public class SpringExceptionHandler {
     }
     
     /**
-     * Попытка сослаться на несуществующую страну.
-     * @param ex исключение
-     * @return перечень нарушенных ограничений
+     * Запрошенный товар не найден.
      */
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -92,9 +87,7 @@ public class SpringExceptionHandler {
     }
     
     /**
-     * Попытка сослаться на несуществующую страну.
-     * @param ex исключение
-     * @return перечень нарушенных ограничений
+     * Запрошенный заказ не найден.
      */
     @ExceptionHandler(OrderNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -105,7 +98,6 @@ public class SpringExceptionHandler {
     
     /**
      * Ошибки валидации полученного от клиента объекта.
-     * @param ex исключение
      * @return перечень нарушенных ограничений
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)

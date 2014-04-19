@@ -1,6 +1,7 @@
 package market.rest;
 
 import javax.annotation.Resource;
+import market.data.MarketData;
 import market.data.UserData;
 import market.domain.dto.ContactsDTO;
 import market.util.TestUtil;
@@ -38,7 +39,7 @@ import org.springframework.web.context.WebApplicationContext;
         TransactionalTestExecutionListener.class})
 @WebAppConfiguration
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UserWSTest {
+public class UserRestControllerTest {
 
     private MockMvc mockMvc;
     
@@ -98,7 +99,7 @@ public class UserWSTest {
         
         ContactsDTO contacts = new ContactsDTO(UserData.USER_WRONG_PHONE, "");
         
-        mockMvc.perform(post("/rest/customer/contacts")
+        mockMvc.perform(put("/rest/customer/contacts")
                 .header("Authorization", UserData.BASIC_AUTH_VALUE)
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .accept(TestUtil.APPLICATION_JSON_UTF8)
@@ -123,7 +124,7 @@ public class UserWSTest {
         
         ContactsDTO contacts = new ContactsDTO(UserData.USER_PHONE, UserData.USER_ADDRESS);
         
-        mockMvc.perform(post("/rest/customer/contacts")
+        mockMvc.perform(put("/rest/customer/contacts")
                 .header("Authorization", UserData.BASIC_AUTH_VALUE)
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .accept(TestUtil.APPLICATION_JSON_UTF8)
@@ -171,7 +172,7 @@ public class UserWSTest {
     @Test
     public void Step6_getOrder_NotFound() throws Exception {
         
-        mockMvc.perform(get("/rest/customer/orders/{id}", 100500)
+        mockMvc.perform(get("/rest/customer/orders/{id}", MarketData.IMPROBABLE_ID)
                 .header("Authorization", UserData.BASIC_AUTH_VALUE)
                 .accept(TestUtil.APPLICATION_JSON_UTF8)
         )

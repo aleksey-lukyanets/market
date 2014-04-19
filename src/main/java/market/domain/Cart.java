@@ -16,9 +16,9 @@ import javax.persistence.Table;
 import market.domain.dto.CartDTO;
 import market.domain.dto.CartItemDTO;
 import market.exception.ProductNotFoundException;
-import market.rest.ContactsWS;
-import market.rest.PaymentWS;
-import market.rest.ProductsWS;
+import market.rest.CartRestController;
+import market.rest.ContactsRestController;
+import market.rest.ProductsRestController;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
@@ -105,8 +105,8 @@ public class Cart implements Serializable {
     public CartDTO createDTO(int deliveryСost) {
         CartDTO dto = createAnonymousDTO(deliveryСost);
         dto.setUser(userAccount.getEmail());
-        dto.add(linkTo(ContactsWS.class).withRel("Customer contacts"));
-        dto.add(linkTo(PaymentWS.class).slash("card").withRel("Payment"));
+        dto.add(linkTo(ContactsRestController.class).withRel("Customer contacts"));
+        dto.add(linkTo(CartRestController.class).slash("payment").withRel("Payment"));
         return dto;
     }
     
@@ -130,7 +130,7 @@ public class Cart implements Serializable {
         for (CartItem item : items) {
             CartItemDTO dto = new CartItemDTO(item);
             try {
-                dto.add(linkTo(methodOn(ProductsWS.class).getProduct(dto.getProductId())).withSelfRel());
+                dto.add(linkTo(methodOn(ProductsRestController.class).getProduct(dto.getProductId())).withSelfRel());
                 dtos.add(dto);
             } catch (ProductNotFoundException ex) {}
         }

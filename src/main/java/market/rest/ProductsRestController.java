@@ -15,16 +15,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Контроллер товаров.
+ * REST-контроллер товаров магазина.
  */
 @Controller
 @RequestMapping(value = "/rest/products")
 @ExposesResourceFor(ProductDTO.class)
-public class ProductsWS {
+public class ProductsRestController {
 
     @Autowired
     private ProductService productService;
     
+    /**
+     * Просмотр всех товаров магазина.
+     * 
+     * @return список всех товаров
+     */
     @RequestMapping(
             method = RequestMethod.GET,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
@@ -41,6 +46,13 @@ public class ProductsWS {
         return dtos;
     }
     
+    /**
+     * Просмотр одного товара.
+     * 
+     * @param id идентификатор товара
+     * @return запрошенный товар
+     * @throws ProductNotFoundException если товар с запрошенным id не существует
+     */
     @RequestMapping(value = "/{id}",
             method = RequestMethod.GET,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)

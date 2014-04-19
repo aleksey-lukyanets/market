@@ -38,15 +38,10 @@ public class CartController {
 
     /**
      * Страница корзины.
-     * 
-     * @param principal
-     * @param request
-     * @param model
-     * @return 
      */
     @RequestMapping(method = RequestMethod.GET)
     public String getCart(Principal principal, HttpServletRequest request, Model model) {
-        if (principal != null) {
+        if (isAuthorized(principal)) {
             Cart cart = cartService.getUserCart(principal.getName());
             request.getSession().setAttribute("cart", cart);
         }
@@ -54,16 +49,16 @@ public class CartController {
         return "cart";
     }
 
+    private boolean isAuthorized(Principal principal) {
+        return principal != null;
+    }
+
     /**
      * Очистка корзины.
-     * 
-     * @param principal
-     * @param cart
-     * @return 
      */
     @RequestMapping(method = RequestMethod.DELETE)
     public String clearCart(Principal principal, @ModelAttribute(value = "cart") Cart cart) {
-        if (principal != null) {
+        if (isAuthorized(principal)) {
             cartService.clearUserCart(principal.getName());
         }
         cart.clear();
@@ -75,14 +70,19 @@ public class CartController {
     /**
      * Добавление через форму.
      * 
+     * @param cart сеансовая корзина
+     * @param cartItem добавляемый элемент корзины
+     * @param bindingResult ошибки валидации объекта
      * @param principal
-     * @param cartItem
-     * @param bindingResult
-     * @param cart
      * @return 
      */
     @RequestMapping(method = RequestMethod.PUT)
-    public String updateCartByForm(Principal principal, @Valid @ModelAttribute("cartItem") CartItemDTO cartItem, BindingResult bindingResult, @ModelAttribute(value = "cart") Cart cart) {
+    public String updateCartByForm(
+            Principal principal,
+            @Valid @ModelAttribute("cartItem") CartItemDTO cartItem,
+            BindingResult bindingResult,
+            @ModelAttribute(value = "cart") Cart cart
+    ) {
         String view = "cart";
         if (bindingResult.hasErrors()) {
             return view;
@@ -93,24 +93,29 @@ public class CartController {
             bindingResult.addError(ex.getFieldError());
             return view;
         }
-        return "redirect:/cart";
+        return "redirect:/" + view;
     }
 
     /**
-     * Добавление через объект JSON.
+     * Добавление через AJAX.
      * 
+     * @param cart сеансовая корзина
+     * @param cartItem добавляемый элемент корзины
+     * @param bindingResult ошибки валидации объекта
      * @param principal
-     * @param cartItem
-     * @param bindingResult
-     * @param cart
-     * @return 
-     * @throws UnknownProductException
+     * @return обновлённая корзина
+     * @throws UnknownProductException при добавлении несуществующего товара
      */
     @RequestMapping(method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public CartDTO updateCartByAjax(Principal principal, @Valid @RequestBody CartItemDTO cartItem, BindingResult bindingResult, @ModelAttribute(value = "cart") Cart cart) throws UnknownProductException {
+    public CartDTO updateCartByAjax(
+            Principal principal,
+            @Valid @RequestBody CartItemDTO cartItem,
+            BindingResult bindingResult,
+            @ModelAttribute(value = "cart") Cart cart
+    ) throws UnknownProductException {
         if (bindingResult.hasErrors()) {
             return cart.createAnonymousDTO(deliveryCost);
         }
@@ -120,7 +125,7 @@ public class CartController {
 
     private void updateCart(Cart cart, CartItemDTO cartItem, Principal principal) throws UnknownProductException {
         cartService.updateCartObject(cart, cartItem);
-        if (principal != null) {
+        if (isAuthorized(principal)) {
             String login = principal.getName();
             cartService.updateUserCart(login, cartItem);
         }
@@ -131,10 +136,10 @@ public class CartController {
     /**
      * Установка способа доставки через объект JSON.
      * 
+     * @param cart сеансовая корзина
+     * @param delivery опция доставки
      * @param principal
-     * @param delivery
-     * @param cart
-     * @return 
+     * @return обновлённая корзина
      */
     @RequestMapping(value = "/delivery/{delivery}",
             method = RequestMethod.PUT,
@@ -142,7 +147,7 @@ public class CartController {
     @ResponseBody
     public CartDTO setDelivery(Principal principal, @PathVariable String delivery, @ModelAttribute(value = "cart") Cart cart) {
         Boolean included = Boolean.valueOf(delivery);
-        if (principal != null) {
+        if (isAuthorized(principal)) {
             String login = principal.getName();
             cartService.setUserCartDelivery(login, included);
         }

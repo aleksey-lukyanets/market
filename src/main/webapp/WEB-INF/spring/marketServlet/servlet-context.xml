@@ -41,7 +41,6 @@
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/rest/cart**"/>
-            <mvc:mapping path="/rest/payment**"/>
             <mvc:mapping path="/rest/customer**"/>
             <bean class="market.interceptors.RestUserCheckInterceptor" />
         </mvc:interceptor>

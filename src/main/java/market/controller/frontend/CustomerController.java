@@ -44,9 +44,6 @@ public class CustomerController {
 
     /**
      * Страница истории заказов.
-     *
-     * @param model
-     * @return
      */
     @Secured({"ROLE_USER"})
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
@@ -68,9 +65,6 @@ public class CustomerController {
     
     /**
      * Страница регистрации.
-     *
-     * @param model
-     * @return
      */
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String getSignup(Model model) {
@@ -81,9 +75,9 @@ public class CustomerController {
     /**
      * Обработка формы регистрации.
      *
-     * @param user
-     * @param bindingResult
-     * @param sessionCart
+     * @param user данные нового пользователя
+     * @param bindingResult ошибки валидации данных пользователя
+     * @param sessionCart сеансовая корзина
      * @return
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -102,7 +96,7 @@ public class CustomerController {
             bindingResult.addError(ex.getFieldError());
             return view;
         }
-        if (sessionCart.getTotalItems() > 0) {
+        if (!sessionCart.isEmpty()) {
             cartService.fillUserCart(user.getEmail(), sessionCart.getCartItems());
         }
         return "redirect:/";

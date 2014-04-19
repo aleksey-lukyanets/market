@@ -30,6 +30,7 @@ public class OrdersController {
 
     @Autowired
     private OrderService orderService;
+    
     @Autowired
     private ISortingOptions<Order> orderSorting;
 

@@ -22,7 +22,20 @@ public interface UserAccountService {
     
     //--------------------------------------- Операции с аккаунтом пользователя
 
+    /**
+     * Создание нового аккаунта с последующей авторизацией.
+     *
+     * @param user данные нового пользователя
+     * @return вновь созданный аккаунт
+     * @throws EmailExistsException если пользователь с таким адресом уже существует
+     */
     UserAccount createUserThenAuthenticate(UserDTO user) throws EmailExistsException;
     
+    /**
+     * Получение аккаунта пользователя.
+     *
+     * @param userLogin логин пользователя
+     * @return аккаунт пользователя с запрошенным логином
+     */
     UserAccount getUserAccount(String userLogin);
 }

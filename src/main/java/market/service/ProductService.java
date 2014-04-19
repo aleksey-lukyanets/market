@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Сервис товара.
+ * Сервис товаров.
  */
 public interface ProductService {
     
@@ -29,5 +29,4 @@ public interface ProductService {
     Page<Product> findByDistillery(Distillery distillery, Pageable pageable);
     
     Page<Product> findByDistilleriesOfRegion(Region region, Pageable pageable);
-    
 }

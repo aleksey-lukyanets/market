@@ -31,8 +31,10 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    
     @Autowired
     private DistilleryService distilleryService;
+    
     @Autowired
     private ISortingOptions<Product> productSorting;
 

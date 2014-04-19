@@ -1,7 +1,7 @@
 package market.exception;
 
 /**
- * 
+ * Запрошенный товар не найден.
  */
 public class ProductNotFoundException extends Exception {
     

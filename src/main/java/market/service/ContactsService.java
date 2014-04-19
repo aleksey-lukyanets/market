@@ -19,7 +19,21 @@ public interface ContactsService {
     
     //-------------------------------------- Операции с контактами пользователя
     
+    /**
+     * Получение контактных данных пользователя.
+     * 
+     * @param userLogin логин покупателя
+     * @return контактные данные
+     */
+        
     ContactsDTO getUserContacts(String userLogin);
     
+    /**
+     * Изменение контактных данных пользователя.
+     *
+     * @param userLogin логин покупателя
+     * @param newContacts новые контактные данные
+     * @return изменённые контактные данные
+     */
     ContactsDTO updateUserContacts(String userLogin, ContactsDTO newContacts);
 }
