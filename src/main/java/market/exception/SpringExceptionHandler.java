@@ -41,63 +41,31 @@ public class SpringExceptionHandler {
     }
     
     /**
-     * Пользователь с указанным адресом уже существует.
-     * @return перечень нарушенных ограничений
+     * Запрос пользователем несуществующих объектов.
      */
-    @ExceptionHandler(EmailExistsException.class)
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    @ResponseBody
-    public ValidationErrorDTO handleEmailExistsException(EmailExistsException ex) {
-        List<FieldError> fieldErrors = Arrays.asList(ex.getFieldError());
-        return processFieldErrors(fieldErrors);
-    }
-    
-    /**
-     * Заказ не может быть оформлен: корзина пуста.
-     * @return перечень нарушенных ограничений
-     */
-    @ExceptionHandler(EmptyCartException.class)
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    @ResponseBody
-    public ValidationErrorDTO handleEmptyCartException(EmptyCartException ex) {
-        List<FieldError> fieldErrors = Arrays.asList(ex.getFieldError());
-        return processFieldErrors(fieldErrors);
-    }
-    
-    /**
-     * Попытка сослаться на неизвестный товар.
-     * @return перечень нарушенных ограничений
-     */
-    @ExceptionHandler(UnknownProductException.class)
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    @ResponseBody
-    public ValidationErrorDTO handleUnknownProductException(UnknownProductException ex) {
-        List<FieldError> fieldErrors = Arrays.asList(ex.getFieldError());
-        return processFieldErrors(fieldErrors);
-    }
-    
-    /**
-     * Запрошенный товар не найден.
-     */
-    @ExceptionHandler(ProductNotFoundException.class)
+    @ExceptionHandler({ProductNotFoundException.class, OrderNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public String handleProductNotFoundException(ProductNotFoundException ex) {
+    public String handleProductNotFoundException(Exception ex) {
         return ex.getMessage();
     }
     
     /**
-     * Запрошенный заказ не найден.
+     * Исключения при обработке переданных пользователем объектов.
+     * Ответ сервера сопровождается пояснениями.
+     * @return перечень нарушенных ограничений
      */
-    @ExceptionHandler(OrderNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler({EmailExistsException.class, EmptyCartException.class, UnknownProductException.class})
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ResponseBody
-    public String handleOrderNotFoundException(OrderNotFoundException ex) {
-        return ex.getMessage();
+    public ValidationErrorDTO handleEmailExistsException(CustomNotValidException ex) {
+        List<FieldError> fieldErrors = Arrays.asList(ex.getFieldError());
+        return processFieldErrors(fieldErrors);
     }
     
     /**
      * Ошибки валидации полученного от клиента объекта.
+     * Ответ сервера сопровождается пояснениями.
      * @return перечень нарушенных ограничений
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)

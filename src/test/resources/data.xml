@@ -22,7 +22,7 @@
     <jpa:repositories base-package="market.dao" />
     
     <!-- Параметры доступа к БД -->
-    <context:property-placeholder location="/WEB-INF/conf/db-jelastic.properties" order="10" />
+    <context:property-placeholder location="classpath:test-db.properties" order="10" />
 
     <!-- Источник данных -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

@@ -1,23 +1,11 @@
 package market.exception;
 
-import org.springframework.validation.FieldError;
-
 /**
  * Пользователь с указанным адресом уже существует.
  */
-public class EmailExistsException extends Exception {
-    
-    public EmailExistsException() {
-        super("");
-    }
+public class EmailExistsException extends CustomNotValidException {
 
-    public EmailExistsException(String message) {
-        super(message);
-    }
-    
-    public FieldError getFieldError() {
-        String[] codes = {"Exists.userDTO.email"};
-        Object[] arguments = {"email"};
-        return new FieldError("userDTO", "email", "", false, codes, arguments, "");
+    public EmailExistsException() {
+        super("Exists", "userDTO", "email");
     }
 }
