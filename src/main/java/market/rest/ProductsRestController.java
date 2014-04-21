@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import market.domain.Product;
 import market.domain.dto.ProductDTO;
+import market.domain.dto.ProductPreviewDTO;
 import market.exception.ProductNotFoundException;
 import market.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,14 +37,18 @@ public class ProductsRestController {
             method = RequestMethod.GET,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<ProductDTO> getProducts() {
-        return createProductDtoList(productService.findAll());
+    public List<ProductPreviewDTO> getProducts() {
+        return createProductDtoList(productService.findAllOrderById());
     }
     
-    private List<ProductDTO> createProductDtoList(List<Product> products) {
-        List<ProductDTO> dtos = new ArrayList<>();
+    private List<ProductPreviewDTO> createProductDtoList(List<Product> products) {
+        List<ProductPreviewDTO> dtos = new ArrayList<>();
         for (Product product : products) {
-            dtos.add(product.createDTO());
+            ProductPreviewDTO dto = product.createPerviewDTO();
+            try {
+                dto.add(linkTo(methodOn(ProductsRestController.class).getProduct(product.getId())).withSelfRel());
+            } catch (ProductNotFoundException ex) {}
+            dtos.add(dto);
         }
         return dtos;
     }

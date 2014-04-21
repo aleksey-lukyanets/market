@@ -76,9 +76,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         UserAccount userAccount = createUserAccount(user);
         userAccount.setCart(new Cart(userAccount));
         userAccountDAO.save(userAccount);
-        
-        authenticateUser(userAccount);
-        
+        authenticateUser(user.getEmail(), user.getPassword());
         return userAccount;
     }
 
@@ -94,8 +92,8 @@ public class UserAccountServiceImpl implements UserAccountService {
         return userAccount;
     }
     
-    private void authenticateUser(UserAccount userAccount) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userAccount.getEmail(), userAccount.getPassword());
+    private void authenticateUser(String email, String password) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
         try {
             Authentication auth = authenticationManager.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(auth);

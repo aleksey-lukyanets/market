@@ -11,6 +11,7 @@ import market.domain.Order;
 import market.domain.Product;
 import market.domain.dto.ContactsDTO;
 import market.domain.dto.CreditCardDTO;
+import market.domain.dto.OrderDTO;
 import market.exception.EmptyCartException;
 import market.service.CartService;
 import market.service.ContactsService;
@@ -34,7 +35,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @Controller
 @RequestMapping("/checkout")
 @Secured({"ROLE_USER"})
-@SessionAttributes({"cart"})
+@SessionAttributes({"createdOrder"})
 public class CheckoutController {
 
     @Value("${deliveryCost}")
@@ -159,8 +160,7 @@ public class CheckoutController {
     @RequestMapping(value = "/confirmation", method = RequestMethod.GET)
     public String purchase(
             Principal principal,
-            Model model,
-            @ModelAttribute(value = "createdOrder") Order createdOrder
+            Model model
     ) {
         String login = principal.getName();
         model.addAttribute("userAccount", userAccountService.getUserAccount(login));

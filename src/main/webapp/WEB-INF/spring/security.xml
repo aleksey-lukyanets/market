@@ -9,6 +9,7 @@
     <http use-expressions="true" pattern="/rest/**" create-session="stateless">
         <intercept-url pattern="/rest/**" access="permitAll" />
         <http-basic />
+        <anonymous username="guest" granted-authority="ROLE_ANONYMOUS"/>
     </http>
     
     <!-- Конфигурация Spring Security -->

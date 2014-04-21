@@ -61,7 +61,7 @@
                         </tr>
                         <tr>
                             <td colspan="3" align="right"><h5>сумма к оплате:</h5></td>
-                            <td><h5>${cart.productsCost + deliveryCost} руб.</h5></td>
+                            <td><h5>${cart.productsCost + deliveryCost}&nbsp;руб.</h5></td>
                         </tr>
                     </c:when>
                     <c:otherwise>

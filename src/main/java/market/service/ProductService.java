@@ -20,7 +20,7 @@ public interface ProductService {
 
     Product findOne(long productId) throws ProductNotFoundException;
 
-    List<Product> findAll();
+    List<Product> findAllOrderById();
     
     Page<Product> findAll(PageRequest request);
     

@@ -27,7 +27,7 @@ public class OrderedProduct implements Serializable {
 
     @MapsId("productId")
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Product product;
 
     @Column(name = "quantity")
