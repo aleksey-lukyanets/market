@@ -2,7 +2,8 @@ package market.rest;
 
 import javax.validation.Valid;
 import market.domain.UserAccount;
-import market.domain.dto.UserDTO;
+import market.dto.UserDTO;
+import market.dto.assembler.UserAccountDtoAssembler;
 import market.exception.EmailExistsException;
 import market.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class SignupRestController {
     @Autowired
     private UserAccountService userAccountService;
 
+    @Autowired
+    private UserAccountDtoAssembler userAccountDtoAssembler;
+
     /**
      * Регистрация нового покупателя.
      * 
@@ -36,6 +40,6 @@ public class SignupRestController {
     @ResponseBody
     public UserDTO postNewUser(@Valid @RequestBody UserDTO user) throws EmailExistsException {
         UserAccount userAccount = userAccountService.createUserThenAuthenticate(user);
-        return userAccount.createDTO();
+        return userAccountDtoAssembler.toResource(userAccount);
     }
 }

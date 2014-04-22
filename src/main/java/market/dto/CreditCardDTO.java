@@ -1,4 +1,4 @@
-package market.domain.dto;
+package market.dto;
 
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotEmpty;

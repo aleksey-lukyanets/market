@@ -1,4 +1,4 @@
-package market.domain.dto;
+package market.dto;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;

@@ -9,9 +9,9 @@ import market.domain.Cart;
 import market.domain.CartItem;
 import market.domain.Order;
 import market.domain.Product;
-import market.domain.dto.ContactsDTO;
-import market.domain.dto.CreditCardDTO;
-import market.domain.dto.OrderDTO;
+import market.dto.ContactsDTO;
+import market.dto.CreditCardDTO;
+import market.dto.assembler.OrderDtoAssembler;
 import market.exception.EmptyCartException;
 import market.service.CartService;
 import market.service.ContactsService;
@@ -23,7 +23,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,6 +51,9 @@ public class CheckoutController {
     
     @Autowired
     private CartService cartService;
+    
+    @Autowired
+    private OrderDtoAssembler orderDtoAssembler;
 
     //--------------------------------------------- Изменение контактных данных
     
@@ -139,7 +141,7 @@ public class CheckoutController {
         String login = principal.getName();
         try {
             Order order = orderService.createUserOrder(creditCard, login, deliveryCost);
-            request.getSession().setAttribute("createdOrder", order.createDTO());
+            request.getSession().setAttribute("createdOrder", orderDtoAssembler.toResource(order));
             return "redirect:/checkout/confirmation";
         } catch (EmptyCartException ex) {
             bindingResult.addError(ex.getFieldError());

@@ -1,6 +1,5 @@
 package market.service.impl;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -17,8 +16,9 @@ import market.domain.Order;
 import market.domain.OrderedProduct;
 import market.domain.Product;
 import market.domain.UserAccount;
-import market.domain.dto.CreditCardDTO;
-import market.domain.dto.OrderDTO;
+import market.dto.CreditCardDTO;
+import market.dto.OrderDTO;
+import market.dto.assembler.OrderDtoAssembler;
 import market.exception.EmptyCartException;
 import market.exception.OrderNotFoundException;
 import market.service.CartService;
@@ -38,12 +38,14 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDAO orderDAO;
     private final UserAccountDAO userAccountDAO;
     private final CartService cartService;
+    private final OrderDtoAssembler orderDtoAssembler;
     
     @Autowired
-    public OrderServiceImpl(OrderDAO orderDAO, UserAccountDAO userAccountDAO, CartService cartService) {
+    public OrderServiceImpl(OrderDAO orderDAO, UserAccountDAO userAccountDAO, CartService cartService, OrderDtoAssembler orderDtoAssembler) {
         this.orderDAO = orderDAO;
         this.userAccountDAO = userAccountDAO;
         this.cartService = cartService;
+        this.orderDtoAssembler = orderDtoAssembler;
     }
 
     @Transactional
@@ -193,15 +195,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> getUserOrders(String userLogin) {
         UserAccount account = userAccountDAO.findByEmail(userLogin);
         List<Order> orders = findByUserAccount(account);
-        return createCartItemsDtoList(orders);
-    }
-    
-    private List<OrderDTO> createCartItemsDtoList(List<Order> orders) {
-        List<OrderDTO> dtos = new ArrayList<>();
-        for (Order order : orders) {
-            dtos.add(order.createDTO());
-        }
-        return dtos;
+        return orderDtoAssembler.toResources(orders);
     }
 
     @Transactional(readOnly = true)
@@ -211,6 +205,6 @@ public class OrderServiceImpl implements OrderService {
         if ((order == null) || !order.getUserAccount().getEmail().equals(userLogin)) {
             throw new OrderNotFoundException("У пользователя " + userLogin + " не существует заказа с id " + id);
         }
-        return order.createDTO();
+        return orderDtoAssembler.toResource(order);
     }
 }

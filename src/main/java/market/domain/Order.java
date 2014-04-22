@@ -18,7 +18,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.TIMESTAMP;
-import market.domain.dto.OrderDTO;
+import market.dto.OrderDTO;
 
 /**
  * Заказ.
@@ -63,21 +63,6 @@ public class Order implements Serializable {
     private boolean executed;
 
     public Order() {
-    }
-    
-    public OrderDTO createDTO() {
-        OrderDTO dto = new OrderDTO();
-        dto.setId(id);
-        dto.setUser(userAccount.getEmail());
-        dto.setBillNumber(bill.getNumber());
-        dto.setProductsCost(productsCost);
-        dto.setDateCreated(dateCreated);
-        dto.setDeliveryCost(deliveryСost);
-        dto.setTotalCost(deliveryIncluded ? (productsCost + deliveryСost) : productsCost);
-        dto.setDeliveryIncluded(deliveryIncluded);
-        dto.setPayed(bill.isPayed());
-        dto.setExecuted(executed);
-        return dto;
     }
 
     /**

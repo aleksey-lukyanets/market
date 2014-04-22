@@ -3,7 +3,7 @@ package market.rest;
 import javax.annotation.Resource;
 import market.data.MarketData;
 import market.data.UserData;
-import market.domain.dto.ContactsDTO;
+import market.dto.ContactsDTO;
 import market.util.TestUtil;
 import static org.hamcrest.Matchers.*;
 import org.junit.Test;

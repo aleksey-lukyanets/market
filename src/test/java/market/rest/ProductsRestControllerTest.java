@@ -79,7 +79,7 @@ public class ProductsRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$.id", is(MarketData.PRODUCT_ID)))
+                .andExpect(jsonPath("$.productId", is(MarketData.PRODUCT_ID)))
                 .andExpect(jsonPath("$.distillery", is(MarketData.PRODUCT_DISTILLERY)))
                 .andExpect(jsonPath("$.name", is(MarketData.PRODUCT_NAME)));
     }

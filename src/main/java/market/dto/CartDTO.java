@@ -1,10 +1,10 @@
-package market.domain.dto;
+package market.dto;
 
 import java.util.List;
 import org.springframework.hateoas.ResourceSupport;
 
 /**
- * Адаптер товара.
+ * Адаптер корзины.
  */
 public class CartDTO extends ResourceSupport {
     

@@ -2,7 +2,7 @@ package market.rest;
 
 import java.security.Principal;
 import java.util.List;
-import market.domain.dto.OrderDTO;
+import market.dto.OrderDTO;
 import market.exception.OrderNotFoundException;
 import market.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;

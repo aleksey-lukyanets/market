@@ -1,16 +1,15 @@
 package market.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 import market.domain.Product;
-import market.domain.dto.ProductDTO;
-import market.domain.dto.ProductPreviewDTO;
+import market.dto.ProductDTO;
+import market.dto.ProductPreviewDTO;
+import market.dto.assembler.ProductDtoAssembler;
+import market.dto.assembler.ProductPreviewAssembler;
 import market.exception.ProductNotFoundException;
 import market.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,18 +37,8 @@ public class ProductsRestController {
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<ProductPreviewDTO> getProducts() {
-        return createProductDtoList(productService.findAllOrderById());
-    }
-    
-    private List<ProductPreviewDTO> createProductDtoList(List<Product> products) {
-        List<ProductPreviewDTO> dtos = new ArrayList<>();
-        for (Product product : products) {
-            ProductPreviewDTO dto = product.createPerviewDTO();
-            try {
-                dto.add(linkTo(methodOn(ProductsRestController.class).getProduct(product.getId())).withSelfRel());
-            } catch (ProductNotFoundException ex) {}
-            dtos.add(dto);
-        }
+        List<Product> products = productService.findAllOrderById();
+        List<ProductPreviewDTO> dtos = new ProductPreviewAssembler().toResources(products);
         return dtos;
     }
     
@@ -66,7 +55,7 @@ public class ProductsRestController {
     @ResponseBody
     public ProductDTO getProduct(@PathVariable long id) throws ProductNotFoundException {
         Product product = productService.findOne(id);
-        ProductDTO dto = product.createDTO();
+        ProductDTO dto = new ProductDtoAssembler().toResource(product);
         return dto;
     }
 }

@@ -24,5 +24,6 @@ Any value defined here will override the pom.xml file value but is only applicab
         <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>Tomcat</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>
         <org-netbeans-modules-html-editor-lib.default-xhtml-public-id>XHTML5</org-netbeans-modules-html-editor-lib.default-xhtml-public-id>
         <org-netbeans-modules-web-clientproject-api.js_2e_libs_2e_folder>resources/js</org-netbeans-modules-web-clientproject-api.js_2e_libs_2e_folder>
+        <org-netbeans-modules-maven-j2ee.netbeans_2e_deploy_2e_on_2e_save>false</org-netbeans-modules-maven-j2ee.netbeans_2e_deploy_2e_on_2e_save>
     </properties>
 </project-shared-configuration>

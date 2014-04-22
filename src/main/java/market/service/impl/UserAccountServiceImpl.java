@@ -6,7 +6,7 @@ import market.domain.Cart;
 import market.domain.Contacts;
 import market.service.UserAccountService;
 import market.domain.UserAccount;
-import market.domain.dto.UserDTO;
+import market.dto.UserDTO;
 import market.exception.EmailExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

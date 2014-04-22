@@ -1,14 +1,15 @@
-package market.domain.dto;
+package market.dto;
 
 import java.util.Date;
+import org.springframework.hateoas.ResourceSupport;
 
 /**
  * 
  */
-public class OrderDTO {
+public class OrderDTO extends ResourceSupport {
     
     private String user;
-    private long id;
+    private long orderId;
     private int billNumber;
     private Date dateCreated;
     private int productsCost;
@@ -85,12 +86,12 @@ public class OrderDTO {
         this.executed = executed;
     }
 
-    public long getId() {
-        return id;
+    public long getOrderId() {
+        return orderId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public boolean isPayed() {

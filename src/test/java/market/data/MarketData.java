@@ -3,7 +3,7 @@ package market.data;
 import java.util.ArrayList;
 import java.util.List;
 import market.domain.Region;
-import market.domain.dto.CartItemDTO;
+import market.dto.CartItemDTO;
 
 /**
  * 

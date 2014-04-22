@@ -8,7 +8,7 @@ import market.domain.Cart;
 import market.domain.CartItem;
 import market.domain.Product;
 import market.domain.UserAccount;
-import market.domain.dto.CartItemDTO;
+import market.dto.CartItemDTO;
 import market.exception.UnknownProductException;
 import market.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;

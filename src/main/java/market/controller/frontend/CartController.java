@@ -4,8 +4,9 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import market.domain.Cart;
-import market.domain.dto.CartDTO;
-import market.domain.dto.CartItemDTO;
+import market.dto.CartDTO;
+import market.dto.CartItemDTO;
+import market.dto.assembler.CartDtoAssembler;
 import market.exception.UnknownProductException;
 import market.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class CartController {
     
     @Autowired
     private CartService cartService;
+    
+    @Autowired
+    CartDtoAssembler cartDtoAssembler;
 
     /**
      * Страница корзины.
@@ -117,10 +121,10 @@ public class CartController {
             @ModelAttribute(value = "cart") Cart cart
     ) throws UnknownProductException {
         if (bindingResult.hasErrors()) {
-            return cart.createAnonymousDTO(deliveryCost);
+            return cartDtoAssembler.toAnonymousResource(cart, deliveryCost);
         }
         updateCart(cart, cartItem, principal);
-        return cart.createAnonymousDTO(deliveryCost);
+        return cartDtoAssembler.toAnonymousResource(cart, deliveryCost);
     }
 
     private void updateCart(Cart cart, CartItemDTO cartItem, Principal principal) throws UnknownProductException {
@@ -152,6 +156,6 @@ public class CartController {
             cartService.setUserCartDelivery(login, included);
         }
         cart.setDeliveryIncluded(included);
-        return cart.createAnonymousDTO(deliveryCost);
+        return cartDtoAssembler.toAnonymousResource(cart, deliveryCost);
     }
 }

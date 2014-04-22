@@ -1,6 +1,6 @@
 package market.data;
 
-import market.domain.dto.UserDTO;
+import market.dto.UserDTO;
 import org.apache.commons.codec.binary.Base64;
 
 /**

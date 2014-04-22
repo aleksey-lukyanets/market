@@ -16,8 +16,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import market.domain.dto.ProductDTO;
-import market.domain.dto.ProductPreviewDTO;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
@@ -72,29 +70,6 @@ public class Product implements Serializable {
         this.distillery = distillery;
         this.name = name;
         this.price = price;
-    }
-    
-    public ProductPreviewDTO createPerviewDTO() {
-        ProductPreviewDTO dto = new ProductPreviewDTO();
-        dto.setProductId(id);
-        dto.setDistillery(distillery.getTitle());
-        dto.setName(name);
-        dto.setPrice(price);
-        return dto;
-    }
-    
-    public ProductDTO createDTO() {
-        ProductDTO dto = new ProductDTO();
-        dto.setId(id);
-        dto.setDistillery(distillery.getTitle());
-        dto.setName(name);
-        dto.setAge(age);
-        dto.setAlcohol(alcohol);
-        dto.setPrice(price);
-        dto.setVolume(volume);
-        dto.setDescription(description);
-        dto.setInStock(storage.isAvailable());
-        return dto;
     }
 
     /**

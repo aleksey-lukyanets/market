@@ -4,7 +4,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import market.data.MarketData;
 import market.data.UserData;
-import market.domain.dto.CartItemDTO;
+import market.dto.CartItemDTO;
 import market.util.TestUtil;
 import static org.hamcrest.Matchers.*;
 import org.junit.After;

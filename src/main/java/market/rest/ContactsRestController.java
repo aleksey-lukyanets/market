@@ -2,7 +2,7 @@ package market.rest;
 
 import java.security.Principal;
 import javax.validation.Valid;
-import market.domain.dto.ContactsDTO;
+import market.dto.ContactsDTO;
 import market.service.ContactsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

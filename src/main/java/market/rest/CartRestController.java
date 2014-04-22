@@ -5,10 +5,12 @@ import java.security.Principal;
 import javax.validation.Valid;
 import market.domain.Cart;
 import market.domain.Order;
-import market.domain.dto.CartDTO;
-import market.domain.dto.CartItemDTO;
-import market.domain.dto.CreditCardDTO;
-import market.domain.dto.OrderDTO;
+import market.dto.CartDTO;
+import market.dto.CartItemDTO;
+import market.dto.CreditCardDTO;
+import market.dto.OrderDTO;
+import market.dto.assembler.CartDtoAssembler;
+import market.dto.assembler.OrderDtoAssembler;
 import market.exception.EmptyCartException;
 import market.exception.UnknownProductException;
 import market.service.CartService;
@@ -44,7 +46,13 @@ public class CartRestController {
     private OrderService orderService;
     
     @Autowired
-    EntityLinks entityLinks;
+    private EntityLinks entityLinks;
+    
+    @Autowired
+    private CartDtoAssembler cartDtoAssembler;
+    
+    @Autowired
+    private OrderDtoAssembler orderDtoAssembler;
 
     /**
      * Просмотр корзины.
@@ -57,7 +65,7 @@ public class CartRestController {
     @ResponseBody
     public CartDTO getCart(Principal principal) {
         Cart cart = cartService.getUserCart(principal.getName());
-        return cart.createDTO(deliveryCost);
+        return cartDtoAssembler.toUserResource(cart, deliveryCost);
     }
 
     /**
@@ -76,7 +84,7 @@ public class CartRestController {
     public CartDTO addItem(Principal principal, @RequestBody CartItemDTO item) throws UnknownProductException {
         String login = principal.getName();
         Cart cart = cartService.updateUserCart(login, item);
-        return cart.createDTO(deliveryCost);
+        return cartDtoAssembler.toUserResource(cart, deliveryCost);
     }
 
     /**
@@ -90,7 +98,7 @@ public class CartRestController {
     @ResponseBody
     public CartDTO clearCart(Principal principal) {
         Cart cart = cartService.clearUserCart(principal.getName());
-        return cart.createDTO(deliveryCost);
+        return cartDtoAssembler.toUserResource(cart, deliveryCost);
     }
     
     /**
@@ -108,7 +116,7 @@ public class CartRestController {
         String login = principal.getName();
         Boolean included = Boolean.valueOf(delivery);
         Cart cart = cartService.setUserCartDelivery(login, included);
-        return cart.createDTO(deliveryCost);
+        return cartDtoAssembler.toUserResource(cart, deliveryCost);
     }
 
     /**
@@ -127,10 +135,10 @@ public class CartRestController {
     public ResponseEntity<OrderDTO> payByCard(Principal principal, @Valid @RequestBody CreditCardDTO card) throws EmptyCartException {
         String login = principal.getName();
         Order order = orderService.createUserOrder(card, login, deliveryCost);
-        OrderDTO dto = order.createDTO();
+        OrderDTO dto = orderDtoAssembler.toResource(order);
         
         HttpHeaders headers = new HttpHeaders();
-        Link link = entityLinks.linkToSingleResource(OrderDTO.class, dto.getId());
+        Link link = dto.getLink("self");
         headers.setLocation(URI.create(link.getHref()));
         return new ResponseEntity<>(dto, headers, HttpStatus.CREATED);
     }

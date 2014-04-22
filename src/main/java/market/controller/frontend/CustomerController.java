@@ -1,6 +1,6 @@
 package market.controller.frontend;
 
-import market.domain.dto.UserDTO;
+import market.dto.UserDTO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

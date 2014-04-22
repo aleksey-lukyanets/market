@@ -1,4 +1,4 @@
-package market.domain.dto;
+package market.dto;
 
 import org.springframework.hateoas.ResourceSupport;
 

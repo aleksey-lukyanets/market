@@ -4,7 +4,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import market.data.MarketData;
 import market.data.UserData;
-import market.domain.dto.CartItemDTO;
+import market.dto.CartItemDTO;
 import market.util.TestUtil;
 import static org.hamcrest.Matchers.*;
 import org.junit.After;
@@ -142,7 +142,7 @@ public class CartControllerTest {
     @Test
     public void updateSessionCartByForm_UnknownProduct() throws Exception {
         MockHttpSession mockSession = new MockHttpSession();
-        clearSessionCart();
+        clearCart(mockSession);
         updateCartByForm_UnknownProduct(mockSession);
     }
     
@@ -179,7 +179,7 @@ public class CartControllerTest {
     @Test
     public void updateSessionCartByForm_Ok() throws Exception {
         MockHttpSession mockSession = new MockHttpSession();
-        clearSessionCart();
+        clearCart(mockSession);
         updateCartByForm_Ok(mockSession);
     }
     
@@ -228,7 +228,7 @@ public class CartControllerTest {
     @Test
     public void updateSessionCartByAjax_UnknownProduct() throws Exception {
         MockHttpSession mockSession = new MockHttpSession();
-        clearSessionCart();
+        clearCart(mockSession);
         updateCartByAjax_UnknownProduct(mockSession);
     }
     
@@ -270,7 +270,7 @@ public class CartControllerTest {
     @Test
     public void updateSessionCartByAjax_Ok() throws Exception {
         MockHttpSession mockSession = new MockHttpSession();
-        clearSessionCart();
+        clearCart(mockSession);
         updateCartByAjax_Ok(mockSession);
     }
     

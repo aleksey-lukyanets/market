@@ -13,15 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import market.domain.dto.CartDTO;
-import market.domain.dto.CartItemDTO;
-import market.exception.ProductNotFoundException;
-import market.rest.CartRestController;
-import market.rest.ContactsRestController;
-import market.rest.ProductsRestController;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 /**
  * Корзина.
@@ -100,41 +93,6 @@ public class Cart implements Serializable {
         }
         setProductsCost(cost);
         setTotalItems(total);
-    }
-    
-    public CartDTO createDTO(int deliveryСost) {
-        CartDTO dto = createAnonymousDTO(deliveryСost);
-        dto.setUser(userAccount.getEmail());
-        dto.add(linkTo(ContactsRestController.class).withRel("Customer contacts"));
-        dto.add(linkTo(CartRestController.class).slash("payment").withRel("Payment"));
-        return dto;
-    }
-    
-    public CartDTO createAnonymousDTO(int deliveryСost) {
-        int currentDeliveryCost = deliveryIncluded ? deliveryСost : 0;
-        int totalCost = isEmpty() ? 0 : (productsCost + currentDeliveryCost);
-        
-        CartDTO dto = new CartDTO();
-        dto.setDeliveryIncluded(deliveryIncluded);
-        dto.setDeliveryCost(deliveryСost);
-        dto.setProductsCost(productsCost);
-        dto.setTotalCost(totalCost);
-        dto.setItems(createCartItemsDtoList(cartItems));
-        dto.setTotalItems(totalItems);
-        
-        return dto;
-    }
-    
-    private List<CartItemDTO> createCartItemsDtoList(List<CartItem> items) {
-        List<CartItemDTO> dtos = new ArrayList<>();
-        for (CartItem item : items) {
-            CartItemDTO dto = new CartItemDTO(item);
-            try {
-                dto.add(linkTo(methodOn(ProductsRestController.class).getProduct(dto.getProductId())).withSelfRel());
-                dtos.add(dto);
-            } catch (ProductNotFoundException ex) {}
-        }
-        return dtos;
     }
 
     //---------------------------------------------------- Аксессоры и мутаторы

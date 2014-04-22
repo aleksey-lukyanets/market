@@ -6,7 +6,8 @@ import market.dao.UserAccountDAO;
 import market.service.ContactsService;
 import market.domain.Contacts;
 import market.domain.UserAccount;
-import market.domain.dto.ContactsDTO;
+import market.dto.ContactsDTO;
+import market.dto.assembler.ContactsDtoAssembler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,14 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ContactsServiceImpl implements ContactsService {
 
-    private final ContactsDAO contactsDAO;
-    private final UserAccountDAO userAccountDAO;
-
     @Autowired
-    public ContactsServiceImpl(ContactsDAO contactsDAO, UserAccountDAO userAccountDAO) {
-        this.contactsDAO = contactsDAO;
-        this.userAccountDAO = userAccountDAO;
-    }
+    private ContactsDAO contactsDAO;
+    
+    @Autowired
+    private UserAccountDAO userAccountDAO;
+    
+    @Autowired
+    private ContactsDtoAssembler contactsDtoAssembler;
 
     @Transactional
     @Override
@@ -57,7 +58,7 @@ public class ContactsServiceImpl implements ContactsService {
     public ContactsDTO getUserContacts(String userLogin) {
         UserAccount account = userAccountDAO.findByEmail(userLogin);
         Contacts contacts = account.getContacts();
-        return contacts.createDTO();
+        return contactsDtoAssembler.toResource(contacts);
     }
     
     @Transactional
@@ -67,6 +68,7 @@ public class ContactsServiceImpl implements ContactsService {
         Contacts contacts = account.getContacts();
         contacts.setPhone(newContacts.getPhone());
         contacts.setAddress(newContacts.getAddress());
-        return save(contacts).createDTO();
+        Contacts savedContacts = save(contacts);
+        return contactsDtoAssembler.toResource(savedContacts);
     }
 }

@@ -2,7 +2,7 @@ package market.service;
 
 import java.util.List;
 import market.domain.UserAccount;
-import market.domain.dto.UserDTO;
+import market.dto.UserDTO;
 import market.exception.EmailExistsException;
 
 /**

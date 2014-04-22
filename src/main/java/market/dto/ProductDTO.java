@@ -1,17 +1,18 @@
-package market.domain.dto;
+package market.dto;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.hateoas.ResourceSupport;
 
 /**
  * Адаптер товара.
  */
-public class ProductDTO {
+public class ProductDTO extends ResourceSupport {
     
-    private long id;
+    private long productId;
     
     private String distillery;
     
@@ -39,12 +40,12 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public long getId() {
-        return id;
+    public long getProductId() {
+        return productId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setProductId(long productId) {
+        this.productId = productId;
     }
 
     public String getDistillery() {

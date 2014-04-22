@@ -15,7 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import market.domain.dto.UserDTO;
+import market.dto.UserDTO;
 
 /**
  * Аккаунт пользователя.
@@ -67,10 +67,6 @@ public class UserAccount implements Serializable {
         this.password = password;
         this.name = name;
         this.active = active;
-    }
-    
-    public UserDTO createDTO() {
-        return new UserDTO(email, "hidden", name, contacts.getPhone(), contacts.getAddress());
     }
 
     /**
