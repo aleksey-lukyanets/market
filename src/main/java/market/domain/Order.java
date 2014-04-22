@@ -40,8 +40,7 @@ public class Order implements Serializable {
             targetEntity = OrderedProduct.class, mappedBy = "order")
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy ="pk.order", cascade =
 //            {CascadeType.PERSIST, CascadeType.MERGE})
-//    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE,
-//            org.hibernate.annotations.CascadeType.DELETE_ORPHAN})
+//    @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE_ORPHAN})
     private Set<OrderedProduct> orderedProducts = new HashSet<>(0);
     
     @OneToOne(mappedBy="order", cascade=CascadeType.ALL, fetch = FetchType.EAGER)

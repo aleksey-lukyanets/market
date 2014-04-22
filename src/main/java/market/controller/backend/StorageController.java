@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import market.domain.Storage;
 import market.service.StorageService;
-import market.sorting.ISortingOptions;
+import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +29,7 @@ public class StorageController {
     private StorageService storageService;
     
     @Autowired
-    private ISortingOptions<Storage> storageSorting;
+    private ISorter<Storage> storageSorting;
 
     /**
      * Перечень единиц хранения.

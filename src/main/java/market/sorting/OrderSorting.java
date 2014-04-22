@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
  * Опции сортировки и фильтрации списка заказов.
  */
 @Component
-public class OrderSorting extends AbstractSortingOptions {
+public class OrderSorting extends AbstractSorter {
 
     private final Map<String, String> executedOptions = new LinkedHashMap<>();
     private final Map<String, String> createdOptions = new LinkedHashMap<>();

@@ -7,7 +7,7 @@ import market.service.ProductService;
 import market.domain.Product;
 import market.exception.ProductNotFoundException;
 import market.service.DistilleryService;
-import market.sorting.ISortingOptions;
+import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +36,7 @@ public class ProductController {
     private DistilleryService distilleryService;
     
     @Autowired
-    private ISortingOptions<Product> productSorting;
+    private ISorter<Product> productBackendSorting;
 
     /**
      * Перечень товаров.
@@ -47,7 +47,7 @@ public class ProductController {
             @RequestParam(value = "dist", required = false, defaultValue = "0") Long distilleryId,
             Model model
     ) {
-        PageRequest request = productSorting.updateSorting(sortingValues);
+        PageRequest request = productBackendSorting.updateSorting(sortingValues);
         Page<Product> pagedList;
         if (distilleryId == 0) {
             pagedList = productService.findAll(request);
@@ -56,7 +56,7 @@ public class ProductController {
             pagedList = productService.findByDistillery(distillery, request);
             model.addAttribute("currentDistilleryTitle", distillery.getTitle());
         }
-        productSorting.prepareModel(model, pagedList);
+        productBackendSorting.prepareModel(model, pagedList);
         
         model.addAttribute("distilleries", distilleryService.findAllOrderByTitle());
         return "admin/products";

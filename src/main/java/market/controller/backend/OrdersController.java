@@ -7,7 +7,7 @@ import java.util.Map;
 import market.domain.Order;
 import market.domain.OrderedProduct;
 import market.service.OrderService;
-import market.sorting.ISortingOptions;
+import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +32,7 @@ public class OrdersController {
     private OrderService orderService;
     
     @Autowired
-    private ISortingOptions<Order> orderSorting;
+    private ISorter<Order> orderSorting;
 
     /**
      * Перечень заказов.

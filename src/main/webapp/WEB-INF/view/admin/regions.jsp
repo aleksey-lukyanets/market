@@ -31,7 +31,7 @@
                     ${shortDesc}<c:if test="${fn:length(region.description) >= 120}">...</c:if>
                 </td>
                 <td>${region.color}</td>
-                <td>
+                <td width="150">
                     <s:url value="regions/{regionId}/edit" var="edit_region_url">
                         <s:param name="regionId" value="${region.id}" />
                     </s:url>
@@ -39,9 +39,8 @@
                         <s:param name="regionId" value="${region.id}" />
                     </s:url>
                     <sf:form action="${delete_region_url}" method="delete">
-                        <div class="pull-right">
+                        <div class="btn-group btn-group-xs pull-right">
                             <a href="${edit_region_url}" class="btn btn-xs btn-default">изменить</a>
-                            <br>
                             <button type="submit" class="btn btn-xs btn-default">удалить</button>
                         </div>
                     </sf:form>

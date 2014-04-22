@@ -6,7 +6,7 @@ import market.domain.Region;
 import market.service.DistilleryService;
 import market.service.ProductService;
 import market.service.RegionService;
-import market.sorting.ISortingOptions;
+import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +35,7 @@ public class ShowcaseController {
     private DistilleryService distilleryService;
     
     @Autowired
-    private ISortingOptions<Product> productSorting;
+    private ISorter<Product> productSorting;
     
     /**
      * Страница товаров региона. Фильтрация по винокурне и сортировка.

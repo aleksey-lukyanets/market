@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
  * Опции сортировки и фильтрации списка единиц хранения.
  */
 @Component
-public class StorageSorting extends AbstractSortingOptions {
+public class StorageSorting extends AbstractSorter {
 
     private final Map<String, String> availableOptions = new LinkedHashMap<>();
 

@@ -8,11 +8,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 
 /**
- * Абстрактный класс опций сортировки.
+ * Управляющий сортировкой и разбивкой на страницы.
  * 
- * @param <T> класс элементов обрабатываемого списка.
+ * Инкапсулирует операции с опциями сортировки и разбивки на страницы: хранение
+ * и обновление значений, а также дополнение модели необходимыми объектами в
+ * соответствии с текущими значениями.
+ * 
+ * Добавление перечня опций сортировки (по умолчанию пустой) и другого
+ * дополнительного функционала (e.g. фильтрации) осуществляется в классах-потомках.
+ * 
+ * @param <T> класс элементов обрабатываемого списка
  */
-public abstract class AbstractSortingOptions<T> implements ISortingOptions<T> {
+public abstract class AbstractSorter<T> implements ISorter<T> {
     
     public static Integer FIRST_PAGE = 1;
     public static Integer PAGE_SIZE_DEFAULT = 3;
@@ -48,6 +55,9 @@ public abstract class AbstractSortingOptions<T> implements ISortingOptions<T> {
         return createPageRequest();
     }
     
+    /**
+     * @return кол-во объектов на странице
+     */
     protected int getDefaultPageSize() {
         return PAGE_SIZE_DEFAULT;
     }
@@ -73,21 +83,12 @@ public abstract class AbstractSortingOptions<T> implements ISortingOptions<T> {
         prepareFilteredModel(model);
         return model;
     }
-    
-    protected Model prepareFilteredModel(Model model) {
-        return model;
-    }
-    
-    protected Model prepareSortedModel(Model model) {
-        model.addAttribute("pageSizeOptions", getPageSizeOptions());
-        model.addAttribute("sortOptions", getSortFieldOptions());
-        model.addAttribute("directOptions", getDirectionOptions());
-        model.addAttribute("currentPageSize", getPageSize());
-        model.addAttribute("currentSort", getSortBy());
-        model.addAttribute("currentDirection", getSortDirection());
-        return model;
-    }
 
+    /**
+     * Дополнение модели объектами разбивки на страницы.
+     * @param model изменяемая модель
+     * @return изменённая модель
+     */
     protected Model preparePagedModel(Model model, Page<T> page) {
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);
@@ -99,39 +100,56 @@ public abstract class AbstractSortingOptions<T> implements ISortingOptions<T> {
         return model;
     }
     
+    /**
+     * Дополнение модели объектами сортировки.
+     * @param model изменяемая модель
+     * @return изменённая модель
+     */
+    protected Model prepareSortedModel(Model model) {
+        model.addAttribute("pageSizeOptions", getPageSizeOptions());
+        model.addAttribute("sortOptions", getSortFieldOptions());
+        model.addAttribute("directOptions", getDirectionOptions());
+        model.addAttribute("currentPageSize", getPageSize());
+        model.addAttribute("currentSort", getSortBy());
+        model.addAttribute("currentDirection", getSortDirection());
+        return model;
+    }
+    
+    /**
+     * Дополнение модели объектами фильтрации.
+     * @param model изменяемая модель
+     * @return изменённая модель
+     */
+    protected Model prepareFilteredModel(Model model) {
+        return model;
+    }
+    
     //---------------------------------------------------- Аксессоры и мутаторы
     
-    @Override
     public Integer getPageNumber() {
         return pageNumber;
     }
 
-    @Override
     public Integer getPageSize() {
         return pageSize;
     }
 
-    @Override
     public String getSortBy() {
         return sortBy;
     }
 
-    @Override
     public String getSortDirection() {
         return sortDirection;
     }
 
-    @Override
     public Map<Integer, String> getPageSizeOptions() {
         return pageSizeOptions;
     }
 
-    @Override
     public Map<String, String> getSortFieldOptions() {
         return sortFieldOptions;
     }
 
-    @Override
     public Map<String, String> getDirectionOptions() {
         return directionOptions;
     }

@@ -15,7 +15,7 @@
                 ${availableOptions[currentAvailable]}
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu dropdown-menu-right">
                 <c:forEach var="available" items="${availableOptions}">
                     <c:url var="paramed_url" value="">
                         <c:forEach items="${param}" var="entry">
@@ -37,7 +37,7 @@
                 ${sortOptions[currentSort]}&nbsp;
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu dropdown-menu-right">
                 <c:forEach var="sort" items="${sortOptions}">
                     <c:url var="paramed_url" value="">
                         <c:forEach items="${param}" var="entry">
@@ -57,7 +57,7 @@
                 ${directOptions[currentDirection]}&nbsp;
                 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu dropdown-menu-right">
                 <c:forEach var="direct" items="${directOptions}">
                     <c:url var="paramed_url" value="">
                         <c:forEach items="${param}" var="entry">
