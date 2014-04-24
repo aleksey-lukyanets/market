@@ -38,6 +38,7 @@
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/admin/**"/>
+            <mvc:exclude-mapping path="/rest/**"/>
             <bean class="market.interceptors.SessionCartInterceptor" />
         </mvc:interceptor>
         <mvc:interceptor>
