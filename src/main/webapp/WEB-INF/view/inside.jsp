@@ -38,7 +38,7 @@
     <li>база данных: PostgreSQL</li>
     <li>контейнер сервлетов: Apache Tomcat</li>
 </ul>
-<p>Исходные коды приложения доступны <a href="https://github.com/aleksej-lukyanets/market">на GitHub</a>.</p>
+<p>Исходные коды приложения доступны <a href="https://github.com/aleksey-lukyanets/market">на GitHub</a>.</p>
 
 
 <a name="func"></a>

@@ -56,7 +56,7 @@
     <div class="col-sm-3 has-feedback">
         <sf:input
             path="alcohol" size="19" maxlength="10" class="form-control"
-            name="alcohol" id="alcohol" value="${product.alcohol}" placeholder="40,0"
+            name="alcohol" id="alcohol" value="${product.alcohol}" placeholder="40.0"
             data-validate="alcohol" data-description="alcohol" data-describedby="alcohol-desc"/>
         <span id="alcohol" class="glyphicon form-control-feedback"></span>
         <span class="help-block">обязательное поле</span>
@@ -130,13 +130,13 @@
                     pattern: '<div class="alert alert-danger">Специальные символы недопустимы.</div>'
                 },
                 age: {
-                    pattern: '<div class="alert alert-danger">Допустимы только цифры и тире.</div>'
+                    pattern: '<div class="alert alert-danger">Допустимы только цифры.</div>'
                 },
                 volume: {
                     pattern: '<div class="alert alert-danger">Допустимы только цифры.</div>'
                 },
                 alcohol: {
-                    pattern: '<div class="alert alert-danger">Допустимы только цифры, точка и запятая.</div>'
+                    pattern: '<div class="alert alert-danger">Допустимы только цифры и точка.</div>'
                 },
                 price: {
                     pattern: '<div class="alert alert-danger">Допустимы только цифры.</div>'
@@ -150,7 +150,7 @@
             },
             age: {
                 required: true,
-                pattern: /^[0-9-]*$/
+                pattern: /^[0-9]*$/
             },
             volume: {
                 required: true,
@@ -158,7 +158,7 @@
             },
             alcohol: {
                 required: true,
-                pattern: /^(\d*[.,])?\d+$/
+                pattern: /^(\d*[.])?\d+$/
             },
             price: {
                 required: true,

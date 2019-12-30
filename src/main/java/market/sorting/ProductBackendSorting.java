@@ -16,6 +16,6 @@ public class ProductBackendSorting extends AbstractSorter {
     
     @Override
     public int getDefaultPageSize() {
-        return 10;
+        return 20;
     }
 }

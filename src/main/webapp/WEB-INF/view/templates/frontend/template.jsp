@@ -86,8 +86,8 @@
                             <ul class="list-inline">
                                 <li><a href="<c:url value="/inside" />" class="btn btn-danger btn-xs">как сделан магазин</a></li>
                                 <li><a href="<c:url value="/rest-api" />" class="btn btn-danger btn-xs">rest api</a></li>
-                                <li><a href="https://github.com/aleksej-lukyanets/market">исходные коды на github</a></li>
-                                <li><a href="http://spb.hh.ru/resume/002aa1acff01bbb6c90039ed1f744c5a305658">резюме на hh.ru</a></li>
+                                <li><a href="https://github.com/aleksey-lukyanets/market">github</a></li>
+                                <li><a href="https://www.linkedin.com/in/aleksey-lukyanets">linkedin</a></li>
                             </ul>
                         </div>
 

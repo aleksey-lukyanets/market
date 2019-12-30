@@ -22,7 +22,7 @@ import org.springframework.ui.Model;
 public abstract class AbstractSorter<T> implements ISorter<T> {
     
     public static Integer FIRST_PAGE = 1;
-    public static Integer PAGE_SIZE_DEFAULT = 3;
+    public static Integer PAGE_SIZE_DEFAULT = 5;
     public static String DIRECTION_DEFAULT = "asc";
 
     protected final Map<String, String> sortFieldOptions = new LinkedHashMap<>();

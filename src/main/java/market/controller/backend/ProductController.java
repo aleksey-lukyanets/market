@@ -83,7 +83,7 @@ public class ProductController {
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
-            return "admin/products/new";
+            return "redirect:/admin/products/new";
         }
         Distillery distillery = distilleryService.findOne(product.getDistillery().getId());
         product.setDistillery(distillery);

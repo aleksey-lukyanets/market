@@ -21,8 +21,7 @@ public class Contacts implements Serializable {
     @Id
     @Column(name = "id", unique = true, nullable = false)
     @GeneratedValue(generator = "gen")
-    @GenericGenerator(name = "gen", strategy = "foreign",
-            parameters = @Parameter(name = "property", value = "userAccount"))
+    @GenericGenerator(name = "gen", strategy = "foreign", parameters = @Parameter(name = "property", value = "userAccount"))
     private Long id;
 
     @OneToOne

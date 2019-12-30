@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import static javax.persistence.TemporalType.TIMESTAMP;
 import market.dto.OrderDTO;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 /**
  * Заказ.
@@ -28,8 +30,9 @@ import market.dto.OrderDTO;
 public class Order implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", insertable = false, updatable = false, nullable = false)
+    @GeneratedValue(generator="gen")
+    @GenericGenerator(name="gen", strategy="foreign", parameters=@Parameter(name="property", value="bill"))
     private Long id;
     
     @ManyToOne(fetch = FetchType.EAGER)

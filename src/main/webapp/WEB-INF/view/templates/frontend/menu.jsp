@@ -7,7 +7,7 @@
 
 <div class="header-regions">
     <div class="region-item region-item-title">
-        регион происхождения:
+        регионы:
     </div>
 </div>
 <div class="header-regions">

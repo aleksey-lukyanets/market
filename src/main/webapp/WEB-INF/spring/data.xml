@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:beans="http://www.springframework.org/schema/beans"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -16,13 +15,13 @@
     http://www.springframework.org/schema/data/jpa
     http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
-    <tx:annotation-driven transaction-manager="transactionManager" />
+    <tx:annotation-driven />
     
     <!-- Репозитории Spring Data JPA -->
     <jpa:repositories base-package="market.dao" />
     
     <!-- Параметры доступа к БД -->
-    <context:property-placeholder location="/WEB-INF/conf/db-jelastic.properties" order="10" />
+    <context:property-placeholder location="/WEB-INF/conf/db.properties" order="10" />
 
     <!-- Источник данных -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
