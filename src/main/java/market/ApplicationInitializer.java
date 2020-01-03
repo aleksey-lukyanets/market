@@ -4,6 +4,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractDispatcherServletInitializer;
 
@@ -55,6 +56,7 @@ public class ApplicationInitializer extends AbstractDispatcherServletInitializer
 	protected Filter[] getServletFilters() {
 		return new Filter[] {
 			new CharacterEncodingFilter("UTF-8", true),
+			new DelegatingFilterProxy("springSecurityFilterChain"),
 			new HiddenHttpMethodFilter()
 		};
 	}
