@@ -1,6 +1,5 @@
 package market.rest;
 
-import java.util.List;
 import market.domain.Product;
 import market.dto.ProductDTO;
 import market.dto.ProductPreviewDTO;
@@ -8,13 +7,14 @@ import market.dto.assembler.ProductDtoAssembler;
 import market.dto.assembler.ProductPreviewAssembler;
 import market.exception.ProductNotFoundException;
 import market.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * REST-контроллер товаров магазина.
@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/rest/products")
 @ExposesResourceFor(ProductDTO.class)
 public class ProductsRestController {
+    private final ProductService productService;
 
-    @Autowired
-    private ProductService productService;
-    
+    public ProductsRestController(ProductService productService) {
+        this.productService = productService;
+    }
+
     /**
      * Просмотр всех товаров магазина.
      * 

@@ -41,9 +41,9 @@ public class ApplicationInitializer extends AbstractDispatcherServletInitializer
 	protected WebApplicationContext createServletApplicationContext() {
 		XmlWebApplicationContext dispatcherContext = new XmlWebApplicationContext();
 		dispatcherContext.setConfigLocations(
-			"/WEB-INF/spring/marketServlet/servlet-context.xml",
-			"/WEB-INF/spring/marketServlet/servlet-security.xml",
-			"/WEB-INF/spring/marketServlet/tiles-context.xml");
+			"/WEB-INF/spring/servlet/servlet-context.xml",
+			"/WEB-INF/spring/servlet/tiles-context.xml",
+			"/WEB-INF/spring/servlet/rest-context.xml");
 		return dispatcherContext;
 	}
 

@@ -1,36 +1,26 @@
 package market.service.impl;
 
-import java.util.List;
 import market.dao.UserAccountDAO;
 import market.domain.Cart;
 import market.domain.Contacts;
-import market.service.UserAccountService;
 import market.domain.UserAccount;
 import market.dto.UserDTO;
 import market.exception.EmailExistsException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import market.service.UserAccountService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Реализация сервиса аккаунта пользователя.
  */
-@Service
 public class UserAccountServiceImpl implements UserAccountService {
+    private final UserAccountDAO userAccountDAO;
 
-    @Autowired
-    private UserAccountDAO userAccountDAO;
-    
-    @Autowired
-    @Qualifier(value = "authenticationManager")
-    private AuthenticationManager authenticationManager;
+    public UserAccountServiceImpl(UserAccountDAO userAccountDAO) {
+        this.userAccountDAO = userAccountDAO;
+    }
 
     @Transactional
     @Override
@@ -72,11 +62,10 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Transactional
     @Override
-    public UserAccount createUserThenAuthenticate(UserDTO user) throws EmailExistsException {
+    public UserAccount createUser(UserDTO user) throws EmailExistsException {
         UserAccount userAccount = createUserAccount(user);
         userAccount.setCart(new Cart(userAccount));
         userAccountDAO.save(userAccount);
-        authenticateUser(user.getEmail(), user.getPassword());
         return userAccount;
     }
 
@@ -90,14 +79,5 @@ public class UserAccountServiceImpl implements UserAccountService {
         Contacts contacts = new Contacts(userAccount, user.getPhone(), user.getAddress());
         userAccount.setContacts(contacts);
         return userAccount;
-    }
-    
-    private void authenticateUser(String email, String password) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(email, password);
-        try {
-            Authentication auth = authenticationManager.authenticate(token);
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        } catch (BadCredentialsException ex) {
-        }
     }
 }

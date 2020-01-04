@@ -1,8 +1,5 @@
 package market.rest;
 
-import java.net.URI;
-import java.security.Principal;
-import javax.validation.Valid;
 import market.domain.Cart;
 import market.domain.Order;
 import market.dto.CartDTO;
@@ -15,19 +12,17 @@ import market.exception.EmptyCartException;
 import market.exception.UnknownProductException;
 import market.service.CartService;
 import market.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.net.URI;
+import java.security.Principal;
 
 /**
  * REST-контроллер корзины.
@@ -35,24 +30,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/rest/cart")
 public class CartRestController {
+    private final CartService cartService;
+    private final OrderService orderService;
+    private final CartDtoAssembler cartDtoAssembler;
+    private final OrderDtoAssembler orderDtoAssembler;
 
     @Value("${deliveryCost}")
     private int deliveryCost;
-    
-    @Autowired
-    private CartService cartService;
-    
-    @Autowired
-    private OrderService orderService;
-    
-    @Autowired
-    private EntityLinks entityLinks;
-    
-    @Autowired
-    private CartDtoAssembler cartDtoAssembler;
-    
-    @Autowired
-    private OrderDtoAssembler orderDtoAssembler;
+
+    public CartRestController(CartService cartService, OrderService orderService,
+        CartDtoAssembler cartDtoAssembler, OrderDtoAssembler orderDtoAssembler)
+    {
+        this.cartService = cartService;
+        this.orderService = orderService;
+        this.cartDtoAssembler = cartDtoAssembler;
+        this.orderDtoAssembler = orderDtoAssembler;
+    }
 
     /**
      * Просмотр корзины.

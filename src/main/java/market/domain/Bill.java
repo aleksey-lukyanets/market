@@ -1,14 +1,13 @@
 package market.domain;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.*;
 
 import static javax.persistence.TemporalType.TIMESTAMP;
-import javax.validation.constraints.Pattern;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Счёт для оплаты заказа.

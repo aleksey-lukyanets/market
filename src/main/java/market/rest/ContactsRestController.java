@@ -1,15 +1,15 @@
 package market.rest;
 
-import java.security.Principal;
-import javax.validation.Valid;
 import market.dto.ContactsDTO;
 import market.service.ContactsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+import java.security.Principal;
 
 /**
  * REST-контроллер контактных данных покупателя.
@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/rest/customer/contacts")
 public class ContactsRestController {
-    
-    @Autowired
-    private ContactsService contactsService;
+    private final ContactsService contactsService;
+
+    public ContactsRestController(ContactsService contactsService) {
+        this.contactsService = contactsService;
+    }
 
     /**
      * Просмотр контактов покупателя.

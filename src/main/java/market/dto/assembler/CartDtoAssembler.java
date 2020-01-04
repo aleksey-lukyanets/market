@@ -1,14 +1,16 @@
 package market.dto.assembler;
 
-import java.util.List;
 import market.domain.Cart;
 import market.dto.CartDTO;
 import market.dto.CartItemDTO;
 import market.rest.CartRestController;
 import market.rest.ContactsRestController;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
  *

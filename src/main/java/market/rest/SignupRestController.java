@@ -1,17 +1,18 @@
 package market.rest;
 
-import javax.validation.Valid;
 import market.domain.UserAccount;
 import market.dto.UserDTO;
 import market.dto.assembler.UserAccountDtoAssembler;
 import market.exception.EmailExistsException;
+import market.security.AuthenticationService;
 import market.service.UserAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
 
 /**
  * REST-контроллер регистрации покупателя.
@@ -20,11 +21,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/rest/signup")
 public class SignupRestController {
 
-    @Autowired
-    private UserAccountService userAccountService;
+    private final UserAccountService userAccountService;
+    private final UserAccountDtoAssembler userAccountDtoAssembler;
+    private final AuthenticationService authenticationService;
 
-    @Autowired
-    private UserAccountDtoAssembler userAccountDtoAssembler;
+    public SignupRestController(UserAccountService userAccountService, UserAccountDtoAssembler userAccountDtoAssembler,
+        AuthenticationService authenticationService)
+    {
+        this.userAccountService = userAccountService;
+        this.userAccountDtoAssembler = userAccountDtoAssembler;
+        this.authenticationService = authenticationService;
+    }
 
     /**
      * Регистрация нового покупателя.
@@ -39,7 +46,8 @@ public class SignupRestController {
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public UserDTO postNewUser(@Valid @RequestBody UserDTO user) throws EmailExistsException {
-        UserAccount userAccount = userAccountService.createUserThenAuthenticate(user);
+        UserAccount userAccount = userAccountService.createUser(user);
+        authenticationService.authenticate(userAccount);
         return userAccountDtoAssembler.toResource(userAccount);
     }
 }

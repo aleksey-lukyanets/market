@@ -4,8 +4,9 @@ import market.domain.Product;
 import market.dto.ProductDTO;
 import market.rest.CartRestController;
 import market.rest.ProductsRestController;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
  *

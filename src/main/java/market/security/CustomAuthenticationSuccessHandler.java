@@ -17,24 +17,20 @@ import org.springframework.stereotype.Component;
 /**
  * Обработчик успешной аутентификации пользователя.
  */
-@Component("customAuthenticationSuccessHandler")
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     private ServletContext servletContext;
-    
     @Autowired
     private UserAccountService userAccountService;
-    
+
     @Override
-    public void onAuthenticationSuccess(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication a
-    ) throws IOException, ServletException {
-        Set<String> roles = AuthorityUtils.authorityListToSet(a.getAuthorities());
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+        Authentication authentication) throws IOException
+    {
+        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
         if (roles.contains("ROLE_USER")) {
-            UserAccount account = userAccountService.findByEmail(a.getName());
+            UserAccount account = userAccountService.findByEmail(authentication.getName());
             request.getSession().setAttribute("cart", account.getCart());
         }
         if (roles.contains("ROLE_ADMIN") || roles.contains("ROLE_STAFF")) {
@@ -42,5 +38,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         } else {
             response.sendRedirect(servletContext.getContextPath() + "/");
         }
+        request.getSession(false).setMaxInactiveInterval(30);
     }
 }

@@ -1,20 +1,15 @@
 package market.controller.frontend;
 
-import market.dto.UserDTO;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.validation.Valid;
 import market.domain.Cart;
 import market.domain.Order;
 import market.domain.OrderedProduct;
 import market.domain.UserAccount;
+import market.dto.UserDTO;
 import market.exception.EmailExistsException;
+import market.security.AuthenticationService;
 import market.service.CartService;
 import market.service.OrderService;
 import market.service.UserAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -25,6 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Контроллер аккаунта покупателя.
  */
@@ -32,15 +33,19 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @RequestMapping("/customer")
 @SessionAttributes({"cart"})
 public class CustomerController {
+    private final UserAccountService userAccountService;
+    private final CartService cartService;
+    private final OrderService orderService;
+    private final AuthenticationService authenticationService;
 
-    @Autowired
-    private UserAccountService userAccountService;
-    
-    @Autowired
-    private CartService cartService;
-    
-    @Autowired
-    private OrderService orderService;
+    public CustomerController(UserAccountService userAccountService, CartService cartService,
+        OrderService orderService, AuthenticationService authenticationService)
+    {
+        this.userAccountService = userAccountService;
+        this.cartService = cartService;
+        this.orderService = orderService;
+        this.authenticationService = authenticationService;
+    }
 
     /**
      * Страница истории заказов.
@@ -91,7 +96,8 @@ public class CustomerController {
             return view;
         }
         try {
-            userAccountService.createUserThenAuthenticate(user);
+            UserAccount newUser = userAccountService.createUser(user);
+            authenticationService.authenticate(newUser);
         } catch (EmailExistsException ex) {
             bindingResult.addError(ex.getFieldError());
             return view;

@@ -1,6 +1,5 @@
 package market.service.impl;
 
-import java.util.List;
 import market.dao.CartDAO;
 import market.dao.ProductDAO;
 import market.dao.UserAccountDAO;
@@ -11,21 +10,18 @@ import market.domain.UserAccount;
 import market.dto.CartItemDTO;
 import market.exception.UnknownProductException;
 import market.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Реализация сервиса корзины.
  */
-@Service
 public class CartServiceImpl implements CartService {
-
     private final CartDAO cartDAO;
     private final UserAccountDAO userAccountDAO;
     private final ProductDAO productDAO;
-    
-    @Autowired
+
     public CartServiceImpl(CartDAO cartDAO, UserAccountDAO userAccountDAO, ProductDAO productDAO) {
         this.cartDAO = cartDAO;
         this.userAccountDAO = userAccountDAO;

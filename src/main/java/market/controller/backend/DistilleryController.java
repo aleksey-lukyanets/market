@@ -1,18 +1,18 @@
 package market.controller.backend;
 
-import javax.validation.Valid;
+import market.domain.Distillery;
 import market.domain.Region;
 import market.service.DistilleryService;
-import market.domain.Distillery;
 import market.service.RegionService;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
 
 /**
  * Контроллер управления винокурнями.
@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/admin/distilleries")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class DistilleryController {
+    private final DistilleryService distilleryService;
+    private final RegionService regionService;
 
-    @Autowired
-    private DistilleryService distilleryService;
-    
-    @Autowired
-    private RegionService regionService;
+    public DistilleryController(DistilleryService distilleryService, RegionService regionService) {
+        this.distilleryService = distilleryService;
+        this.regionService = regionService;
+    }
 
     /**
      * Перечень винокурен.
