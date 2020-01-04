@@ -1,10 +1,5 @@
 package market.controller.frontend;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import market.domain.Cart;
 import market.domain.CartItem;
 import market.domain.Order;
@@ -17,7 +12,6 @@ import market.service.CartService;
 import market.service.ContactsService;
 import market.service.OrderService;
 import market.service.UserAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -28,6 +22,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Контроллер оформления заказа.
  */
@@ -36,24 +36,24 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @Secured({"ROLE_USER"})
 @SessionAttributes({"createdOrder"})
 public class CheckoutController {
+    private final UserAccountService userAccountService;
+    private final ContactsService contactsService;
+    private final OrderService orderService;
+    private final CartService cartService;
+    private final OrderDtoAssembler orderDtoAssembler;
 
     @Value("${deliveryCost}")
     private int deliveryCost;
-    
-    @Autowired
-    private UserAccountService userAccountService;
-    
-    @Autowired
-    private ContactsService contactsService;
-    
-    @Autowired
-    private OrderService orderService;
-    
-    @Autowired
-    private CartService cartService;
-    
-    @Autowired
-    private OrderDtoAssembler orderDtoAssembler;
+
+    public CheckoutController(UserAccountService userAccountService, ContactsService contactsService,
+        OrderService orderService, CartService cartService, OrderDtoAssembler orderDtoAssembler)
+    {
+        this.userAccountService = userAccountService;
+        this.contactsService = contactsService;
+        this.orderService = orderService;
+        this.cartService = cartService;
+        this.orderDtoAssembler = orderDtoAssembler;
+    }
 
     //--------------------------------------------- Изменение контактных данных
     

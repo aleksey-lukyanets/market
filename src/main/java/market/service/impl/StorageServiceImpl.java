@@ -1,25 +1,21 @@
 package market.service.impl;
 
-import java.util.List;
 import market.dao.StorageDAO;
 import market.domain.Storage;
 import market.service.StorageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Реализация сервиса единицы хранения.
  */
-@Service
 public class StorageServiceImpl implements StorageService {
-
     private final StorageDAO storageDAO;
 
-    @Autowired
     public StorageServiceImpl(StorageDAO storageDAO) {
         this.storageDAO = storageDAO;
     }

@@ -1,15 +1,10 @@
 package market.controller.backend;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import market.domain.Order;
 import market.domain.OrderedProduct;
 import market.service.OrderService;
 import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
@@ -20,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Контроллер управления заказами.
  */
@@ -27,12 +27,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/admin/orders")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class OrdersController {
+    private final OrderService orderService;
+    private final ISorter<Order> orderSorting;
 
-    @Autowired
-    private OrderService orderService;
-    
-    @Autowired
-    private ISorter<Order> orderSorting;
+    public OrdersController(OrderService orderService, ISorter<Order> orderSorting) {
+        this.orderService = orderService;
+        this.orderSorting = orderSorting;
+    }
 
     /**
      * Перечень заказов.

@@ -38,8 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:servlet-test-context.xml",
-    "file:src/main/webapp/WEB-INF/spring/marketServlet/servlet-security.xml",
-    "file:src/main/webapp/WEB-INF/spring/marketServlet/servlet-context.xml"})
+    "file:../../../../main/webapp/WEB-INF/spring/servlet/servlet-context.xml"})
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class})

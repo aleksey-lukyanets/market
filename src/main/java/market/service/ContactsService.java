@@ -1,8 +1,9 @@
 package market.service;
 
-import java.util.List;
 import market.domain.Contacts;
 import market.dto.ContactsDTO;
+
+import java.util.List;
 
 /**
  * Сервис контактных данных пользователя.

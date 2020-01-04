@@ -1,9 +1,10 @@
 package market.sorting;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Опции сортировки и фильтрации списка единиц хранения.

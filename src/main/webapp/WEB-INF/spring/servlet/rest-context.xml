@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+       xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <annotation-driven />
+
+    <context:component-scan base-package="market.rest" />
+    <context:component-scan base-package="market.dto.assembler" />
+    
+    <!-- Перехватчики -->
+    <interceptors>
+        <interceptor>
+            <mapping path="/**"/>
+            <exclude-mapping path="/rest/**"/>
+            <beans:bean class="market.interceptors.SessionCartInterceptor" />
+        </interceptor>
+        <interceptor>
+            <mapping path="/rest/cart**"/>
+            <mapping path="/rest/customer**"/>
+            <beans:bean class="market.interceptors.RestUserCheckInterceptor" />
+        </interceptor>
+    </interceptors>
+    
+</beans:beans>

@@ -1,31 +1,31 @@
 package market.service.impl;
 
-import java.util.List;
 import market.dao.ContactsDAO;
 import market.dao.UserAccountDAO;
-import market.service.ContactsService;
 import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.dto.ContactsDTO;
 import market.dto.assembler.ContactsDtoAssembler;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import market.service.ContactsService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Реализация сервиса контактных данных пользователя.
  */
-@Service
 public class ContactsServiceImpl implements ContactsService {
+    private final ContactsDAO contactsDAO;
+    private final UserAccountDAO userAccountDAO;
+    private final ContactsDtoAssembler contactsDtoAssembler;
 
-    @Autowired
-    private ContactsDAO contactsDAO;
-    
-    @Autowired
-    private UserAccountDAO userAccountDAO;
-    
-    @Autowired
-    private ContactsDtoAssembler contactsDtoAssembler;
+    public ContactsServiceImpl(ContactsDAO contactsDAO, UserAccountDAO userAccountDAO,
+        ContactsDtoAssembler contactsDtoAssembler)
+    {
+        this.contactsDAO = contactsDAO;
+        this.userAccountDAO = userAccountDAO;
+        this.contactsDtoAssembler = contactsDtoAssembler;
+    }
 
     @Transactional
     @Override

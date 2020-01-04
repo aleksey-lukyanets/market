@@ -1,13 +1,9 @@
 package market.controller.backend;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import market.domain.Storage;
 import market.service.StorageService;
 import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
@@ -17,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Контроллер управления единицами хранения.
  */
@@ -24,12 +24,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/admin/storage")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class StorageController {
+    private final StorageService storageService;
+    private final ISorter<Storage> storageSorting;
 
-    @Autowired
-    private StorageService storageService;
-    
-    @Autowired
-    private ISorter<Storage> storageSorting;
+    public StorageController(StorageService storageService, ISorter<Storage> storageSorting) {
+        this.storageService = storageService;
+        this.storageSorting = storageSorting;
+    }
 
     /**
      * Перечень единиц хранения.

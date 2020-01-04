@@ -3,9 +3,10 @@ package market.dto.assembler;
 import market.domain.Contacts;
 import market.dto.ContactsDTO;
 import market.rest.CartRestController;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 import org.springframework.stereotype.Component;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
  *

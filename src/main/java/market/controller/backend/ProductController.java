@@ -1,25 +1,25 @@
 package market.controller.backend;
 
-import javax.validation.Valid;
-import market.domain.Storage;
 import market.domain.Distillery;
-import market.service.ProductService;
 import market.domain.Product;
+import market.domain.Storage;
 import market.exception.ProductNotFoundException;
 import market.service.DistilleryService;
+import market.service.ProductService;
 import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.Valid;
 
 /**
  * Контроллер управления товарами.
@@ -28,15 +28,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/admin/products")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class ProductController {
+    private final ProductService productService;
+    private final DistilleryService distilleryService;
+    private final ISorter<Product> productBackendSorting;
 
-    @Autowired
-    private ProductService productService;
-    
-    @Autowired
-    private DistilleryService distilleryService;
-    
-    @Autowired
-    private ISorter<Product> productBackendSorting;
+    public ProductController(ProductService productService, DistilleryService distilleryService,
+        ISorter<Product> productBackendSorting)
+    {
+        this.productService = productService;
+        this.distilleryService = distilleryService;
+        this.productBackendSorting = productBackendSorting;
+    }
 
     /**
      * Перечень товаров.

@@ -1,13 +1,12 @@
 package market.controller.frontend;
 
-import market.service.RegionService;
 import market.domain.Region;
+import market.service.RegionService;
+import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.config.EnableEntityLinks;
-import org.springframework.ui.Model;
 
 /**
  * Контроллер пользовательского интерфейса.
@@ -15,9 +14,11 @@ import org.springframework.ui.Model;
 @Controller
 @EnableEntityLinks
 public class FrontendController {
+    private final RegionService regionService;
 
-    @Autowired
-    private RegionService regionService;
+    public FrontendController(RegionService regionService) {
+        this.regionService = regionService;
+    }
 
     /**
      * Главная страница.

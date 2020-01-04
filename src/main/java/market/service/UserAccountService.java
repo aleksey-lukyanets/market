@@ -1,9 +1,10 @@
 package market.service;
 
-import java.util.List;
 import market.domain.UserAccount;
 import market.dto.UserDTO;
 import market.exception.EmailExistsException;
+
+import java.util.List;
 
 /**
  * Сервис аккаунта пользователя.
@@ -23,13 +24,13 @@ public interface UserAccountService {
     //--------------------------------------- Операции с аккаунтом пользователя
 
     /**
-     * Создание нового аккаунта с последующей авторизацией.
+     * Создание нового аккаунта.
      *
      * @param user данные нового пользователя
      * @return вновь созданный аккаунт
      * @throws EmailExistsException если пользователь с таким адресом уже существует
      */
-    UserAccount createUserThenAuthenticate(UserDTO user) throws EmailExistsException;
+    UserAccount createUser(UserDTO user) throws EmailExistsException;
     
     /**
      * Получение аккаунта пользователя.

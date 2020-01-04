@@ -1,24 +1,20 @@
 package market.service.impl;
 
-import java.util.List;
 import market.dao.DistilleryDAO;
-import market.domain.Region;
 import market.domain.Distillery;
+import market.domain.Region;
 import market.service.DistilleryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Реализация сервиса винокурни.
  */
-@Service
 public class DistilleryServiceImpl implements DistilleryService {
-
     private final DistilleryDAO distilleryDAO;
 
-    @Autowired
     public DistilleryServiceImpl(DistilleryDAO distilleryDAO) {
         this.distilleryDAO = distilleryDAO;
     }

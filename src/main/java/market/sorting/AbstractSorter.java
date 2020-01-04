@@ -1,11 +1,12 @@
 package market.sorting;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Управляющий сортировкой и разбивкой на страницы.

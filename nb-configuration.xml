@@ -8,7 +8,7 @@ Without this configuration present, some functionality in the IDE may be limited
 -->
     <spring-data xmlns="http://www.netbeans.org/ns/spring-data/1">
         <config-files>
-            <config-file>src/main/webapp/WEB-INF/spring/marketServlet/servlet-context.xml</config-file>
+            <config-file>src/main/webapp/WEB-INF/spring/servlet/servlet-context.xml</config-file>
             <config-file>src/main/webapp/WEB-INF/view/view.xml</config-file>
         </config-files>
         <config-file-groups/>

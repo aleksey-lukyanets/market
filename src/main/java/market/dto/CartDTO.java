@@ -1,7 +1,8 @@
 package market.dto;
 
-import java.util.List;
 import org.springframework.hateoas.ResourceSupport;
+
+import java.util.List;
 
 /**
  * Адаптер корзины.

@@ -1,7 +1,7 @@
 package market.domain;
 
-import java.io.Serializable;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * Первичный ключ элемента корзины.

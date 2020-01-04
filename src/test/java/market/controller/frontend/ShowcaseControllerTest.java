@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:servlet-test-context.xml",
-    "file:src/main/webapp/WEB-INF/spring/marketServlet/servlet-context.xml"})
+    "file:../../../../../main/webapp/WEB-INF/spring/servlet/servlet-context.xml"})
 @TestExecutionListeners({DependencyInjectionTestExecutionListener.class,
     DirtiesContextTestExecutionListener.class,
     TransactionalTestExecutionListener.class})

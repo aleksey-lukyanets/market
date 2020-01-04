@@ -1,47 +1,34 @@
 package market.service.impl;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
 import market.dao.OrderDAO;
 import market.dao.UserAccountDAO;
-import market.domain.Bill;
-import market.domain.Cart;
-import market.domain.CartItem;
-import market.service.OrderService;
-import market.domain.Order;
-import market.domain.OrderedProduct;
-import market.domain.Product;
-import market.domain.UserAccount;
+import market.domain.*;
 import market.dto.CreditCardDTO;
 import market.dto.OrderDTO;
 import market.dto.assembler.OrderDtoAssembler;
 import market.exception.EmptyCartException;
 import market.exception.OrderNotFoundException;
 import market.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
+import market.service.OrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * Реализация сервиса заказа.
  */
-@Service
 public class OrderServiceImpl implements OrderService {
-    
     private final OrderDAO orderDAO;
     private final UserAccountDAO userAccountDAO;
     private final CartService cartService;
     private final OrderDtoAssembler orderDtoAssembler;
-    
-    @Autowired
-    public OrderServiceImpl(OrderDAO orderDAO, UserAccountDAO userAccountDAO, CartService cartService, OrderDtoAssembler orderDtoAssembler) {
+
+    public OrderServiceImpl(OrderDAO orderDAO, UserAccountDAO userAccountDAO,
+        CartService cartService, OrderDtoAssembler orderDtoAssembler)
+    {
         this.orderDAO = orderDAO;
         this.userAccountDAO = userAccountDAO;
         this.cartService = cartService;

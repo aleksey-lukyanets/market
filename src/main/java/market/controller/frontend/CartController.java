@@ -1,27 +1,21 @@
 package market.controller.frontend;
 
-import java.security.Principal;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import market.domain.Cart;
 import market.dto.CartDTO;
 import market.dto.CartItemDTO;
 import market.dto.assembler.CartDtoAssembler;
 import market.exception.UnknownProductException;
 import market.service.CartService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.security.Principal;
 
 /**
  * Контроллер корзины.
@@ -30,15 +24,16 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @RequestMapping("/cart")
 @SessionAttributes({"cart"})
 public class CartController {
+    private final CartService cartService;
+    private final CartDtoAssembler cartDtoAssembler;
 
     @Value("${deliveryCost}")
     private int deliveryCost;
-    
-    @Autowired
-    private CartService cartService;
-    
-    @Autowired
-    CartDtoAssembler cartDtoAssembler;
+
+    public CartController(CartService cartService, CartDtoAssembler cartDtoAssembler) {
+        this.cartService = cartService;
+        this.cartDtoAssembler = cartDtoAssembler;
+    }
 
     /**
      * Страница корзины.

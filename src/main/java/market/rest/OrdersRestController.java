@@ -1,17 +1,17 @@
 package market.rest;
 
-import java.security.Principal;
-import java.util.List;
 import market.dto.OrderDTO;
 import market.exception.OrderNotFoundException;
 import market.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.security.Principal;
+import java.util.List;
 
 /**
  * REST-контроллер истории заказов покупателя.
@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(value = "/rest/customer/orders")
 @ExposesResourceFor(OrderDTO.class)
 public class OrdersRestController {
-    
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
+
+    public OrdersRestController(OrderService orderService) {
+        this.orderService = orderService;
+    }
 
     /**
      * Просмотр всех заказов покупателя.

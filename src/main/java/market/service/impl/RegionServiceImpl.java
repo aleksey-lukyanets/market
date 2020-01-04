@@ -1,23 +1,19 @@
 package market.service.impl;
 
 import market.dao.RegionDAO;
-import java.util.List;
-import market.service.RegionService;
 import market.domain.Region;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import market.service.RegionService;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Реализация сервиса региона.
  */
-@Service
 public class RegionServiceImpl implements RegionService {
-
     private final RegionDAO regionDAO;
 
-    @Autowired
     public RegionServiceImpl(RegionDAO regionDAO) {
         this.regionDAO = regionDAO;
     }

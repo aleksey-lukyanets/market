@@ -8,7 +8,6 @@ import market.service.ProductService;
 import market.service.RegionService;
 import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -24,19 +23,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/regions")
 public class ShowcaseController {
+    private final RegionService regionService;
+    private final ProductService productService;
+    private final DistilleryService distilleryService;
+    private final ISorter<Product> productSorting;
 
-    @Autowired
-    private RegionService regionService;
-    
-    @Autowired
-    private ProductService productService;
-    
-    @Autowired
-    private DistilleryService distilleryService;
-    
-    @Autowired
-    private ISorter<Product> productSorting;
-    
+    public ShowcaseController(RegionService regionService, ProductService productService,
+        DistilleryService distilleryService, ISorter<Product> productSorting)
+    {
+        this.regionService = regionService;
+        this.productService = productService;
+        this.distilleryService = distilleryService;
+        this.productSorting = productSorting;
+    }
+
     /**
      * Страница товаров региона. Фильтрация по винокурне и сортировка.
      *

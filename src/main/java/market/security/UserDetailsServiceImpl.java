@@ -1,25 +1,30 @@
 package market.security;
 
-import market.service.UserAccountService;
+import market.domain.Role;
 import market.domain.UserAccount;
-import org.springframework.beans.factory.annotation.Autowired;
+import market.service.UserAccountService;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Реализация сервиса извлечения аккаунта пользователя из БД.
  */
-@Component("myUserDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private UserAccountService userAccountService;
-    @Autowired
-    private UserAssembler assembler;
+    private final UserAccountService userAccountService;
+
+    public UserDetailsServiceImpl(UserAccountService userAccountService) {
+        this.userAccountService = userAccountService;
+    }
 
     @Override
     @Transactional
@@ -30,6 +35,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userEntity == null) {
             throw new UsernameNotFoundException("user not found");
         }
-        return assembler.buildUserFromUserEntity(userEntity);
+        return buildUser(userEntity);
+    }
+
+    private User buildUser(UserAccount account) {
+        String login = account.getEmail();
+        String password = account.getPassword();
+        boolean enabled = account.isActive();
+        boolean accountNonExpired = account.isActive();
+        boolean credentialsNonExpired = account.isActive();
+        boolean accountNonLocked = account.isActive();
+
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : account.getRoles()) {
+            authorities.add(new SimpleGrantedAuthority(role.getTitle()));
+        }
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        User user = new User(login, password, enabled,
+            accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        return user;
     }
 }
