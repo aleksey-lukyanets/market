@@ -1,5 +1,6 @@
 package market.dto.assembler;
 
+import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.dto.UserDTO;
 import market.rest.CartRestController;
@@ -28,5 +29,11 @@ public class UserAccountDtoAssembler extends ResourceAssemblerSupport<UserAccoun
         dto.setAddress(userAccount.getContacts().getAddress());
         dto.add(linkTo(CartRestController.class).withRel("Shopping cart"));
         return dto;
+    }
+
+    public UserAccount toDomain(UserDTO user) {
+        UserAccount userAccount = new UserAccount(user.getEmail(), user.getPassword(), user.getName(), true);
+        userAccount.setContacts(new Contacts(userAccount, user.getPhone(), user.getAddress()));
+        return userAccount;
     }
 }

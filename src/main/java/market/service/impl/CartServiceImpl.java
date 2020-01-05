@@ -7,7 +7,6 @@ import market.domain.Cart;
 import market.domain.CartItem;
 import market.domain.Product;
 import market.domain.UserAccount;
-import market.dto.CartItemDTO;
 import market.exception.UnknownProductException;
 import market.service.CartService;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,14 +53,12 @@ public class CartServiceImpl implements CartService {
     
     @Transactional
     @Override
-    public Cart updateCartObject(Cart cart, CartItemDTO item) throws UnknownProductException {
-        Product product = productDAO.findOne(item.getProductId());
-        if (product == null) {
+    public Cart updateCartObject(Cart cart, Long productId, Short quantity) throws UnknownProductException {
+        Product product = productDAO.findOne(productId);
+        if (product == null)
             throw new UnknownProductException();
-        }
-        if (product.getStorage().isAvailable()) {
-            cart.update(product, item.getQuantity());
-        }
+        if (product.getStorage().isAvailable())
+            cart.update(product, quantity);
         return cart;
     }
 
@@ -72,6 +69,7 @@ public class CartServiceImpl implements CartService {
     public Cart getUserCart(String userLogin) {
         UserAccount account = userAccountDAO.findByEmail(userLogin);
         return findOne(account.getId());
+        // todo: handle user doesn't exist
     }
     
     @Transactional
@@ -84,9 +82,9 @@ public class CartServiceImpl implements CartService {
     
     @Transactional(rollbackFor = {UnknownProductException.class})
     @Override
-    public Cart updateUserCart(String userLogin, CartItemDTO item) throws UnknownProductException {
+    public Cart updateUserCart(String userLogin, Long productId, Short quantity) throws UnknownProductException {
         Cart cart = getUserCart(userLogin);
-        cart = updateCartObject(cart, item);
+        cart = updateCartObject(cart, productId, quantity);
         return save(cart);
     }
 

@@ -76,7 +76,7 @@ public class CartRestController {
     @ResponseBody
     public CartDTO addItem(Principal principal, @RequestBody CartItemDTO item) throws UnknownProductException {
         String login = principal.getName();
-        Cart cart = cartService.updateUserCart(login, item);
+        Cart cart = cartService.updateUserCart(login, item.getProductId(), item.getQuantity());
         return cartDtoAssembler.toUserResource(cart, deliveryCost);
     }
 
@@ -127,7 +127,7 @@ public class CartRestController {
     @ResponseBody
     public ResponseEntity<OrderDTO> payByCard(Principal principal, @Valid @RequestBody CreditCardDTO card) throws EmptyCartException {
         String login = principal.getName();
-        Order order = orderService.createUserOrder(card, login, deliveryCost);
+        Order order = orderService.createUserOrder(login, deliveryCost, card.getNumber());
         OrderDTO dto = orderDtoAssembler.toResource(order);
         
         HttpHeaders headers = new HttpHeaders();

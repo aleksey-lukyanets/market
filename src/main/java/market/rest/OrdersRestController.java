@@ -1,6 +1,8 @@
 package market.rest;
 
+import market.domain.Order;
 import market.dto.OrderDTO;
+import market.dto.assembler.OrderDtoAssembler;
 import market.exception.OrderNotFoundException;
 import market.service.OrderService;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -21,9 +23,11 @@ import java.util.List;
 @ExposesResourceFor(OrderDTO.class)
 public class OrdersRestController {
     private final OrderService orderService;
+    private final OrderDtoAssembler orderDtoAssembler;
 
-    public OrdersRestController(OrderService orderService) {
+    public OrdersRestController(OrderService orderService, OrderDtoAssembler orderDtoAssembler) {
         this.orderService = orderService;
+        this.orderDtoAssembler = orderDtoAssembler;
     }
 
     /**
@@ -37,7 +41,8 @@ public class OrdersRestController {
     @ResponseBody
     public List<OrderDTO> getOrders(Principal principal) {
         String login = principal.getName();
-        return orderService.getUserOrders(login);
+        List<Order> orders = orderService.getUserOrders(login);
+        return orderDtoAssembler.toResources(orders);
     }
 
     /**
@@ -54,6 +59,7 @@ public class OrdersRestController {
     @ResponseBody
     public OrderDTO getOrder(Principal principal, @PathVariable long id) throws OrderNotFoundException {
         String login = principal.getName();
-        return orderService.getUserOrder(login, id);
+        Order order = orderService.getUserOrder(login, id);
+        return orderDtoAssembler.toResource(order);
     }
 }

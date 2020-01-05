@@ -123,10 +123,10 @@ public class CartController {
     }
 
     private void updateCart(Cart cart, CartItemDTO cartItem, Principal principal) throws UnknownProductException {
-        cartService.updateCartObject(cart, cartItem);
+        cartService.updateCartObject(cart, cartItem.getProductId(), cartItem.getQuantity());
         if (isAuthorized(principal)) {
             String login = principal.getName();
-            cartService.updateUserCart(login, cartItem);
+            cartService.updateUserCart(login, cartItem.getProductId(), cartItem.getQuantity());
         }
     }
 

@@ -1,5 +1,6 @@
 package market.rest;
 
+import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.dto.UserDTO;
 import market.dto.assembler.UserAccountDtoAssembler;
@@ -46,8 +47,15 @@ public class SignupRestController {
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public UserDTO postNewUser(@Valid @RequestBody UserDTO user) throws EmailExistsException {
-        UserAccount userAccount = userAccountService.createUser(user);
-        authenticationService.authenticate(userAccount);
-        return userAccountDtoAssembler.toResource(userAccount);
+        UserAccount userData = userAccountDtoAssembler.toDomain(user);
+        UserAccount newAccount = userAccountService.createUser(userData);
+        authenticationService.authenticate(newAccount);
+        return userAccountDtoAssembler.toResource(newAccount);
+    }
+
+    private UserAccount toUserAccount(UserDTO user) {
+        UserAccount userAccount = new UserAccount(user.getEmail(), user.getPassword(), user.getName(), true);
+        userAccount.setContacts(new Contacts(userAccount, user.getPhone(), user.getAddress()));
+        return userAccount;
     }
 }
