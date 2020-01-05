@@ -5,6 +5,7 @@ import market.domain.Order;
 import market.domain.OrderedProduct;
 import market.domain.UserAccount;
 import market.dto.UserDTO;
+import market.dto.assembler.UserAccountDtoAssembler;
 import market.exception.EmailExistsException;
 import market.security.AuthenticationService;
 import market.service.CartService;
@@ -37,14 +38,16 @@ public class CustomerController {
     private final CartService cartService;
     private final OrderService orderService;
     private final AuthenticationService authenticationService;
+    private final UserAccountDtoAssembler userAccountDtoAssembler;
 
-    public CustomerController(UserAccountService userAccountService, CartService cartService,
-        OrderService orderService, AuthenticationService authenticationService)
+    public CustomerController(UserAccountService userAccountService, CartService cartService, OrderService orderService,
+        AuthenticationService authenticationService, UserAccountDtoAssembler userAccountDtoAssembler)
     {
         this.userAccountService = userAccountService;
         this.cartService = cartService;
         this.orderService = orderService;
         this.authenticationService = authenticationService;
+        this.userAccountDtoAssembler = userAccountDtoAssembler;
     }
 
     /**
@@ -87,24 +90,27 @@ public class CustomerController {
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String postSignup(
+            Model model,
             @Valid UserDTO user,
             BindingResult bindingResult,
             @ModelAttribute(value = "cart") Cart sessionCart
     ) {
         String view = "customer/new";
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors())
             return view;
-        }
+
         try {
-            UserAccount newUser = userAccountService.createUser(user);
-            authenticationService.authenticate(newUser);
+            UserAccount userData = userAccountDtoAssembler.toDomain(user);
+            UserAccount newAccount = userAccountService.createUser(userData);
+            authenticationService.authenticate(newAccount);
+            model.addAttribute("userDTO", userAccountDtoAssembler.toResource(newAccount));
         } catch (EmailExistsException ex) {
             bindingResult.addError(ex.getFieldError());
             return view;
         }
-        if (!sessionCart.isEmpty()) {
+        if (!sessionCart.isEmpty())
             cartService.fillUserCart(user.getEmail(), sessionCart.getCartItems());
-        }
+
         return "redirect:/";
     }
 }

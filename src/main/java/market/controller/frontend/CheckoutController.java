@@ -1,11 +1,9 @@
 package market.controller.frontend;
 
-import market.domain.Cart;
-import market.domain.CartItem;
-import market.domain.Order;
-import market.domain.Product;
+import market.domain.*;
 import market.dto.ContactsDTO;
 import market.dto.CreditCardDTO;
+import market.dto.assembler.ContactsDtoAssembler;
 import market.dto.assembler.OrderDtoAssembler;
 import market.exception.EmptyCartException;
 import market.service.CartService;
@@ -41,18 +39,21 @@ public class CheckoutController {
     private final OrderService orderService;
     private final CartService cartService;
     private final OrderDtoAssembler orderDtoAssembler;
+    private final ContactsDtoAssembler contactsDtoAssembler;
 
     @Value("${deliveryCost}")
     private int deliveryCost;
 
     public CheckoutController(UserAccountService userAccountService, ContactsService contactsService,
-        OrderService orderService, CartService cartService, OrderDtoAssembler orderDtoAssembler)
+        OrderService orderService, CartService cartService, OrderDtoAssembler orderDtoAssembler,
+        ContactsDtoAssembler contactsDtoAssembler)
     {
         this.userAccountService = userAccountService;
         this.contactsService = contactsService;
         this.orderService = orderService;
         this.cartService = cartService;
         this.orderDtoAssembler = orderDtoAssembler;
+        this.contactsDtoAssembler = contactsDtoAssembler;
     }
 
     //--------------------------------------------- Изменение контактных данных
@@ -74,7 +75,7 @@ public class CheckoutController {
     /**
      * Внесение изменений в контактные данные.
      *
-     * @param contacts новые контакты
+     * @param contactsDto новые контакты
      * @param bindingResult ошибки валидации контактов
      * @param infoOption подтверждение изменения
      * @param principal
@@ -82,17 +83,21 @@ public class CheckoutController {
      */
     @RequestMapping(value = "/details", method = RequestMethod.PUT)
     public String putDetails(
+            Model model,
             Principal principal,
-            @Valid ContactsDTO contacts,
+            @Valid ContactsDTO contactsDto,
             BindingResult bindingResult,
-            @RequestParam(value = "infoOption", required = true) String infoOption
+            @RequestParam(value = "infoOption") String infoOption
     ) {
         if (infoOption.equals("useNew")) {
-            if (bindingResult.hasErrors()) {
+            if (bindingResult.hasErrors())
                 return "checkout/details";
-            }
+
             String login = principal.getName();
-            contactsService.updateUserContacts(login, contacts);
+            String newPhone = contactsDto.getPhone();
+            String newAddress = contactsDto.getAddress();
+            Contacts updatedContacts = contactsService.updateUserContacts(login, newPhone, newAddress);
+            model.addAttribute("userDetails", contactsDtoAssembler.toResource(updatedContacts));
         }
         return "redirect:/checkout/payment";
     }
@@ -140,7 +145,7 @@ public class CheckoutController {
         }
         String login = principal.getName();
         try {
-            Order order = orderService.createUserOrder(creditCard, login, deliveryCost);
+            Order order = orderService.createUserOrder(login, deliveryCost, creditCard.getNumber());
             request.getSession().setAttribute("createdOrder", orderDtoAssembler.toResource(order));
             return "redirect:/checkout/confirmation";
         } catch (EmptyCartException ex) {
@@ -165,8 +170,9 @@ public class CheckoutController {
             Model model
     ) {
         String login = principal.getName();
+        Contacts contacts = contactsService.getUserContacts(login);
         model.addAttribute("userAccount", userAccountService.getUserAccount(login));
-        model.addAttribute("userDetails", contactsService.getUserContacts(login));
+        model.addAttribute("userDetails", contactsDtoAssembler.toResource(contacts));
         return "checkout/confirmation";
     }
 }

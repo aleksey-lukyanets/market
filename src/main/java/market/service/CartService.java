@@ -2,7 +2,6 @@ package market.service;
 
 import market.domain.Cart;
 import market.domain.CartItem;
-import market.dto.CartItemDTO;
 import market.exception.UnknownProductException;
 
 import java.util.List;
@@ -24,11 +23,12 @@ public interface CartService {
      * Добавление новой позиции в объект корзины.
      * 
      * @param cart корзина
-     * @param item добавляемая позиция
+     * @param productId
+	 * @param quantity
      * @return обновлённая корзина
      * @throws UnknownProductException если запрошенный товар не существует
      */
-    Cart updateCartObject(Cart cart, CartItemDTO item) throws UnknownProductException;
+    Cart updateCartObject(Cart cart, Long productId, Short quantity) throws UnknownProductException;
     
     //---------------------------------------- Операции с корзиной пользователя
     
@@ -52,11 +52,12 @@ public interface CartService {
      * Добавление новой позиции в корзину покупателя.
      * 
      * @param userLogin логин покупателя
-     * @param item добавляемая позиция
+     * @param productId
+     * @param quantity
      * @return обновлённая корзина
      * @throws UnknownProductException если запрошенный товар не существует
      */
-    Cart updateUserCart(String userLogin, CartItemDTO item) throws UnknownProductException;
+    Cart updateUserCart(String userLogin, Long productId, Short quantity) throws UnknownProductException;
 
     /**
      * Изменение опции доставки в корзине покупателя.

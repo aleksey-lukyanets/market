@@ -4,8 +4,6 @@ import market.dao.ContactsDAO;
 import market.dao.UserAccountDAO;
 import market.domain.Contacts;
 import market.domain.UserAccount;
-import market.dto.ContactsDTO;
-import market.dto.assembler.ContactsDtoAssembler;
 import market.service.ContactsService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,14 +15,10 @@ import java.util.List;
 public class ContactsServiceImpl implements ContactsService {
     private final ContactsDAO contactsDAO;
     private final UserAccountDAO userAccountDAO;
-    private final ContactsDtoAssembler contactsDtoAssembler;
 
-    public ContactsServiceImpl(ContactsDAO contactsDAO, UserAccountDAO userAccountDAO,
-        ContactsDtoAssembler contactsDtoAssembler)
-    {
+    public ContactsServiceImpl(ContactsDAO contactsDAO, UserAccountDAO userAccountDAO) {
         this.contactsDAO = contactsDAO;
         this.userAccountDAO = userAccountDAO;
-        this.contactsDtoAssembler = contactsDtoAssembler;
     }
 
     @Transactional
@@ -55,20 +49,19 @@ public class ContactsServiceImpl implements ContactsService {
     
     @Transactional(readOnly = true)
     @Override
-    public ContactsDTO getUserContacts(String userLogin) {
+    public Contacts getUserContacts(String userLogin) {
         UserAccount account = userAccountDAO.findByEmail(userLogin);
-        Contacts contacts = account.getContacts();
-        return contactsDtoAssembler.toResource(contacts);
+        return account.getContacts();
     }
     
     @Transactional
     @Override
-    public ContactsDTO updateUserContacts(String userLogin, ContactsDTO newContacts) {
+    public Contacts updateUserContacts(String userLogin, String phone, String address) {
         UserAccount account = userAccountDAO.findByEmail(userLogin);
+        // todo: handle if user doesn't exist
         Contacts contacts = account.getContacts();
-        contacts.setPhone(newContacts.getPhone());
-        contacts.setAddress(newContacts.getAddress());
-        Contacts savedContacts = save(contacts);
-        return contactsDtoAssembler.toResource(savedContacts);
+        contacts.setPhone(phone);
+        contacts.setAddress(address);
+        return save(contacts);
     }
 }

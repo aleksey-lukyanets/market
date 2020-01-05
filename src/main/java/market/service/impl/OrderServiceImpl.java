@@ -3,9 +3,6 @@ package market.service.impl;
 import market.dao.OrderDAO;
 import market.dao.UserAccountDAO;
 import market.domain.*;
-import market.dto.CreditCardDTO;
-import market.dto.OrderDTO;
-import market.dto.assembler.OrderDtoAssembler;
 import market.exception.EmptyCartException;
 import market.exception.OrderNotFoundException;
 import market.service.CartService;
@@ -24,15 +21,11 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDAO orderDAO;
     private final UserAccountDAO userAccountDAO;
     private final CartService cartService;
-    private final OrderDtoAssembler orderDtoAssembler;
 
-    public OrderServiceImpl(OrderDAO orderDAO, UserAccountDAO userAccountDAO,
-        CartService cartService, OrderDtoAssembler orderDtoAssembler)
-    {
+    public OrderServiceImpl(OrderDAO orderDAO, UserAccountDAO userAccountDAO, CartService cartService) {
         this.orderDAO = orderDAO;
         this.userAccountDAO = userAccountDAO;
         this.cartService = cartService;
-        this.orderDtoAssembler = orderDtoAssembler;
     }
 
     @Transactional
@@ -119,21 +112,20 @@ public class OrderServiceImpl implements OrderService {
     
     @Transactional
     @Override
-    public Order createUserOrder(CreditCardDTO card, String userLogin, int deliveryCost) throws EmptyCartException {
+    public Order createUserOrder(String userLogin, int deliveryCost, String cardNumber) throws EmptyCartException {
         Cart cart = cartService.getUserCart(userLogin);
-        if (cart.isEmpty()) {
+        if (cart.isEmpty())
             throw new EmptyCartException();
-        }
-        
+
         Order order = createNewOrder(userLogin, cart, deliveryCost);
-        Bill bill = createBill(order, card);
+        Bill bill = createBill(order, cardNumber);
         order.setBill(bill);
         orderDAO.saveAndFlush(order);
-        
+
         fillOrderItems(cart, order);
         save(order);
         cartService.clearUserCart(userLogin);
-        
+
         return order;
     }
 
@@ -153,14 +145,14 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    private Bill createBill(Order order, CreditCardDTO card) {
+    private Bill createBill(Order order, String cardNumber) {
         Bill bill = new Bill();
         bill.setOrder(order);
         bill.setNumber(new Random().nextInt(999999999));
         bill.setTotalCost(order.getProductsCost() + order.getDeliveryСost());
         bill.setPayed(true);
         bill.setDateCreated(new Date());
-        bill.setCcNumber(card.getNumber());
+        bill.setCcNumber(cardNumber);
         return bill;
     }
 
@@ -179,19 +171,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<OrderDTO> getUserOrders(String userLogin) {
+    public List<Order> getUserOrders(String userLogin) {
         UserAccount account = userAccountDAO.findByEmail(userLogin);
-        List<Order> orders = findByUserAccount(account);
-        return orderDtoAssembler.toResources(orders);
+        // todo: handle account doesn't exist
+        return findByUserAccount(account);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public OrderDTO getUserOrder(String userLogin, long id) throws OrderNotFoundException {
+    public Order getUserOrder(String userLogin, long id) throws OrderNotFoundException {
+        // todo: add user check
         Order order = findOne(id);
-        if ((order == null) || !order.getUserAccount().getEmail().equals(userLogin)) {
+        if ((order == null) || !order.getUserAccount().getEmail().equals(userLogin))
             throw new OrderNotFoundException("У пользователя " + userLogin + " не существует заказа с id " + id);
-        }
-        return orderDtoAssembler.toResource(order);
+        return order;
     }
 }

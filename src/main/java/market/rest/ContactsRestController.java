@@ -1,6 +1,8 @@
 package market.rest;
 
+import market.domain.Contacts;
 import market.dto.ContactsDTO;
+import market.dto.assembler.ContactsDtoAssembler;
 import market.service.ContactsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +20,11 @@ import java.security.Principal;
 @RequestMapping(value = "/rest/customer/contacts")
 public class ContactsRestController {
     private final ContactsService contactsService;
+    private final ContactsDtoAssembler contactsDtoAssembler;
 
-    public ContactsRestController(ContactsService contactsService) {
+    public ContactsRestController(ContactsService contactsService, ContactsDtoAssembler contactsDtoAssembler) {
         this.contactsService = contactsService;
+        this.contactsDtoAssembler = contactsDtoAssembler;
     }
 
     /**
@@ -34,13 +38,14 @@ public class ContactsRestController {
     @ResponseBody
     public ContactsDTO getContacts(Principal principal) {
         String login = principal.getName();
-        return contactsService.getUserContacts(login);
+        Contacts contacts = contactsService.getUserContacts(login);
+        return contactsDtoAssembler.toResource(contacts);
     }
 
     /**
      * Изменение контактов покупателя.
      *
-     * @param contacts новые контактные данные
+     * @param contactsDto новые контактные данные
      * @param principal
      * @return обновлённые контактные данные
      */
@@ -49,8 +54,11 @@ public class ContactsRestController {
             consumes = MediaUtf8.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ContactsDTO postContacts(Principal principal, @Valid @RequestBody ContactsDTO contacts) {
+    public ContactsDTO postContacts(Principal principal, @Valid @RequestBody ContactsDTO contactsDto) {
         String login = principal.getName();
-        return contactsService.updateUserContacts(login, contacts);
+        String newPhone = contactsDto.getPhone();
+        String newAddress = contactsDto.getAddress();
+        Contacts updatedContacts = contactsService.updateUserContacts(login, newPhone, newAddress);
+        return contactsDtoAssembler.toResource(updatedContacts);
     }
 }

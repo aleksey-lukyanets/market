@@ -1,7 +1,6 @@
 package market.service;
 
 import market.domain.Contacts;
-import market.dto.ContactsDTO;
 
 import java.util.List;
 
@@ -27,14 +26,15 @@ public interface ContactsService {
      * @return контактные данные
      */
         
-    ContactsDTO getUserContacts(String userLogin);
+    Contacts getUserContacts(String userLogin);
     
     /**
      * Изменение контактных данных пользователя.
      *
      * @param userLogin логин покупателя
-     * @param newContacts новые контактные данные
+     * @param phone
+     * @param address
      * @return изменённые контактные данные
      */
-    ContactsDTO updateUserContacts(String userLogin, ContactsDTO newContacts);
+    Contacts updateUserContacts(String userLogin, String phone, String address);
 }

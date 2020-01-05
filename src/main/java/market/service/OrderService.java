@@ -2,8 +2,6 @@ package market.service;
 
 import market.domain.Order;
 import market.domain.UserAccount;
-import market.dto.CreditCardDTO;
-import market.dto.OrderDTO;
 import market.exception.EmptyCartException;
 import market.exception.OrderNotFoundException;
 import org.springframework.data.domain.Page;
@@ -43,13 +41,13 @@ public interface OrderService {
     /**
      * Оформление нового заказа.
      *
-     * @param card данные банковской карты для оплаты заказа
      * @param userLogin логин покупателя
      * @param deliveryCost цена доставки
+     * @param cardNumber
      * @return вновь созданный заказ
      * @throws EmptyCartException если оплачивается пустая корзина
      */
-    Order createUserOrder(CreditCardDTO card, String userLogin, int deliveryCost) throws EmptyCartException;
+    Order createUserOrder(String userLogin, int deliveryCost, String cardNumber) throws EmptyCartException;
     
     /**
      * Получение всех заказов покупателя.
@@ -57,7 +55,7 @@ public interface OrderService {
      * @param userLogin логин покупателя
      * @return список заказов
      */
-    List<OrderDTO> getUserOrders(String userLogin);
+    List<Order> getUserOrders(String userLogin);
     
     /**
      * Получение одного заказа покупателя.
@@ -67,5 +65,5 @@ public interface OrderService {
      * @return заказ с запрошенным id
      * @throws OrderNotFoundException если у пользователя не существует запрошенного заказа
      */
-    OrderDTO getUserOrder(String userLogin, long id) throws OrderNotFoundException;
+    Order getUserOrder(String userLogin, long id) throws OrderNotFoundException;
 }

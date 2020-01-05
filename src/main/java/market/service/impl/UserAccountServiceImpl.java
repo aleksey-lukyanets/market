@@ -2,9 +2,7 @@ package market.service.impl;
 
 import market.dao.UserAccountDAO;
 import market.domain.Cart;
-import market.domain.Contacts;
 import market.domain.UserAccount;
-import market.dto.UserDTO;
 import market.exception.EmailExistsException;
 import market.service.UserAccountService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -62,22 +60,17 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Transactional
     @Override
-    public UserAccount createUser(UserDTO user) throws EmailExistsException {
-        UserAccount userAccount = createUserAccount(user);
+    public UserAccount createUser(UserAccount userAccount) throws EmailExistsException {
+        if (findByEmail(userAccount.getEmail()) != null)
+            throw new EmailExistsException();
+        // todo: account data validation
+
+        BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+        String hashedPassword = pe.encode(userAccount.getPassword());
+        userAccount.setPassword(hashedPassword);
+
         userAccount.setCart(new Cart(userAccount));
         userAccountDAO.save(userAccount);
-        return userAccount;
-    }
-
-    private UserAccount createUserAccount(UserDTO user) throws EmailExistsException {
-        BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
-        String hashedPassword = pe.encode(user.getPassword());
-        if (findByEmail(user.getEmail()) != null) {
-            throw new EmailExistsException();
-        }
-        UserAccount userAccount = new UserAccount(user.getEmail(), hashedPassword, user.getName(), true);
-        Contacts contacts = new Contacts(userAccount, user.getPhone(), user.getAddress());
-        userAccount.setContacts(contacts);
         return userAccount;
     }
 }

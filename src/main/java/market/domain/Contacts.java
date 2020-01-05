@@ -35,6 +35,10 @@ public class Contacts implements Serializable {
     public Contacts() {
     }
 
+    public Contacts(String phone, String address/*, String cityAndRegion*/) {
+        this(null, phone, address);
+    }
+
     public Contacts(UserAccount userAccount, String phone, String address/*, String cityAndRegion*/) {
         this.userAccount = userAccount;
         this.phone = phone;
