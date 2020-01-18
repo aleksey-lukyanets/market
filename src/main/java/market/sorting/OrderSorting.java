@@ -12,32 +12,32 @@ import java.util.Map;
 @Component
 public class OrderSorting extends AbstractSorter {
 
-    private final Map<String, String> executedOptions = new LinkedHashMap<>();
-    private final Map<String, String> createdOptions = new LinkedHashMap<>();
+	private final Map<String, String> executedOptions = new LinkedHashMap<>();
+	private final Map<String, String> createdOptions = new LinkedHashMap<>();
 
-    {
-        sortFieldOptions.put("dateCreated", "по дате оформления");
-        sortFieldOptions.put("bill.totalCost", "по сумме");
-        sortFieldOptions.put("userAccount.name", "по имени покупателя");
-        
-        executedOptions.put("all", "все заказы");
-        executedOptions.put("true", "только исполненные");
-        executedOptions.put("false", "только в исполнении");
-        createdOptions.put("all", "за всё время");
-        createdOptions.put("1", "за сутки");
-        createdOptions.put("7", "за 7 дней");
-        createdOptions.put("30", "за 30 дней");
-    }
-    
-    @Override
-    public int getDefaultPageSize() {
-        return 10;
-    }
+	{
+		sortFieldOptions.put("dateCreated", "по дате оформления");
+		sortFieldOptions.put("bill.totalCost", "по сумме");
+		sortFieldOptions.put("userAccount.name", "по имени покупателя");
 
-    @Override
-    public Model prepareFilteredModel(Model model) {
-        model.addAttribute("executedOptions", executedOptions);
-        model.addAttribute("createdOptions", createdOptions);
-        return model;
-    }
+		executedOptions.put("all", "все заказы");
+		executedOptions.put("true", "только исполненные");
+		executedOptions.put("false", "только в исполнении");
+		createdOptions.put("all", "за всё время");
+		createdOptions.put("1", "за сутки");
+		createdOptions.put("7", "за 7 дней");
+		createdOptions.put("30", "за 30 дней");
+	}
+
+	@Override
+	public int getDefaultPageSize() {
+		return 10;
+	}
+
+	@Override
+	public Model prepareFilteredModel(Model model) {
+		model.addAttribute("executedOptions", executedOptions);
+		model.addAttribute("createdOptions", createdOptions);
+		return model;
+	}
 }

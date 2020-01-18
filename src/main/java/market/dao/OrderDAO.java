@@ -13,13 +13,12 @@ import java.util.List;
 /**
  * ДАО заказа.
  */
-public interface OrderDAO extends CrudRepository<Order, Long>, JpaRepository<Order, Long>
-{
-    List<Order> findByUserAccountOrderByDateCreatedDesc(UserAccount userAccount);
+public interface OrderDAO extends CrudRepository<Order, Long>, JpaRepository<Order, Long> {
+	List<Order> findByUserAccountOrderByDateCreatedDesc(UserAccount userAccount);
 
-    Page<Order> findByExecuted(boolean stored, Pageable pageable);
+	Page<Order> findByExecuted(boolean stored, Pageable pageable);
 
-    Page<Order> findByDateCreatedGreaterThan(Date created, Pageable pageable);
+	Page<Order> findByDateCreatedGreaterThan(Date created, Pageable pageable);
 
-    Page<Order> findByExecutedAndDateCreatedGreaterThan(boolean executed, Date created, Pageable pageable);
+	Page<Order> findByExecutedAndDateCreatedGreaterThan(boolean executed, Date created, Pageable pageable);
 }

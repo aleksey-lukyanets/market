@@ -13,108 +13,109 @@ import java.io.Serializable;
 @Table(name = "region")
 public class Region implements Serializable {
 
-    public static final Region NULL;
-    static {
-        NULL = new Region();
-        NULL.setId(Long.valueOf(0));
-        NULL.name = "null region";
-    }
+	public static final Region NULL;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", insertable = false, updatable = false, nullable = false)
-    private Long id;
+	static {
+		NULL = new Region();
+		NULL.setId(Long.valueOf(0));
+		NULL.name = "null region";
+	}
 
-    @Column(name = "name", nullable = false)
-    @NotEmpty
-    @Pattern(regexp="^[^#$%^&*()']*$")
-    private String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", insertable = false, updatable = false, nullable = false)
+	private Long id;
 
-    @Column(name = "subtitle")
-    @Pattern(regexp="^[^#$%^*()']*$")
-    private String subtitle;
+	@Column(name = "name", nullable = false)
+	@NotEmpty
+	@Pattern(regexp = "^[^#$%^&*()']*$")
+	private String name;
 
-    @Column(name = "description")
-    private String description;
+	@Column(name = "subtitle")
+	@Pattern(regexp = "^[^#$%^*()']*$")
+	private String subtitle;
 
-    @Column(name = "color")
-    @Pattern(regexp="^(a-z|A-Z|0-9-)*[^#$%^&*()']*$")
-    private String color;
+	@Column(name = "description")
+	private String description;
 
-    public Region() {
-    }
+	@Column(name = "color")
+	@Pattern(regexp = "^(a-z|A-Z|0-9-)*[^#$%^&*()']*$")
+	private String color;
 
-    public Region(String name) {
-        this.name = name;
-    }
+	public Region() {
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	public Region(String name) {
+		this.name = name;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * @return the subtitle
-     */
-    public String getSubtitle() {
-        return subtitle;
-    }
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * @param subtitle the subtitle to set
-     */
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
+	/**
+	 * @return the subtitle
+	 */
+	public String getSubtitle() {
+		return subtitle;
+	}
 
-    /**
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
+	/**
+	 * @param subtitle the subtitle to set
+	 */
+	public void setSubtitle(String subtitle) {
+		this.subtitle = subtitle;
+	}
 
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    /**
-     * @return the color
-     */
-    public String getColor() {
-        return color;
-    }
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    /**
-     * @param color the color to set
-     */
-    public void setColor(String color) {
-        this.color = color;
-    }
+	/**
+	 * @return the color
+	 */
+	public String getColor() {
+		return color;
+	}
+
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(String color) {
+		this.color = color;
+	}
 }

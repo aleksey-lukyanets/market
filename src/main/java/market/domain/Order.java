@@ -18,169 +18,169 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @Table(name = "customer_order")
 public class Order implements Serializable {
 
-    @Id
-    @Column(name = "id", insertable = false, updatable = false, nullable = false)
-    @GeneratedValue(generator="gen")
-    @GenericGenerator(name="gen", strategy="foreign", parameters=@Parameter(name="property", value="bill"))
-    private Long id;
-    
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_account_id")
-    private UserAccount userAccount;
-    
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
-            targetEntity = OrderedProduct.class, mappedBy = "order")
+	@Id
+	@Column(name = "id", insertable = false, updatable = false, nullable = false)
+	@GeneratedValue(generator = "gen")
+	@GenericGenerator(name = "gen", strategy = "foreign", parameters = @Parameter(name = "property", value = "bill"))
+	private Long id;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_account_id")
+	private UserAccount userAccount;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
+		targetEntity = OrderedProduct.class, mappedBy = "order")
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy ="pk.order", cascade =
 //            {CascadeType.PERSIST, CascadeType.MERGE})
 //    @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE_ORPHAN})
-    private Set<OrderedProduct> orderedProducts = new HashSet<>(0);
-    
-    @OneToOne(mappedBy="order", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-    private Bill bill;
-    
-    @Column(name = "products_cost", nullable = false)
-    private int productsCost;
-    
-    @Column(name = "date_created", nullable = false)
-    @Temporal(TIMESTAMP)
-    private Date dateCreated;
-    
-    @Column(name = "delivery_cost")
-    private int deliveryСost;
-    
-    @Column(name = "delivery_included", nullable = false)
-    private boolean deliveryIncluded;
-    
-    @Column(name = "executed", nullable = false)
-    private boolean executed;
+	private Set<OrderedProduct> orderedProducts = new HashSet<>(0);
 
-    public Order() {
-    }
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Bill bill;
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	@Column(name = "products_cost", nullable = false)
+	private int productsCost;
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Column(name = "date_created", nullable = false)
+	@Temporal(TIMESTAMP)
+	private Date dateCreated;
 
-    /**
-     * @return the amount
-     */
-    public int getProductsCost() {
-        return productsCost;
-    }
+	@Column(name = "delivery_cost")
+	private int deliveryСost;
 
-    /**
-     * @param amount the amount to set
-     */
-    public void setProductsCost(int amount) {
-        this.productsCost = amount;
-    }
+	@Column(name = "delivery_included", nullable = false)
+	private boolean deliveryIncluded;
 
-    /**
-     * @return the name
-     */
-    public Date getDateCreated() {
-        return dateCreated;
-    }
+	@Column(name = "executed", nullable = false)
+	private boolean executed;
 
-    /**
-     * @param name the name to set
-     */
-    public void setDateCreated(Date name) {
-        this.dateCreated = name;
-    }
+	public Order() {
+	}
 
-    /**
-     * @return the userAccount
-     */
-    public UserAccount getUserAccount() {
-        return userAccount;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @param userAccount the userAccount to set
-     */
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
-    }
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @return the products
-     */
-    public Set<OrderedProduct> getOrderedProducts() {
-        return orderedProducts;
-    }
+	/**
+	 * @return the amount
+	 */
+	public int getProductsCost() {
+		return productsCost;
+	}
 
-    /**
-     * @param products the products to set
-     */
-    public void setOrderedProducts(Set<OrderedProduct> products) {
-        this.orderedProducts = products;
-    }
+	/**
+	 * @param amount the amount to set
+	 */
+	public void setProductsCost(int amount) {
+		this.productsCost = amount;
+	}
 
-    /**
-     * @return the deliveryСost
-     */
-    public int getDeliveryСost() {
-        return deliveryСost;
-    }
+	/**
+	 * @return the name
+	 */
+	public Date getDateCreated() {
+		return dateCreated;
+	}
 
-    /**
-     * @param deliveryСost the deliveryСost to set
-     */
-    public void setDeliveryСost(int deliveryСost) {
-        this.deliveryСost = deliveryСost;
-    }
+	/**
+	 * @param name the name to set
+	 */
+	public void setDateCreated(Date name) {
+		this.dateCreated = name;
+	}
 
-    /**
-     * @return the deliveryIncluded
-     */
-    public boolean isDeliveryIncluded() {
-        return deliveryIncluded;
-    }
+	/**
+	 * @return the userAccount
+	 */
+	public UserAccount getUserAccount() {
+		return userAccount;
+	}
 
-    /**
-     * @param deliveryIncluded the deliveryIncluded to set
-     */
-    public void setDeliveryIncluded(boolean deliveryIncluded) {
-        this.deliveryIncluded = deliveryIncluded;
-    }
+	/**
+	 * @param userAccount the userAccount to set
+	 */
+	public void setUserAccount(UserAccount userAccount) {
+		this.userAccount = userAccount;
+	}
 
-    /**
-     * @return the bill
-     */
-    public Bill getBill() {
-        return bill;
-    }
+	/**
+	 * @return the products
+	 */
+	public Set<OrderedProduct> getOrderedProducts() {
+		return orderedProducts;
+	}
 
-    /**
-     * @param bill the bill to set
-     */
-    public void setBill(Bill bill) {
-        this.bill = bill;
-    }
+	/**
+	 * @param products the products to set
+	 */
+	public void setOrderedProducts(Set<OrderedProduct> products) {
+		this.orderedProducts = products;
+	}
 
-    /**
-     * @return the executed
-     */
-    public boolean isExecuted() {
-        return executed;
-    }
+	/**
+	 * @return the deliveryСost
+	 */
+	public int getDeliveryСost() {
+		return deliveryСost;
+	}
 
-    /**
-     * @param executed the executed to set
-     */
-    public void setExecuted(boolean executed) {
-        this.executed = executed;
-    }
+	/**
+	 * @param deliveryСost the deliveryСost to set
+	 */
+	public void setDeliveryСost(int deliveryСost) {
+		this.deliveryСost = deliveryСost;
+	}
+
+	/**
+	 * @return the deliveryIncluded
+	 */
+	public boolean isDeliveryIncluded() {
+		return deliveryIncluded;
+	}
+
+	/**
+	 * @param deliveryIncluded the deliveryIncluded to set
+	 */
+	public void setDeliveryIncluded(boolean deliveryIncluded) {
+		this.deliveryIncluded = deliveryIncluded;
+	}
+
+	/**
+	 * @return the bill
+	 */
+	public Bill getBill() {
+		return bill;
+	}
+
+	/**
+	 * @param bill the bill to set
+	 */
+	public void setBill(Bill bill) {
+		this.bill = bill;
+	}
+
+	/**
+	 * @return the executed
+	 */
+	public boolean isExecuted() {
+		return executed;
+	}
+
+	/**
+	 * @param executed the executed to set
+	 */
+	public void setExecuted(boolean executed) {
+		this.executed = executed;
+	}
 
 }

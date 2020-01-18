@@ -54,7 +54,7 @@ public class ApplicationInitializer extends AbstractDispatcherServletInitializer
 
 	@Override
 	protected Filter[] getServletFilters() {
-		return new Filter[] {
+		return new Filter[]{
 			new CharacterEncodingFilter("UTF-8", true),
 			new DelegatingFilterProxy("springSecurityFilterChain"),
 			new HiddenHttpMethodFilter()

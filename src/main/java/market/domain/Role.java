@@ -11,64 +11,64 @@ import java.util.Set;
 @Entity
 @Table(name = "role")
 public class Role implements Serializable {
-    
-    enum Roles {
-        ROLE_ADMIN,
-        ROLE_STAFF,
-        ROLE_USER
-    };
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", insertable = false, updatable = false, nullable = false)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", insertable = false, updatable = false, nullable = false)
+	private Long id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+	;
+	@Column(name = "title", nullable = false)
+	private String title;
+	@ManyToMany(mappedBy = "roles")
+	private Set<UserAccount> users = new HashSet<>();
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<UserAccount> users = new HashSet<>();
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
 
-    /**
-     * @return the title
-     */
-    public String getTitle() {
-        return title;
-    }
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    /**
-     * @param title the title to set
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	/**
+	 * @return the users
+	 */
+	public Set<UserAccount> getUsers() {
+		return users;
+	}
 
-    /**
-     * @return the users
-     */
-    public Set<UserAccount> getUsers() {
-        return users;
-    }
+	/**
+	 * @param users the users to set
+	 */
+	public void setUsers(Set<UserAccount> users) {
+		this.users = users;
+	}
 
-    /**
-     * @param users the users to set
-     */
-    public void setUsers(Set<UserAccount> users) {
-        this.users = users;
-    }
+	enum Roles {
+		ROLE_ADMIN,
+		ROLE_STAFF,
+		ROLE_USER
+	}
 
 }

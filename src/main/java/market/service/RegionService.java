@@ -8,14 +8,14 @@ import java.util.List;
  * Сервис региона.
  */
 public interface RegionService {
-    
-    void save(Region region);
-    
-    void delete(Region region);
 
-    Region findOne(long regionId);
+	void save(Region region);
 
-    List<Region> findAllOrderById();
+	void delete(Region region);
 
-    List<Region> findAllOrderByName();
+	Region findOne(long regionId);
+
+	List<Region> findAllOrderById();
+
+	List<Region> findAllOrderByName();
 }

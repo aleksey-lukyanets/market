@@ -6,44 +6,44 @@ import org.springframework.hateoas.ResourceSupport;
  * Адаптер товара.
  */
 public class ProductPreviewDTO extends ResourceSupport {
-    
-    private long productId;
-    private String distillery;
-    private String name;
-    private Integer price;
 
-    public ProductPreviewDTO() {
-    }
+	private long productId;
+	private String distillery;
+	private String name;
+	private Integer price;
 
-    public long getProductId() {
-        return productId;
-    }
+	public ProductPreviewDTO() {
+	}
 
-    public void setProductId(long productId) {
-        this.productId = productId;
-    }
+	public long getProductId() {
+		return productId;
+	}
 
-    public String getDistillery() {
-        return distillery;
-    }
+	public void setProductId(long productId) {
+		this.productId = productId;
+	}
 
-    public void setDistillery(String distillery) {
-        this.distillery = distillery;
-    }
+	public String getDistillery() {
+		return distillery;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setDistillery(String distillery) {
+		this.distillery = distillery;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Integer getPrice() {
-        return price;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
 }

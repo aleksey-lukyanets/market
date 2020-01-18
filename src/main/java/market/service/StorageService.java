@@ -12,17 +12,17 @@ import java.util.List;
  */
 public interface StorageService {
 
-    void save(Storage storage);
-    
-    void delete(Storage storage);
+	void save(Storage storage);
 
-    Storage findOne(long productId);
+	void delete(Storage storage);
 
-    List<Storage> findAll();
+	Storage findOne(long productId);
 
-    Page<Storage> findAll(PageRequest request);
+	List<Storage> findAll();
 
-    Page<Storage> findByAvailable(boolean available, Pageable pageable);
+	Page<Storage> findAll(PageRequest request);
 
-    Page<Storage> fetchFilteredAndPaged(String available, PageRequest request);
+	Page<Storage> findByAvailable(boolean available, Pageable pageable);
+
+	Page<Storage> fetchFilteredAndPaged(String available, PageRequest request);
 }

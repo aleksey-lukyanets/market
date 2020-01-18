@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductSorting extends AbstractSorter {
 
-    {
-        sortFieldOptions.put("price", "по цене");
-        sortFieldOptions.put("distillery.title", "по винокурне");
-        sortFieldOptions.put("age", "по возрасту");
-    }
+	{
+		sortFieldOptions.put("price", "по цене");
+		sortFieldOptions.put("distillery.title", "по винокурне");
+		sortFieldOptions.put("age", "по возрасту");
+	}
 }

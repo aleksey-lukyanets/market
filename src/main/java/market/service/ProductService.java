@@ -14,20 +14,20 @@ import java.util.List;
  * Сервис товаров.
  */
 public interface ProductService {
-    
-    void save(Product product);
-    
-    void delete(Product product);
 
-    Product findOne(long productId) throws ProductNotFoundException;
+	void save(Product product);
 
-    List<Product> findAllOrderById();
-    
-    Page<Product> findAll(PageRequest request);
-    
-    List<Product> findByDistillery(Distillery distillery);
-    
-    Page<Product> findByDistillery(Distillery distillery, Pageable pageable);
-    
-    Page<Product> findByDistilleriesOfRegion(Region region, Pageable pageable);
+	void delete(Product product);
+
+	Product findOne(long productId) throws ProductNotFoundException;
+
+	List<Product> findAllOrderById();
+
+	Page<Product> findAll(PageRequest request);
+
+	List<Product> findByDistillery(Distillery distillery);
+
+	Page<Product> findByDistillery(Distillery distillery, Pageable pageable);
+
+	Page<Product> findByDistilleriesOfRegion(Region region, Pageable pageable);
 }

@@ -16,54 +16,54 @@ import java.util.List;
  */
 public interface OrderService {
 
-    void save(Order order);
-    
-    void delete(Order order);
+	void save(Order order);
 
-    Order findOne(long orderId);
+	void delete(Order order);
 
-    List<Order> findAll();
+	Order findOne(long orderId);
 
-    Page<Order> findAll(PageRequest request);
+	List<Order> findAll();
 
-    List<Order> findByUserAccount(UserAccount userAccount);
+	Page<Order> findAll(PageRequest request);
 
-    Page<Order> findByExecuted(boolean stored, Pageable pageable);
+	List<Order> findByUserAccount(UserAccount userAccount);
 
-    Page<Order> findByExecutedAndDateCreatedGreaterThan(boolean executed, Date created, Pageable pageable);
+	Page<Order> findByExecuted(boolean stored, Pageable pageable);
 
-    Page<Order> findByDateCreatedGreaterThan(Date created, Pageable pageable);
+	Page<Order> findByExecutedAndDateCreatedGreaterThan(boolean executed, Date created, Pageable pageable);
 
-    Page<Order> fetchFilteredAndPaged(String executed, String created, PageRequest request);
-    
-    //---------------------------------------- Операции с заказами пользователя
-    
-    /**
-     * Оформление нового заказа.
-     *
-     * @param userLogin логин покупателя
-     * @param deliveryCost цена доставки
-     * @param cardNumber
-     * @return вновь созданный заказ
-     * @throws EmptyCartException если оплачивается пустая корзина
-     */
-    Order createUserOrder(String userLogin, int deliveryCost, String cardNumber) throws EmptyCartException;
-    
-    /**
-     * Получение всех заказов покупателя.
-     *
-     * @param userLogin логин покупателя
-     * @return список заказов
-     */
-    List<Order> getUserOrders(String userLogin);
-    
-    /**
-     * Получение одного заказа покупателя.
-     *
-     * @param userLogin логин покупателя
-     * @param id идентификатор заказа
-     * @return заказ с запрошенным id
-     * @throws OrderNotFoundException если у пользователя не существует запрошенного заказа
-     */
-    Order getUserOrder(String userLogin, long id) throws OrderNotFoundException;
+	Page<Order> findByDateCreatedGreaterThan(Date created, Pageable pageable);
+
+	Page<Order> fetchFilteredAndPaged(String executed, String created, PageRequest request);
+
+	//---------------------------------------- Операции с заказами пользователя
+
+	/**
+	 * Оформление нового заказа.
+	 *
+	 * @param userLogin    логин покупателя
+	 * @param deliveryCost цена доставки
+	 * @param cardNumber
+	 * @return вновь созданный заказ
+	 * @throws EmptyCartException если оплачивается пустая корзина
+	 */
+	Order createUserOrder(String userLogin, int deliveryCost, String cardNumber) throws EmptyCartException;
+
+	/**
+	 * Получение всех заказов покупателя.
+	 *
+	 * @param userLogin логин покупателя
+	 * @return список заказов
+	 */
+	List<Order> getUserOrders(String userLogin);
+
+	/**
+	 * Получение одного заказа покупателя.
+	 *
+	 * @param userLogin логин покупателя
+	 * @param id        идентификатор заказа
+	 * @return заказ с запрошенным id
+	 * @throws OrderNotFoundException если у пользователя не существует запрошенного заказа
+	 */
+	Order getUserOrder(String userLogin, long id) throws OrderNotFoundException;
 }

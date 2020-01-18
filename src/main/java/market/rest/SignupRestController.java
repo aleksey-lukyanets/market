@@ -22,40 +22,39 @@ import javax.validation.Valid;
 @RequestMapping(value = "/rest/signup")
 public class SignupRestController {
 
-    private final UserAccountService userAccountService;
-    private final UserAccountDtoAssembler userAccountDtoAssembler;
-    private final AuthenticationService authenticationService;
+	private final UserAccountService userAccountService;
+	private final UserAccountDtoAssembler userAccountDtoAssembler;
+	private final AuthenticationService authenticationService;
 
-    public SignupRestController(UserAccountService userAccountService, UserAccountDtoAssembler userAccountDtoAssembler,
-        AuthenticationService authenticationService)
-    {
-        this.userAccountService = userAccountService;
-        this.userAccountDtoAssembler = userAccountDtoAssembler;
-        this.authenticationService = authenticationService;
-    }
+	public SignupRestController(UserAccountService userAccountService, UserAccountDtoAssembler userAccountDtoAssembler,
+		AuthenticationService authenticationService) {
+		this.userAccountService = userAccountService;
+		this.userAccountDtoAssembler = userAccountDtoAssembler;
+		this.authenticationService = authenticationService;
+	}
 
-    /**
-     * Регистрация нового покупателя.
-     * 
-     * @param user данные нового покупателя
-     * @return вновь зарегистрированный покупатель
-     * @throws EmailExistsException если покупатель с таким адресом уже существует
-     */
-    @RequestMapping(
-            method = RequestMethod.POST,
-            consumes = MediaUtf8.APPLICATION_JSON_UTF8_VALUE,
-            produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public UserDTO postNewUser(@Valid @RequestBody UserDTO user) throws EmailExistsException {
-        UserAccount userData = userAccountDtoAssembler.toDomain(user);
-        UserAccount newAccount = userAccountService.createUser(userData);
-        authenticationService.authenticate(newAccount);
-        return userAccountDtoAssembler.toResource(newAccount);
-    }
+	/**
+	 * Регистрация нового покупателя.
+	 *
+	 * @param user данные нового покупателя
+	 * @return вновь зарегистрированный покупатель
+	 * @throws EmailExistsException если покупатель с таким адресом уже существует
+	 */
+	@RequestMapping(
+		method = RequestMethod.POST,
+		consumes = MediaUtf8.APPLICATION_JSON_UTF8_VALUE,
+		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public UserDTO postNewUser(@Valid @RequestBody UserDTO user) throws EmailExistsException {
+		UserAccount userData = userAccountDtoAssembler.toDomain(user);
+		UserAccount newAccount = userAccountService.createUser(userData);
+		authenticationService.authenticate(newAccount);
+		return userAccountDtoAssembler.toResource(newAccount);
+	}
 
-    private UserAccount toUserAccount(UserDTO user) {
-        UserAccount userAccount = new UserAccount(user.getEmail(), user.getPassword(), user.getName(), true);
-        userAccount.setContacts(new Contacts(userAccount, user.getPhone(), user.getAddress()));
-        return userAccount;
-    }
+	private UserAccount toUserAccount(UserDTO user) {
+		UserAccount userAccount = new UserAccount(user.getEmail(), user.getPassword(), user.getName(), true);
+		userAccount.setContacts(new Contacts(userAccount, user.getPhone(), user.getAddress()));
+		return userAccount;
+	}
 }

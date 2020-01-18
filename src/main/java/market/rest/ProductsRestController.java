@@ -23,41 +23,41 @@ import java.util.List;
 @RequestMapping(value = "/rest/products")
 @ExposesResourceFor(ProductDTO.class)
 public class ProductsRestController {
-    private final ProductService productService;
+	private final ProductService productService;
 
-    public ProductsRestController(ProductService productService) {
-        this.productService = productService;
-    }
+	public ProductsRestController(ProductService productService) {
+		this.productService = productService;
+	}
 
-    /**
-     * Просмотр всех товаров магазина.
-     * 
-     * @return список всех товаров
-     */
-    @RequestMapping(
-            method = RequestMethod.GET,
-            produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public List<ProductPreviewDTO> getProducts() {
-        List<Product> products = productService.findAllOrderById();
-        List<ProductPreviewDTO> dtos = new ProductPreviewAssembler().toResources(products);
-        return dtos;
-    }
-    
-    /**
-     * Просмотр одного товара.
-     * 
-     * @param id идентификатор товара
-     * @return запрошенный товар
-     * @throws ProductNotFoundException если товар с запрошенным id не существует
-     */
-    @RequestMapping(value = "/{id}",
-            method = RequestMethod.GET,
-            produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public ProductDTO getProduct(@PathVariable long id) throws ProductNotFoundException {
-        Product product = productService.findOne(id);
-        ProductDTO dto = new ProductDtoAssembler().toResource(product);
-        return dto;
-    }
+	/**
+	 * Просмотр всех товаров магазина.
+	 *
+	 * @return список всех товаров
+	 */
+	@RequestMapping(
+		method = RequestMethod.GET,
+		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public List<ProductPreviewDTO> getProducts() {
+		List<Product> products = productService.findAllOrderById();
+		List<ProductPreviewDTO> dtos = new ProductPreviewAssembler().toResources(products);
+		return dtos;
+	}
+
+	/**
+	 * Просмотр одного товара.
+	 *
+	 * @param id идентификатор товара
+	 * @return запрошенный товар
+	 * @throws ProductNotFoundException если товар с запрошенным id не существует
+	 */
+	@RequestMapping(value = "/{id}",
+		method = RequestMethod.GET,
+		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public ProductDTO getProduct(@PathVariable long id) throws ProductNotFoundException {
+		Product product = productService.findOne(id);
+		ProductDTO dto = new ProductDtoAssembler().toResource(product);
+		return dto;
+	}
 }

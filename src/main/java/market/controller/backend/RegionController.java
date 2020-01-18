@@ -19,88 +19,88 @@ import javax.validation.Valid;
 @RequestMapping("/admin/regions")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class RegionController {
-    private final RegionService regionService;
+	private final RegionService regionService;
 
-    public RegionController(RegionService regionService) {
-        this.regionService = regionService;
-    }
+	public RegionController(RegionService regionService) {
+		this.regionService = regionService;
+	}
 
-    /**
-     * Перечень регионов.
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public String regions(Model model) {
-        model.addAttribute("regions", regionService.findAllOrderById());
-        return "admin/regions";
-    }
-    
-    //------------------------------------------------- Создание нового региона
+	/**
+	 * Перечень регионов.
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public String regions(Model model) {
+		model.addAttribute("regions", regionService.findAllOrderById());
+		return "admin/regions";
+	}
 
-    /**
-     * Страница добавления.
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/new")
-    public String newRegion(Model model) {
-        model.addAttribute("region", new Region());
-        return "admin/regions/new";
-    }
+	//------------------------------------------------- Создание нового региона
 
-    /**
-     * Сохранение нового региона.
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    public String postRegion(
-            @Valid Region region,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return "admin/regions/new";
-        }
-        regionService.save(region);
-        return "redirect:/admin/regions";
-    }
+	/**
+	 * Страница добавления.
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/new")
+	public String newRegion(Model model) {
+		model.addAttribute("region", new Region());
+		return "admin/regions/new";
+	}
 
-    //-------------------------------------------------- Редактирование региона
+	/**
+	 * Сохранение нового региона.
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public String postRegion(
+		@Valid Region region,
+		BindingResult bindingResult
+	) {
+		if (bindingResult.hasErrors()) {
+			return "admin/regions/new";
+		}
+		regionService.save(region);
+		return "redirect:/admin/regions";
+	}
 
-    /**
-     * Страница редактирования.
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/{regionId}/edit")
-    public String editRegion(
-            @PathVariable long regionId,
-            Model model
-    ) {
-        model.addAttribute("region", regionService.findOne(regionId));
-        return "admin/regions/edit";
-    }
+	//-------------------------------------------------- Редактирование региона
 
-    /**
-     * Изменение региона.
-     */
-    @RequestMapping(method = RequestMethod.PUT, value = "/{regionId}")
-    public String putRegion(
-            @PathVariable long regionId,
-            @Valid Region region,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return "admin/regions/edit";
-        }
-        regionService.save(region);//!
-        return "redirect:/admin/regions";
-    }
+	/**
+	 * Страница редактирования.
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/{regionId}/edit")
+	public String editRegion(
+		@PathVariable long regionId,
+		Model model
+	) {
+		model.addAttribute("region", regionService.findOne(regionId));
+		return "admin/regions/edit";
+	}
 
-    //-------------------------------------------------------- Удаление региона
+	/**
+	 * Изменение региона.
+	 */
+	@RequestMapping(method = RequestMethod.PUT, value = "/{regionId}")
+	public String putRegion(
+		@PathVariable long regionId,
+		@Valid Region region,
+		BindingResult bindingResult
+	) {
+		if (bindingResult.hasErrors()) {
+			return "admin/regions/edit";
+		}
+		regionService.save(region);//!
+		return "redirect:/admin/regions";
+	}
 
-    /**
-     * Удаление региона.
-     */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{regionId}")
-    public String deleteRegion(
-            @PathVariable long regionId
-    ) {
-        Region region = regionService.findOne(regionId);
-        regionService.delete(region);
-        return "redirect:/admin/regions";
-    }
+	//-------------------------------------------------------- Удаление региона
+
+	/**
+	 * Удаление региона.
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{regionId}")
+	public String deleteRegion(
+		@PathVariable long regionId
+	) {
+		Region region = regionService.findOne(regionId);
+		regionService.delete(region);
+		return "redirect:/admin/regions";
+	}
 }
