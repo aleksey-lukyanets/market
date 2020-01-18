@@ -5,101 +5,101 @@ import org.springframework.hateoas.ResourceSupport;
 import java.util.Date;
 
 /**
- * 
+ *
  */
 public class OrderDTO extends ResourceSupport {
-    
-    private String user;
-    private long orderId;
-    private int billNumber;
-    private Date dateCreated;
-    private int productsCost;
-    private int deliveryCost;
-    private boolean deliveryIncluded;
-    private int totalCost;
-    private boolean payed;
-    private boolean executed;
-    
-    public OrderDTO() {
-    }
 
-    public String getUser() {
-        return user;
-    }
+	private String user;
+	private long orderId;
+	private int billNumber;
+	private Date dateCreated;
+	private int productsCost;
+	private int deliveryCost;
+	private boolean deliveryIncluded;
+	private int totalCost;
+	private boolean payed;
+	private boolean executed;
 
-    public void setUser(String user) {
-        this.user = user;
-    }
+	public OrderDTO() {
+	}
 
-    public int getBillNumber() {
-        return billNumber;
-    }
+	public String getUser() {
+		return user;
+	}
 
-    public void setBillNumber(int billNumber) {
-        this.billNumber = billNumber;
-    }
+	public void setUser(String user) {
+		this.user = user;
+	}
 
-    public int getProductsCost() {
-        return productsCost;
-    }
+	public int getBillNumber() {
+		return billNumber;
+	}
 
-    public void setProductsCost(int productsCost) {
-        this.productsCost = productsCost;
-    }
+	public void setBillNumber(int billNumber) {
+		this.billNumber = billNumber;
+	}
 
-    public Date getDateCreated() {
-        return dateCreated;
-    }
+	public int getProductsCost() {
+		return productsCost;
+	}
 
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
+	public void setProductsCost(int productsCost) {
+		this.productsCost = productsCost;
+	}
 
-    public int getDeliveryCost() {
-        return deliveryCost;
-    }
+	public Date getDateCreated() {
+		return dateCreated;
+	}
 
-    public void setDeliveryCost(int deliveryCost) {
-        this.deliveryCost = deliveryCost;
-    }
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
 
-    public int getTotalCost() {
-        return totalCost;
-    }
+	public int getDeliveryCost() {
+		return deliveryCost;
+	}
 
-    public void setTotalCost(int totalCost) {
-        this.totalCost = totalCost;
-    }
+	public void setDeliveryCost(int deliveryCost) {
+		this.deliveryCost = deliveryCost;
+	}
 
-    public boolean isDeliveryIncluded() {
-        return deliveryIncluded;
-    }
+	public int getTotalCost() {
+		return totalCost;
+	}
 
-    public void setDeliveryIncluded(boolean deliveryIncluded) {
-        this.deliveryIncluded = deliveryIncluded;
-    }
+	public void setTotalCost(int totalCost) {
+		this.totalCost = totalCost;
+	}
 
-    public boolean isExecuted() {
-        return executed;
-    }
+	public boolean isDeliveryIncluded() {
+		return deliveryIncluded;
+	}
 
-    public void setExecuted(boolean executed) {
-        this.executed = executed;
-    }
+	public void setDeliveryIncluded(boolean deliveryIncluded) {
+		this.deliveryIncluded = deliveryIncluded;
+	}
 
-    public long getOrderId() {
-        return orderId;
-    }
+	public boolean isExecuted() {
+		return executed;
+	}
 
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
-    }
+	public void setExecuted(boolean executed) {
+		this.executed = executed;
+	}
 
-    public boolean isPayed() {
-        return payed;
-    }
+	public long getOrderId() {
+		return orderId;
+	}
 
-    public void setPayed(boolean payed) {
-        this.payed = payed;
-    }
+	public void setOrderId(long orderId) {
+		this.orderId = orderId;
+	}
+
+	public boolean isPayed() {
+		return payed;
+	}
+
+	public void setPayed(boolean payed) {
+		this.payed = payed;
+	}
 }

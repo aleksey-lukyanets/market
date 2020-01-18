@@ -34,83 +34,82 @@ import java.util.Map;
 @RequestMapping("/customer")
 @SessionAttributes({"cart"})
 public class CustomerController {
-    private final UserAccountService userAccountService;
-    private final CartService cartService;
-    private final OrderService orderService;
-    private final AuthenticationService authenticationService;
-    private final UserAccountDtoAssembler userAccountDtoAssembler;
+	private final UserAccountService userAccountService;
+	private final CartService cartService;
+	private final OrderService orderService;
+	private final AuthenticationService authenticationService;
+	private final UserAccountDtoAssembler userAccountDtoAssembler;
 
-    public CustomerController(UserAccountService userAccountService, CartService cartService, OrderService orderService,
-        AuthenticationService authenticationService, UserAccountDtoAssembler userAccountDtoAssembler)
-    {
-        this.userAccountService = userAccountService;
-        this.cartService = cartService;
-        this.orderService = orderService;
-        this.authenticationService = authenticationService;
-        this.userAccountDtoAssembler = userAccountDtoAssembler;
-    }
+	public CustomerController(UserAccountService userAccountService, CartService cartService, OrderService orderService,
+		AuthenticationService authenticationService, UserAccountDtoAssembler userAccountDtoAssembler) {
+		this.userAccountService = userAccountService;
+		this.cartService = cartService;
+		this.orderService = orderService;
+		this.authenticationService = authenticationService;
+		this.userAccountDtoAssembler = userAccountDtoAssembler;
+	}
 
-    /**
-     * Страница истории заказов.
-     */
-    @Secured({"ROLE_USER"})
-    @RequestMapping(value = "/orders", method = RequestMethod.GET)
-    public String orders(Model model) {
-        String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserAccount account = userAccountService.findByEmail(userLogin);
-        List<Order> userOrders = orderService.findByUserAccount(account);
+	/**
+	 * Страница истории заказов.
+	 */
+	@Secured({"ROLE_USER"})
+	@RequestMapping(value = "/orders", method = RequestMethod.GET)
+	public String orders(Model model) {
+		String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserAccount account = userAccountService.findByEmail(userLogin);
+		List<Order> userOrders = orderService.findByUserAccount(account);
 
-        Map<Long, List<OrderedProduct>> orderedProductsMap = new HashMap<>();
-        for (Order order : userOrders) {
-            orderedProductsMap.put(order.getId(), new ArrayList<>(order.getOrderedProducts()));
-        }
-        model.addAttribute("userOrders", userOrders);
-        model.addAttribute("orderedProductsMap", orderedProductsMap);
-        return "customer/orders";
-    }
+		Map<Long, List<OrderedProduct>> orderedProductsMap = new HashMap<>();
+		for (Order order : userOrders) {
+			orderedProductsMap.put(order.getId(), new ArrayList<>(order.getOrderedProducts()));
+		}
+		model.addAttribute("userOrders", userOrders);
+		model.addAttribute("orderedProductsMap", orderedProductsMap);
+		return "customer/orders";
+	}
 
-    //----------------------------------------- Регистрация нового пользователя
-    
-    /**
-     * Страница регистрации.
-     */
-    @RequestMapping(value = "/new", method = RequestMethod.GET)
-    public String getSignup(Model model) {
-        model.addAttribute("userDTO", new UserDTO());
-        return "customer/new";
-    }
+	//----------------------------------------- Регистрация нового пользователя
 
-    /**
-     * Обработка формы регистрации.
-     *
-     * @param user данные нового пользователя
-     * @param bindingResult ошибки валидации данных пользователя
-     * @param sessionCart сеансовая корзина
-     * @return
-     */
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String postSignup(
-            Model model,
-            @Valid UserDTO user,
-            BindingResult bindingResult,
-            @ModelAttribute(value = "cart") Cart sessionCart
-    ) {
-        String view = "customer/new";
-        if (bindingResult.hasErrors())
-            return view;
+	/**
+	 * Страница регистрации.
+	 */
+	@RequestMapping(value = "/new", method = RequestMethod.GET)
+	public String getSignup(Model model) {
+		model.addAttribute("userDTO", new UserDTO());
+		return "customer/new";
+	}
 
-        try {
-            UserAccount userData = userAccountDtoAssembler.toDomain(user);
-            UserAccount newAccount = userAccountService.createUser(userData);
-            authenticationService.authenticate(newAccount);
-            model.addAttribute("userDTO", userAccountDtoAssembler.toResource(newAccount));
-        } catch (EmailExistsException ex) {
-            bindingResult.addError(ex.getFieldError());
-            return view;
-        }
-        if (!sessionCart.isEmpty())
-            cartService.fillUserCart(user.getEmail(), sessionCart.getCartItems());
+	/**
+	 * Обработка формы регистрации.
+	 *
+	 * @param user          данные нового пользователя
+	 * @param bindingResult ошибки валидации данных пользователя
+	 * @param sessionCart   сеансовая корзина
+	 * @return
+	 */
+	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	public String postSignup(
+		Model model,
+		@Valid UserDTO user,
+		BindingResult bindingResult,
+		@ModelAttribute(value = "cart") Cart sessionCart
+	) {
+		String view = "customer/new";
+		if (bindingResult.hasErrors())
+			return view;
 
-        return "redirect:/";
-    }
+		try {
+			UserAccount userData = userAccountDtoAssembler.toDomain(user);
+			UserAccount newAccount = userAccountService.createUser(userData);
+			authenticationService.authenticate(newAccount);
+			model.addAttribute("userDTO", userAccountDtoAssembler.toResource(newAccount));
+		} catch (EmailExistsException ex) {
+			bindingResult.addError(ex.getFieldError());
+			return view;
+		}
+		if (!sessionCart.isEmpty())
+			cartService.fillUserCart(user.getEmail(), sessionCart.getCartItems());
+
+		return "redirect:/";
+	}
 }

@@ -24,54 +24,54 @@ import java.util.Set;
 @RequestMapping("/admin/storage")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class StorageController {
-    private final StorageService storageService;
-    private final ISorter<Storage> storageSorting;
+	private final StorageService storageService;
+	private final ISorter<Storage> storageSorting;
 
-    public StorageController(StorageService storageService, ISorter<Storage> storageSorting) {
-        this.storageService = storageService;
-        this.storageSorting = storageSorting;
-    }
+	public StorageController(StorageService storageService, ISorter<Storage> storageSorting) {
+		this.storageService = storageService;
+		this.storageSorting = storageSorting;
+	}
 
-    /**
-     * Перечень единиц хранения.
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public String getStorageUnits(
-            SortingValuesDTO sortingValues,
-            @RequestParam(value = "available", required = false, defaultValue = "all") String available,
-            Model model
-    ) {
-        PageRequest request = storageSorting.updateSorting(sortingValues);
-        Page<Storage> pagedList = storageService.fetchFilteredAndPaged(available, request);
-        storageSorting.prepareModel(model, pagedList);
-        
-        model.addAttribute("currentAvailable", available);
-        return "admin/storage";
-    }
+	/**
+	 * Перечень единиц хранения.
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public String getStorageUnits(
+		SortingValuesDTO sortingValues,
+		@RequestParam(value = "available", required = false, defaultValue = "all") String available,
+		Model model
+	) {
+		PageRequest request = storageSorting.updateSorting(sortingValues);
+		Page<Storage> pagedList = storageService.fetchFilteredAndPaged(available, request);
+		storageSorting.prepareModel(model, pagedList);
 
-    /**
-     * Установка наличия перечня товаров.
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    public String postStorage(
-            @RequestParam(value = "productIds", required = false) Long[] productIds,
-            @RequestParam(value = "actualIds", required = false) Long[] actualIds
-    ) {
-        if ((actualIds == null) && (productIds == null)) {
-            for (Storage stored : storageService.findAll()) {
-                stored.setAvailable(false);
-                storageService.save(stored);
-            }
-        } else {
-            Set<Long> products = new HashSet<>(Arrays.asList(productIds));
-            Set<Long> actuals = new HashSet<>(Arrays.asList(actualIds));
-            for (Long actualId : products) {
-                Storage stored = storageService.findOne(actualId);
-                boolean refreshedAvailable = actuals.contains(stored.getId());
-                stored.setAvailable(refreshedAvailable);
-                storageService.save(stored);
-            }
-        }
-        return "redirect:/admin/storage";
-    }
+		model.addAttribute("currentAvailable", available);
+		return "admin/storage";
+	}
+
+	/**
+	 * Установка наличия перечня товаров.
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public String postStorage(
+		@RequestParam(value = "productIds", required = false) Long[] productIds,
+		@RequestParam(value = "actualIds", required = false) Long[] actualIds
+	) {
+		if ((actualIds == null) && (productIds == null)) {
+			for (Storage stored : storageService.findAll()) {
+				stored.setAvailable(false);
+				storageService.save(stored);
+			}
+		} else {
+			Set<Long> products = new HashSet<>(Arrays.asList(productIds));
+			Set<Long> actuals = new HashSet<>(Arrays.asList(actualIds));
+			for (Long actualId : products) {
+				Storage stored = storageService.findOne(actualId);
+				boolean refreshedAvailable = actuals.contains(stored.getId());
+				stored.setAvailable(refreshedAvailable);
+				storageService.save(stored);
+			}
+		}
+		return "redirect:/admin/storage";
+	}
 }

@@ -16,138 +16,138 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @Table(name = "bill")
 public class Bill implements Serializable {
 
-    @Id
-    @Column(name="id", unique=true, nullable=false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@Column(name = "id", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private Order order;
-    
-    @Column(name = "number", nullable = false)
-    private int number;
-    
-    @Column(name = "total_cost", nullable = false)
-    private int totalCost;
-    
-    @Column(name = "payed", nullable = false)
-    private boolean payed = false;
-    
-    @Column(name = "cc_number", nullable = false)
-    @NotEmpty
-    @Pattern(regexp="\\b(?:\\d[ -]*?){13,16}\\b")
-    private String ccNumber;
-    
-    @Column(name = "date_created", nullable = false)
-    @Temporal(TIMESTAMP)
-    private Date dateCreated;
-    
-    public Bill() {
-    }
-    
-    public Bill(int totalCost, String ccNumber) {
-        this.totalCost = totalCost;
-        this.ccNumber = ccNumber;
-    }
+	@OneToOne
+	@PrimaryKeyJoinColumn
+	private Order order;
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	@Column(name = "number", nullable = false)
+	private int number;
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Column(name = "total_cost", nullable = false)
+	private int totalCost;
 
-    /**
-     * @return the ccNumber
-     */
-    public String getCcNumber() {
-        return ccNumber;
-    }
+	@Column(name = "payed", nullable = false)
+	private boolean payed = false;
 
-    /**
-     * @param ccNumber the ccNumber to set
-     */
-    public void setCcNumber(String ccNumber) {
-        this.ccNumber = ccNumber;
-    }
+	@Column(name = "cc_number", nullable = false)
+	@NotEmpty
+	@Pattern(regexp = "\\b(?:\\d[ -]*?){13,16}\\b")
+	private String ccNumber;
 
-    /**
-     * @return the order
-     */
-    public Order getOrder() {
-        return order;
-    }
+	@Column(name = "date_created", nullable = false)
+	@Temporal(TIMESTAMP)
+	private Date dateCreated;
 
-    /**
-     * @param order the order to set
-     */
-    public void setOrder(Order order) {
-        this.order = order;
-    }
+	public Bill() {
+	}
 
-    /**
-     * @return the number
-     */
-    public int getNumber() {
-        return number;
-    }
+	public Bill(int totalCost, String ccNumber) {
+		this.totalCost = totalCost;
+		this.ccNumber = ccNumber;
+	}
 
-    /**
-     * @param number the number to set
-     */
-    public void setNumber(int number) {
-        this.number = number;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the dateCreated
-     */
-    public Date getDateCreated() {
-        return dateCreated;
-    }
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param dateCreated the dateCreated to set
-     */
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
+	/**
+	 * @return the ccNumber
+	 */
+	public String getCcNumber() {
+		return ccNumber;
+	}
 
-    /**
-     * @return the totalCost
-     */
-    public int getTotalCost() {
-        return totalCost;
-    }
+	/**
+	 * @param ccNumber the ccNumber to set
+	 */
+	public void setCcNumber(String ccNumber) {
+		this.ccNumber = ccNumber;
+	}
 
-    /**
-     * @param totalCost the totalCost to set
-     */
-    public void setTotalCost(int totalCost) {
-        this.totalCost = totalCost;
-    }
+	/**
+	 * @return the order
+	 */
+	public Order getOrder() {
+		return order;
+	}
 
-    /**
-     * @return the payed
-     */
-    public boolean isPayed() {
-        return payed;
-    }
+	/**
+	 * @param order the order to set
+	 */
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 
-    /**
-     * @param payed the payed to set
-     */
-    public void setPayed(boolean payed) {
-        this.payed = payed;
-    }
+	/**
+	 * @return the number
+	 */
+	public int getNumber() {
+		return number;
+	}
+
+	/**
+	 * @param number the number to set
+	 */
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
+	/**
+	 * @return the dateCreated
+	 */
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	/**
+	 * @param dateCreated the dateCreated to set
+	 */
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	/**
+	 * @return the totalCost
+	 */
+	public int getTotalCost() {
+		return totalCost;
+	}
+
+	/**
+	 * @param totalCost the totalCost to set
+	 */
+	public void setTotalCost(int totalCost) {
+		this.totalCost = totalCost;
+	}
+
+	/**
+	 * @return the payed
+	 */
+	public boolean isPayed() {
+		return payed;
+	}
+
+	/**
+	 * @param payed the payed to set
+	 */
+	public void setPayed(boolean payed) {
+		this.payed = payed;
+	}
 
 
 }

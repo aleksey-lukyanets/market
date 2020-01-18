@@ -10,16 +10,16 @@ import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
  */
 public class CartItemDtoAssembler extends ResourceAssemblerSupport<CartItem, CartItemDTO> {
 
-    public CartItemDtoAssembler() {
-        super(ProductsRestController.class, CartItemDTO.class);
-    }
+	public CartItemDtoAssembler() {
+		super(ProductsRestController.class, CartItemDTO.class);
+	}
 
-    @Override
-    public CartItemDTO toResource(CartItem cartItem) {
-        Long productId = cartItem.getProduct().getId();
-        CartItemDTO dto = createResourceWithId(productId, cartItem);
-        dto.setProductId(productId);
-        dto.setQuantity((short)cartItem.getQuantity());
-        return dto;
-    }
+	@Override
+	public CartItemDTO toResource(CartItem cartItem) {
+		Long productId = cartItem.getProduct().getId();
+		CartItemDTO dto = createResourceWithId(productId, cartItem);
+		dto.setProductId(productId);
+		dto.setQuantity((short) cartItem.getQuantity());
+		return dto;
+	}
 }

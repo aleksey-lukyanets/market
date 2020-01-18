@@ -15,13 +15,12 @@ import java.util.List;
 /**
  * ДАО товара.
  */
-public interface ProductDAO extends CrudRepository<Product, Long>, JpaRepository<Product, Long>
-{
-    List<Product> findByDistillery(Distillery distillery);
-    
-    Page<Product> findByDistillery(Distillery distillery, Pageable pageable);
-    
-    @Query(value = "SELECT p FROM Product p WHERE p.distillery IN "
-            + "(SELECT d FROM Distillery d WHERE d.region = :region)")
-    public Page<Product> findByDistilleriesOfRegion(@Param("region") Region region, Pageable pageable);
+public interface ProductDAO extends CrudRepository<Product, Long>, JpaRepository<Product, Long> {
+	List<Product> findByDistillery(Distillery distillery);
+
+	Page<Product> findByDistillery(Distillery distillery, Pageable pageable);
+
+	@Query(value = "SELECT p FROM Product p WHERE p.distillery IN "
+		+ "(SELECT d FROM Distillery d WHERE d.region = :region)")
+	public Page<Product> findByDistilleriesOfRegion(@Param("region") Region region, Pageable pageable);
 }

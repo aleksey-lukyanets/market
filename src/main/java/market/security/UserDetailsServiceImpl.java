@@ -20,40 +20,39 @@ import java.util.Collection;
  */
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserAccountService userAccountService;
+	private final UserAccountService userAccountService;
 
-    public UserDetailsServiceImpl(UserAccountService userAccountService) {
-        this.userAccountService = userAccountService;
-    }
+	public UserDetailsServiceImpl(UserAccountService userAccountService) {
+		this.userAccountService = userAccountService;
+	}
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String login)
-            throws UsernameNotFoundException, DataAccessException
-    {
-        UserAccount userEntity = userAccountService.findByEmail(login);
-        if (userEntity == null) {
-            throw new UsernameNotFoundException("user not found");
-        }
-        return buildUser(userEntity);
-    }
+	@Override
+	@Transactional
+	public UserDetails loadUserByUsername(String login)
+		throws UsernameNotFoundException, DataAccessException {
+		UserAccount userEntity = userAccountService.findByEmail(login);
+		if (userEntity == null) {
+			throw new UsernameNotFoundException("user not found");
+		}
+		return buildUser(userEntity);
+	}
 
-    private User buildUser(UserAccount account) {
-        String login = account.getEmail();
-        String password = account.getPassword();
-        boolean enabled = account.isActive();
-        boolean accountNonExpired = account.isActive();
-        boolean credentialsNonExpired = account.isActive();
-        boolean accountNonLocked = account.isActive();
+	private User buildUser(UserAccount account) {
+		String login = account.getEmail();
+		String password = account.getPassword();
+		boolean enabled = account.isActive();
+		boolean accountNonExpired = account.isActive();
+		boolean credentialsNonExpired = account.isActive();
+		boolean accountNonLocked = account.isActive();
 
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : account.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role.getTitle()));
-        }
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+		Collection<GrantedAuthority> authorities = new ArrayList<>();
+		for (Role role : account.getRoles()) {
+			authorities.add(new SimpleGrantedAuthority(role.getTitle()));
+		}
+		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        User user = new User(login, password, enabled,
-            accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-        return user;
-    }
+		User user = new User(login, password, enabled,
+			accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+		return user;
+	}
 }

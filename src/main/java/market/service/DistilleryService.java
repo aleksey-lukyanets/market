@@ -10,15 +10,15 @@ import java.util.List;
  */
 public interface DistilleryService {
 
-    void save(Distillery distillery);
-    
-    void delete(Distillery distillery);
+	void save(Distillery distillery);
 
-    Distillery findOne(long distilleryId);
+	void delete(Distillery distillery);
 
-    List<Distillery> findByRegionOrderByTitle(Region region);
+	Distillery findOne(long distilleryId);
 
-    List<Distillery> findAllOrderById();
+	List<Distillery> findByRegionOrderByTitle(Region region);
 
-    List<Distillery> findAllOrderByTitle();
+	List<Distillery> findAllOrderById();
+
+	List<Distillery> findAllOrderByTitle();
 }

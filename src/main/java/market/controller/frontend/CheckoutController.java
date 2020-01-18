@@ -34,145 +34,144 @@ import java.util.List;
 @Secured({"ROLE_USER"})
 @SessionAttributes({"createdOrder"})
 public class CheckoutController {
-    private final UserAccountService userAccountService;
-    private final ContactsService contactsService;
-    private final OrderService orderService;
-    private final CartService cartService;
-    private final OrderDtoAssembler orderDtoAssembler;
-    private final ContactsDtoAssembler contactsDtoAssembler;
+	private final UserAccountService userAccountService;
+	private final ContactsService contactsService;
+	private final OrderService orderService;
+	private final CartService cartService;
+	private final OrderDtoAssembler orderDtoAssembler;
+	private final ContactsDtoAssembler contactsDtoAssembler;
 
-    @Value("${deliveryCost}")
-    private int deliveryCost;
+	@Value("${deliveryCost}")
+	private int deliveryCost;
 
-    public CheckoutController(UserAccountService userAccountService, ContactsService contactsService,
-        OrderService orderService, CartService cartService, OrderDtoAssembler orderDtoAssembler,
-        ContactsDtoAssembler contactsDtoAssembler)
-    {
-        this.userAccountService = userAccountService;
-        this.contactsService = contactsService;
-        this.orderService = orderService;
-        this.cartService = cartService;
-        this.orderDtoAssembler = orderDtoAssembler;
-        this.contactsDtoAssembler = contactsDtoAssembler;
-    }
+	public CheckoutController(UserAccountService userAccountService, ContactsService contactsService,
+		OrderService orderService, CartService cartService, OrderDtoAssembler orderDtoAssembler,
+		ContactsDtoAssembler contactsDtoAssembler) {
+		this.userAccountService = userAccountService;
+		this.contactsService = contactsService;
+		this.orderService = orderService;
+		this.cartService = cartService;
+		this.orderDtoAssembler = orderDtoAssembler;
+		this.contactsDtoAssembler = contactsDtoAssembler;
+	}
 
-    //--------------------------------------------- Изменение контактных данных
-    
-    /**
-     * Страница изменения контактных данных.
-     */
-    @RequestMapping(value = "/details", method = RequestMethod.GET)
-    public String details(Principal principal, Model model) {
-        String login = principal.getName();
-        Cart cart = cartService.getUserCart(login);
-        if (cart.isDeliveryIncluded() == false) {
-            return "redirect:/checkout/payment";
-        }
-        model.addAttribute("userContacts", contactsService.getUserContacts(login));
-        return "checkout/details";
-    }
+	//--------------------------------------------- Изменение контактных данных
 
-    /**
-     * Внесение изменений в контактные данные.
-     *
-     * @param contactsDto новые контакты
-     * @param bindingResult ошибки валидации контактов
-     * @param infoOption подтверждение изменения
-     * @param principal
-     * @return
-     */
-    @RequestMapping(value = "/details", method = RequestMethod.PUT)
-    public String putDetails(
-            Model model,
-            Principal principal,
-            @Valid ContactsDTO contactsDto,
-            BindingResult bindingResult,
-            @RequestParam(value = "infoOption") String infoOption
-    ) {
-        if (infoOption.equals("useNew")) {
-            if (bindingResult.hasErrors())
-                return "checkout/details";
+	/**
+	 * Страница изменения контактных данных.
+	 */
+	@RequestMapping(value = "/details", method = RequestMethod.GET)
+	public String details(Principal principal, Model model) {
+		String login = principal.getName();
+		Cart cart = cartService.getUserCart(login);
+		if (cart.isDeliveryIncluded() == false) {
+			return "redirect:/checkout/payment";
+		}
+		model.addAttribute("userContacts", contactsService.getUserContacts(login));
+		return "checkout/details";
+	}
 
-            String login = principal.getName();
-            String newPhone = contactsDto.getPhone();
-            String newAddress = contactsDto.getAddress();
-            Contacts updatedContacts = contactsService.updateUserContacts(login, newPhone, newAddress);
-            model.addAttribute("userDetails", contactsDtoAssembler.toResource(updatedContacts));
-        }
-        return "redirect:/checkout/payment";
-    }
+	/**
+	 * Внесение изменений в контактные данные.
+	 *
+	 * @param contactsDto   новые контакты
+	 * @param bindingResult ошибки валидации контактов
+	 * @param infoOption    подтверждение изменения
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping(value = "/details", method = RequestMethod.PUT)
+	public String putDetails(
+		Model model,
+		Principal principal,
+		@Valid ContactsDTO contactsDto,
+		BindingResult bindingResult,
+		@RequestParam(value = "infoOption") String infoOption
+	) {
+		if (infoOption.equals("useNew")) {
+			if (bindingResult.hasErrors())
+				return "checkout/details";
 
-    //------------------------------------------------------- Проверка и оплата
-    
-    /**
-     * Страница оплаты.
-     */
-    @RequestMapping(value = "/payment", method = RequestMethod.GET)
-    public String payment(Principal principal, Model model) {
-        String login = principal.getName();
-        Cart cart = cartService.getUserCart(login);
-        List<Product> products = new ArrayList<>();
-        for (CartItem item : cart.getCartItems()) {
-            products.add(item.getProduct());
-        }
-        model.addAttribute("products", products);
-        model.addAttribute("userAccount", userAccountService.getUserAccount(login));
-        model.addAttribute("contacts", contactsService.getUserContacts(login));
-        model.addAttribute("deliveryCost", deliveryCost);
-        model.addAttribute("creditCard", new CreditCardDTO());
-        return "checkout/payment";
-    }
+			String login = principal.getName();
+			String newPhone = contactsDto.getPhone();
+			String newAddress = contactsDto.getAddress();
+			Contacts updatedContacts = contactsService.updateUserContacts(login, newPhone, newAddress);
+			model.addAttribute("userDetails", contactsDtoAssembler.toResource(updatedContacts));
+		}
+		return "redirect:/checkout/payment";
+	}
 
-    /**
-     * Обработка формы оплаты.
-     *
-     * @param creditCard данные карты
-     * @param bindingResult ошибки валидации данных карты
-     * @param request
-     * @param principal
-     * @return
-     */
-    @RequestMapping(value = "/payment", method = RequestMethod.POST)
-    public String paymentPost(
-            Principal principal,
-            @Valid CreditCardDTO creditCard,
-            BindingResult bindingResult,
-            HttpServletRequest request
-    ) {
-        String view = "checkout/payment";
-        if (bindingResult.hasErrors()) {
-            return view;
-        }
-        String login = principal.getName();
-        try {
-            Order order = orderService.createUserOrder(login, deliveryCost, creditCard.getNumber());
-            request.getSession().setAttribute("createdOrder", orderDtoAssembler.toResource(order));
-            return "redirect:/checkout/confirmation";
-        } catch (EmptyCartException ex) {
-            bindingResult.addError(ex.getFieldError());
-            return view;
-        }
-    }
+	//------------------------------------------------------- Проверка и оплата
 
-    //---------------------------------- Страница подтверждения и благодарности
-    
-    /**
-     * Подтверждение и благодарность.
-     *
-     * @param createdOrder созданный заказ
-     * @param principal
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/confirmation", method = RequestMethod.GET)
-    public String purchase(
-            Principal principal,
-            Model model
-    ) {
-        String login = principal.getName();
-        Contacts contacts = contactsService.getUserContacts(login);
-        model.addAttribute("userAccount", userAccountService.getUserAccount(login));
-        model.addAttribute("userDetails", contactsDtoAssembler.toResource(contacts));
-        return "checkout/confirmation";
-    }
+	/**
+	 * Страница оплаты.
+	 */
+	@RequestMapping(value = "/payment", method = RequestMethod.GET)
+	public String payment(Principal principal, Model model) {
+		String login = principal.getName();
+		Cart cart = cartService.getUserCart(login);
+		List<Product> products = new ArrayList<>();
+		for (CartItem item : cart.getCartItems()) {
+			products.add(item.getProduct());
+		}
+		model.addAttribute("products", products);
+		model.addAttribute("userAccount", userAccountService.getUserAccount(login));
+		model.addAttribute("contacts", contactsService.getUserContacts(login));
+		model.addAttribute("deliveryCost", deliveryCost);
+		model.addAttribute("creditCard", new CreditCardDTO());
+		return "checkout/payment";
+	}
+
+	/**
+	 * Обработка формы оплаты.
+	 *
+	 * @param creditCard    данные карты
+	 * @param bindingResult ошибки валидации данных карты
+	 * @param request
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping(value = "/payment", method = RequestMethod.POST)
+	public String paymentPost(
+		Principal principal,
+		@Valid CreditCardDTO creditCard,
+		BindingResult bindingResult,
+		HttpServletRequest request
+	) {
+		String view = "checkout/payment";
+		if (bindingResult.hasErrors()) {
+			return view;
+		}
+		String login = principal.getName();
+		try {
+			Order order = orderService.createUserOrder(login, deliveryCost, creditCard.getNumber());
+			request.getSession().setAttribute("createdOrder", orderDtoAssembler.toResource(order));
+			return "redirect:/checkout/confirmation";
+		} catch (EmptyCartException ex) {
+			bindingResult.addError(ex.getFieldError());
+			return view;
+		}
+	}
+
+	//---------------------------------- Страница подтверждения и благодарности
+
+	/**
+	 * Подтверждение и благодарность.
+	 *
+	 * @param createdOrder созданный заказ
+	 * @param principal
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/confirmation", method = RequestMethod.GET)
+	public String purchase(
+		Principal principal,
+		Model model
+	) {
+		String login = principal.getName();
+		Contacts contacts = contactsService.getUserContacts(login);
+		model.addAttribute("userAccount", userAccountService.getUserAccount(login));
+		model.addAttribute("userDetails", contactsDtoAssembler.toResource(contacts));
+		return "checkout/confirmation";
+	}
 }

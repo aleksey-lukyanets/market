@@ -8,35 +8,35 @@ import org.springframework.hateoas.ResourceSupport;
  */
 public class CartItemDTO extends ResourceSupport {
 
-    private Long productId;
-    private Short quantity;
+	private Long productId;
+	private Short quantity;
 
-    public CartItemDTO() {
-    }
-    
-    public CartItemDTO(long productId, short quantity) {
-        this.productId = productId;
-        this.quantity = quantity;
-    }
-    
-    public CartItemDTO(CartItem item) {
-        this.productId = item.getProduct().getId();
-        this.quantity = (short)item.getQuantity();
-    }
+	public CartItemDTO() {
+	}
 
-    public Long getProductId() {
-        return productId;
-    }
+	public CartItemDTO(long productId, short quantity) {
+		this.productId = productId;
+		this.quantity = quantity;
+	}
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
+	public CartItemDTO(CartItem item) {
+		this.productId = item.getProduct().getId();
+		this.quantity = (short) item.getQuantity();
+	}
 
-    public Short getQuantity() {
-        return quantity;
-    }
+	public Long getProductId() {
+		return productId;
+	}
 
-    public void setQuantity(Short quantity) {
-        this.quantity = quantity;
-    }
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public Short getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Short quantity) {
+		this.quantity = quantity;
+	}
 }

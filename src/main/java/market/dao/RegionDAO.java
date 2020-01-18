@@ -7,6 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * ДАО региона.
  */
-public interface RegionDAO extends CrudRepository<Region, Long>, JpaRepository<Region, Long>
-{
+public interface RegionDAO extends CrudRepository<Region, Long>, JpaRepository<Region, Long> {
 }

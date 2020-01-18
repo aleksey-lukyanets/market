@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class BackendController {
 
-    /**
-     * Главная страница панели управления.
-     */
-    @RequestMapping(value = "/admin/index", method = RequestMethod.GET)
-    public String index(Model model) {
-        return "admin/index";
-    }
+	/**
+	 * Главная страница панели управления.
+	 */
+	@RequestMapping(value = {"", "/", "/index"}, method = RequestMethod.GET)
+	public String index(Model model) {
+		return "admin/index";
+	}
 }

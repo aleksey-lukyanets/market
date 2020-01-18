@@ -12,26 +12,26 @@ import java.util.Map;
 @Component
 public class StorageSorting extends AbstractSorter {
 
-    private final Map<String, String> availableOptions = new LinkedHashMap<>();
+	private final Map<String, String> availableOptions = new LinkedHashMap<>();
 
-    {
-        sortFieldOptions.put("product.price", "по цене");
-        sortFieldOptions.put("product.distillery.title", "по винокурне");
-        sortFieldOptions.put("product.age", "по возрасту");
-        
-        availableOptions.put("all", "все товары");
-        availableOptions.put("true", "только в наличии");
-        availableOptions.put("false", "только отсутствующие");
-    }
-    
-    @Override
-    public int getDefaultPageSize() {
-        return 10;
-    }
+	{
+		sortFieldOptions.put("product.price", "по цене");
+		sortFieldOptions.put("product.distillery.title", "по винокурне");
+		sortFieldOptions.put("product.age", "по возрасту");
 
-    @Override
-    public Model prepareFilteredModel(Model model) {
-        model.addAttribute("availableOptions", availableOptions);
-        return model;
-    }
+		availableOptions.put("all", "все товары");
+		availableOptions.put("true", "только в наличии");
+		availableOptions.put("false", "только отсутствующие");
+	}
+
+	@Override
+	public int getDefaultPageSize() {
+		return 10;
+	}
+
+	@Override
+	public Model prepareFilteredModel(Model model) {
+		model.addAttribute("availableOptions", availableOptions);
+		return model;
+	}
 }

@@ -12,78 +12,78 @@ import java.io.Serializable;
 @Entity
 @Table(name = "distillery")
 public class Distillery implements Serializable {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", insertable = false, updatable = false, nullable = false)
-    private Long id;
 
-    @Column(name = "title", nullable = false)
-    @NotEmpty
-    @Pattern(regexp="^[^#$%^*()']*$")
-    private String title;
-    
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "region_id", nullable = false)
-    private Region region;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", insertable = false, updatable = false, nullable = false)
+	private Long id;
 
-    @Column(name = "description")
-    private String description;
+	@Column(name = "title", nullable = false)
+	@NotEmpty
+	@Pattern(regexp = "^[^#$%^*()']*$")
+	private String title;
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "region_id", nullable = false)
+	private Region region;
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Column(name = "description")
+	private String description;
 
-    /**
-     * @return the title
-     */
-    public String getTitle() {
-        return title;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @param title the title to set
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
 
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    /**
-     * @return the region
-     */
-    public Region getRegion() {
-        return region;
-    }
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    /**
-     * @param region the region to set
-     */
-    public void setRegion(Region region) {
-        this.region = region;
-    }
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @return the region
+	 */
+	public Region getRegion() {
+		return region;
+	}
+
+	/**
+	 * @param region the region to set
+	 */
+	public void setRegion(Region region) {
+		this.region = region;
+	}
 
 }

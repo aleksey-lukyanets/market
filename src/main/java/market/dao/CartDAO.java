@@ -7,7 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * ДАО корзины.
  */
-public interface CartDAO extends CrudRepository<Cart, Long>, JpaRepository<Cart, Long>
-{
+public interface CartDAO extends CrudRepository<Cart, Long>, JpaRepository<Cart, Long> {
 
 }

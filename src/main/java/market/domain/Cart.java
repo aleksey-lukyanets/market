@@ -15,125 +15,125 @@ import java.util.List;
 @Table(name = "cart")
 public class Cart implements Serializable {
 
-    @Id
-    @Column(name = "id", unique = true, nullable = false)
-    @GeneratedValue(generator = "gen")
-    @GenericGenerator(name = "gen", strategy = "foreign", parameters = @Parameter(name = "property", value = "userAccount"))
-    private Long id;
+	@Id
+	@Column(name = "id", unique = true, nullable = false)
+	@GeneratedValue(generator = "gen")
+	@GenericGenerator(name = "gen", strategy = "foreign", parameters = @Parameter(name = "property", value = "userAccount"))
+	private Long id;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private UserAccount userAccount;
+	@OneToOne
+	@PrimaryKeyJoinColumn
+	private UserAccount userAccount;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true,
-            targetEntity = CartItem.class, mappedBy = "cart")
-    private List<CartItem> cartItems = new ArrayList<>(0);
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true,
+		targetEntity = CartItem.class, mappedBy = "cart")
+	private List<CartItem> cartItems = new ArrayList<>(0);
 
-    @Column(name = "delivery_included", nullable = false)
-    private boolean deliveryIncluded;
+	@Column(name = "delivery_included", nullable = false)
+	private boolean deliveryIncluded;
 
-    @Column(name = "total_items")
-    private int totalItems;
+	@Column(name = "total_items")
+	private int totalItems;
 
-    @Column(name = "products_cost")
-    private int productsCost;
+	@Column(name = "products_cost")
+	private int productsCost;
 
-    public Cart() {
-        this.deliveryIncluded = true;
-        this.totalItems = 0;
-        this.productsCost = 0;
-    }
+	public Cart() {
+		this.deliveryIncluded = true;
+		this.totalItems = 0;
+		this.productsCost = 0;
+	}
 
-    public Cart(UserAccount userAccount) {
-        this.userAccount = userAccount;
-        this.deliveryIncluded = true;
-        this.totalItems = 0;
-        this.productsCost = 0;
-    }
-    
-    public boolean isEmpty() {
-        return (totalItems == 0);
-    }
+	public Cart(UserAccount userAccount) {
+		this.userAccount = userAccount;
+		this.deliveryIncluded = true;
+		this.totalItems = 0;
+		this.productsCost = 0;
+	}
 
-    public void update(Product product, int quantity) {
-        CartItem newItem = new CartItem(this, product, quantity);
-        List<CartItem> items = getCartItems();
-        if (items.contains(newItem)) {
-            int index = items.indexOf(newItem);
-            if (quantity > 0) {
-                items.get(index).setQuantity(quantity);
-            } else {
-                items.remove(newItem);
-            }
-        } else {
-            items.add(newItem);
-        }
-        revalidateCartMetrics();
-    }
+	public boolean isEmpty() {
+		return (totalItems == 0);
+	}
 
-    public void clear() {
-        getCartItems().clear();
-        revalidateCartMetrics();
-    }
+	public void update(Product product, int quantity) {
+		CartItem newItem = new CartItem(this, product, quantity);
+		List<CartItem> items = getCartItems();
+		if (items.contains(newItem)) {
+			int index = items.indexOf(newItem);
+			if (quantity > 0) {
+				items.get(index).setQuantity(quantity);
+			} else {
+				items.remove(newItem);
+			}
+		} else {
+			items.add(newItem);
+		}
+		revalidateCartMetrics();
+	}
 
-    public void revalidateCartMetrics() {
-        int total = 0;
-        int cost = 0;
-        for (CartItem item : getCartItems()) {
-            total += item.getQuantity();
-            cost += item.getQuantity() * item.getProduct().getPrice();
-        }
-        setProductsCost(cost);
-        setTotalItems(total);
-    }
+	public void clear() {
+		getCartItems().clear();
+		revalidateCartMetrics();
+	}
 
-    //---------------------------------------------------- Аксессоры и мутаторы
-    
-    public Long getId() {
-        return id;
-    }
+	public void revalidateCartMetrics() {
+		int total = 0;
+		int cost = 0;
+		for (CartItem item : getCartItems()) {
+			total += item.getQuantity();
+			cost += item.getQuantity() * item.getProduct().getPrice();
+		}
+		setProductsCost(cost);
+		setTotalItems(total);
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	//---------------------------------------------------- Аксессоры и мутаторы
 
-    public UserAccount getUserAccount() {
-        return userAccount;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setUserAccount(UserAccount userAccount) {
-        this.userAccount = userAccount;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public List<CartItem> getCartItems() {
-        return cartItems;
-    }
+	public UserAccount getUserAccount() {
+		return userAccount;
+	}
 
-    public void setCartItems(List<CartItem> cartItems) {
-        this.cartItems = cartItems;
-    }
+	public void setUserAccount(UserAccount userAccount) {
+		this.userAccount = userAccount;
+	}
 
-    public boolean isDeliveryIncluded() {
-        return deliveryIncluded;
-    }
+	public List<CartItem> getCartItems() {
+		return cartItems;
+	}
 
-    public void setDeliveryIncluded(boolean deliveryIncluded) {
-        this.deliveryIncluded = deliveryIncluded;
-    }
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
+	}
 
-    public int getTotalItems() {
-        return totalItems;
-    }
+	public boolean isDeliveryIncluded() {
+		return deliveryIncluded;
+	}
 
-    public void setTotalItems(int totalItems) {
-        this.totalItems = totalItems;
-    }
+	public void setDeliveryIncluded(boolean deliveryIncluded) {
+		this.deliveryIncluded = deliveryIncluded;
+	}
 
-    public int getProductsCost() {
-        return productsCost;
-    }
+	public int getTotalItems() {
+		return totalItems;
+	}
 
-    public void setProductsCost(int productsCost) {
-        this.productsCost = productsCost;
-    }
+	public void setTotalItems(int totalItems) {
+		this.totalItems = totalItems;
+	}
+
+	public int getProductsCost() {
+		return productsCost;
+	}
+
+	public void setProductsCost(int productsCost) {
+		this.productsCost = productsCost;
+	}
 }

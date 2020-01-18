@@ -8,71 +8,71 @@ import java.util.List;
  * Адаптер корзины.
  */
 public class CartDTO extends ResourceSupport {
-    
-    private String user;
-    private List<CartItemDTO> items;
-    private int totalItems;
-    private int productsCost;
-    private int deliveryCost;
-    private boolean deliveryIncluded;
-    private int totalCost;
 
-    public CartDTO() {
-    }
+	private String user;
+	private List<CartItemDTO> items;
+	private int totalItems;
+	private int productsCost;
+	private int deliveryCost;
+	private boolean deliveryIncluded;
+	private int totalCost;
 
-    public String getUser() {
-        return user;
-    }
+	public CartDTO() {
+	}
 
-    public void setUser(String user) {
-        this.user = user;
-    }
+	public String getUser() {
+		return user;
+	}
 
-    public List<CartItemDTO> getItems() {
-        return items;
-    }
+	public void setUser(String user) {
+		this.user = user;
+	}
 
-    public void setItems(List<CartItemDTO> items) {
-        this.items = items;
-    }
+	public List<CartItemDTO> getItems() {
+		return items;
+	}
 
-    public boolean isDeliveryIncluded() {
-        return deliveryIncluded;
-    }
+	public void setItems(List<CartItemDTO> items) {
+		this.items = items;
+	}
 
-    public void setDeliveryIncluded(boolean deliveryIncluded) {
-        this.deliveryIncluded = deliveryIncluded;
-    }
+	public boolean isDeliveryIncluded() {
+		return deliveryIncluded;
+	}
 
-    public int getProductsCost() {
-        return productsCost;
-    }
+	public void setDeliveryIncluded(boolean deliveryIncluded) {
+		this.deliveryIncluded = deliveryIncluded;
+	}
 
-    public void setProductsCost(int productsCost) {
-        this.productsCost = productsCost;
-    }
+	public int getProductsCost() {
+		return productsCost;
+	}
 
-    public int getTotalCost() {
-        return totalCost;
-    }
+	public void setProductsCost(int productsCost) {
+		this.productsCost = productsCost;
+	}
 
-    public void setTotalCost(int totalCost) {
-        this.totalCost = totalCost;
-    }
+	public int getTotalCost() {
+		return totalCost;
+	}
 
-    public int getDeliveryCost() {
-        return deliveryCost;
-    }
+	public void setTotalCost(int totalCost) {
+		this.totalCost = totalCost;
+	}
 
-    public void setDeliveryCost(int deliveryCost) {
-        this.deliveryCost = deliveryCost;
-    }
+	public int getDeliveryCost() {
+		return deliveryCost;
+	}
 
-    public int getTotalItems() {
-        return totalItems;
-    }
+	public void setDeliveryCost(int deliveryCost) {
+		this.deliveryCost = deliveryCost;
+	}
 
-    public void setTotalItems(int totalItems) {
-        this.totalItems = totalItems;
-    }
+	public int getTotalItems() {
+		return totalItems;
+	}
+
+	public void setTotalItems(int totalItems) {
+		this.totalItems = totalItems;
+	}
 }

@@ -28,117 +28,116 @@ import javax.validation.Valid;
 @RequestMapping("/admin/products")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class ProductController {
-    private final ProductService productService;
-    private final DistilleryService distilleryService;
-    private final ISorter<Product> productBackendSorting;
+	private final ProductService productService;
+	private final DistilleryService distilleryService;
+	private final ISorter<Product> productBackendSorting;
 
-    public ProductController(ProductService productService, DistilleryService distilleryService,
-        ISorter<Product> productBackendSorting)
-    {
-        this.productService = productService;
-        this.distilleryService = distilleryService;
-        this.productBackendSorting = productBackendSorting;
-    }
+	public ProductController(ProductService productService, DistilleryService distilleryService,
+		ISorter<Product> productBackendSorting) {
+		this.productService = productService;
+		this.distilleryService = distilleryService;
+		this.productBackendSorting = productBackendSorting;
+	}
 
-    /**
-     * Перечень товаров.
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public String getProducts(
-            SortingValuesDTO sortingValues,
-            @RequestParam(value = "dist", required = false, defaultValue = "0") Long distilleryId,
-            Model model
-    ) {
-        PageRequest request = productBackendSorting.updateSorting(sortingValues);
-        Page<Product> pagedList;
-        if (distilleryId == 0) {
-            pagedList = productService.findAll(request);
-        } else {
-            Distillery distillery = distilleryService.findOne(distilleryId);
-            pagedList = productService.findByDistillery(distillery, request);
-            model.addAttribute("currentDistilleryTitle", distillery.getTitle());
-        }
-        productBackendSorting.prepareModel(model, pagedList);
-        
-        model.addAttribute("distilleries", distilleryService.findAllOrderByTitle());
-        return "admin/products";
-    }
+	/**
+	 * Перечень товаров.
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public String getProducts(
+		SortingValuesDTO sortingValues,
+		@RequestParam(value = "dist", required = false, defaultValue = "0") Long distilleryId,
+		Model model
+	) {
+		PageRequest request = productBackendSorting.updateSorting(sortingValues);
+		Page<Product> pagedList;
+		if (distilleryId == 0) {
+			pagedList = productService.findAll(request);
+		} else {
+			Distillery distillery = distilleryService.findOne(distilleryId);
+			pagedList = productService.findByDistillery(distillery, request);
+			model.addAttribute("currentDistilleryTitle", distillery.getTitle());
+		}
+		productBackendSorting.prepareModel(model, pagedList);
 
-    //------------------------------------------------------- Добавление товара
-    
-    /**
-     * Страница добавления.
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/new")
-    public String newProduct(Model model) {
-        model.addAttribute("product", new Product());
-        model.addAttribute("distilleries", distilleryService.findAllOrderByTitle());
-        return "admin/products/new";
-    }
+		model.addAttribute("distilleries", distilleryService.findAllOrderByTitle());
+		return "admin/products";
+	}
 
-    /**
-     * Сохранение нового товара.
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    public String postProduct(
-            @Valid Product product,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/admin/products/new";
-        }
-        Distillery distillery = distilleryService.findOne(product.getDistillery().getId());
-        product.setDistillery(distillery);
+	//------------------------------------------------------- Добавление товара
 
-        Storage available = new Storage(product);
-        product.setStorage(available);
+	/**
+	 * Страница добавления.
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/new")
+	public String newProduct(Model model) {
+		model.addAttribute("product", new Product());
+		model.addAttribute("distilleries", distilleryService.findAllOrderByTitle());
+		return "admin/products/new";
+	}
 
-        productService.save(product);
-        return "redirect:/admin/products";
-    }
+	/**
+	 * Сохранение нового товара.
+	 */
+	@RequestMapping(method = RequestMethod.POST)
+	public String postProduct(
+		@Valid Product product,
+		BindingResult bindingResult
+	) {
+		if (bindingResult.hasErrors()) {
+			return "redirect:/admin/products/new";
+		}
+		Distillery distillery = distilleryService.findOne(product.getDistillery().getId());
+		product.setDistillery(distillery);
 
-    //--------------------------------------------------- Редактирование товара
-    
-    /**
-     * Страница редактирования.
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/{productId}/edit")
-    public String editProduct(
-            @PathVariable long productId,
-            Model model
-    ) throws ProductNotFoundException {
-        model.addAttribute("product", productService.findOne(productId));
-        model.addAttribute("distilleries", distilleryService.findAllOrderByTitle());
-        return "admin/products/edit";
-    }
+		Storage available = new Storage(product);
+		product.setStorage(available);
 
-    /**
-     * Изменение товара.
-     */
-    @RequestMapping(method = RequestMethod.PUT, value = "/{productId}")
-    public String putProduct(
-            @PathVariable long productId,
-            @Valid Product product,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
-            return "admin/products/edit";
-        }
-        Distillery distillery = distilleryService.findOne(product.getDistillery().getId());
-        product.setDistillery(distillery);
-        productService.save(product);//!
-        return "redirect:/admin/products";
-    }
+		productService.save(product);
+		return "redirect:/admin/products";
+	}
 
-    //--------------------------------------------------------- Удаление товара
-    
-    /**
-     * Удаление товара.
-     */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")
-    public String deleteProduct(@PathVariable long productId) throws ProductNotFoundException {
-        Product product = productService.findOne(productId);
-        productService.delete(product);
-        return "redirect:/admin/products";
-    }
+	//--------------------------------------------------- Редактирование товара
+
+	/**
+	 * Страница редактирования.
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/{productId}/edit")
+	public String editProduct(
+		@PathVariable long productId,
+		Model model
+	) throws ProductNotFoundException {
+		model.addAttribute("product", productService.findOne(productId));
+		model.addAttribute("distilleries", distilleryService.findAllOrderByTitle());
+		return "admin/products/edit";
+	}
+
+	/**
+	 * Изменение товара.
+	 */
+	@RequestMapping(method = RequestMethod.PUT, value = "/{productId}")
+	public String putProduct(
+		@PathVariable long productId,
+		@Valid Product product,
+		BindingResult bindingResult
+	) {
+		if (bindingResult.hasErrors()) {
+			return "admin/products/edit";
+		}
+		Distillery distillery = distilleryService.findOne(product.getDistillery().getId());
+		product.setDistillery(distillery);
+		productService.save(product);//!
+		return "redirect:/admin/products";
+	}
+
+	//--------------------------------------------------------- Удаление товара
+
+	/**
+	 * Удаление товара.
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{productId}")
+	public String deleteProduct(@PathVariable long productId) throws ProductNotFoundException {
+		Product product = productService.findOne(productId);
+		productService.delete(product);
+		return "redirect:/admin/products";
+	}
 }

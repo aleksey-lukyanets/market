@@ -27,52 +27,52 @@ import java.util.Map;
 @RequestMapping("/admin/orders")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class OrdersController {
-    private final OrderService orderService;
-    private final ISorter<Order> orderSorting;
+	private final OrderService orderService;
+	private final ISorter<Order> orderSorting;
 
-    public OrdersController(OrderService orderService, ISorter<Order> orderSorting) {
-        this.orderService = orderService;
-        this.orderSorting = orderSorting;
-    }
+	public OrdersController(OrderService orderService, ISorter<Order> orderSorting) {
+		this.orderService = orderService;
+		this.orderSorting = orderSorting;
+	}
 
-    /**
-     * Перечень заказов.
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public String getOrders(
-            SortingValuesDTO sortingValues,
-            @RequestParam(value = "exec", required = false, defaultValue = "all") String executed,
-            @RequestParam(value = "created", required = false, defaultValue = "all") String created,
-            Model model
-    ) {
-        PageRequest request = orderSorting.updateSorting(sortingValues);
-        Page<Order> pagedList = orderService.fetchFilteredAndPaged(executed, created, request);
-        orderSorting.prepareModel(model, pagedList);
+	/**
+	 * Перечень заказов.
+	 */
+	@RequestMapping(method = RequestMethod.GET)
+	public String getOrders(
+		SortingValuesDTO sortingValues,
+		@RequestParam(value = "exec", required = false, defaultValue = "all") String executed,
+		@RequestParam(value = "created", required = false, defaultValue = "all") String created,
+		Model model
+	) {
+		PageRequest request = orderSorting.updateSorting(sortingValues);
+		Page<Order> pagedList = orderService.fetchFilteredAndPaged(executed, created, request);
+		orderSorting.prepareModel(model, pagedList);
 
-        Map<Long, List<OrderedProduct>> orderedProductsMap = new HashMap<>();
-        for (Order order : pagedList.getContent()) {
-            orderedProductsMap.put(order.getId(), new ArrayList<>(order.getOrderedProducts()));
-        }
-        model.addAttribute("orderedProductsMap", orderedProductsMap);
+		Map<Long, List<OrderedProduct>> orderedProductsMap = new HashMap<>();
+		for (Order order : pagedList.getContent()) {
+			orderedProductsMap.put(order.getId(), new ArrayList<>(order.getOrderedProducts()));
+		}
+		model.addAttribute("orderedProductsMap", orderedProductsMap);
 
-        model.addAttribute("currentExecuted", executed);
-        model.addAttribute("currentCreated", created);
-        return "admin/orders";
-    }
+		model.addAttribute("currentExecuted", executed);
+		model.addAttribute("currentCreated", created);
+		return "admin/orders";
+	}
 
-    /**
-     * Изменение статуса исполнения заказа.
-     */
-    @RequestMapping(method = RequestMethod.PUT, value = "/{orderId}")
-    public String putOrderExecutionStatus(
-            @PathVariable long orderId,
-            @RequestParam(value = "executed") Boolean executed
-    ) {
-        if (executed != null) {
-            Order order = orderService.findOne(orderId);
-            order.setExecuted(executed);
-            orderService.save(order);
-        }
-        return "redirect:/admin/orders";
-    }
+	/**
+	 * Изменение статуса исполнения заказа.
+	 */
+	@RequestMapping(method = RequestMethod.PUT, value = "/{orderId}")
+	public String putOrderExecutionStatus(
+		@PathVariable long orderId,
+		@RequestParam(value = "executed") Boolean executed
+	) {
+		if (executed != null) {
+			Order order = orderService.findOne(orderId);
+			order.setExecuted(executed);
+			orderService.save(order);
+		}
+		return "redirect:/admin/orders";
+	}
 }

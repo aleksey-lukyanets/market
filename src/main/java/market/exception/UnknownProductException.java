@@ -5,7 +5,7 @@ package market.exception;
  */
 public class UnknownProductException extends CustomNotValidException {
 
-    public UnknownProductException() {
-        super("NotExist", "product", "id");
-    }
+	public UnknownProductException() {
+		super("NotExist", "product", "id");
+	}
 }

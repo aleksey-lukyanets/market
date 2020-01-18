@@ -10,32 +10,32 @@ import java.util.List;
  */
 public interface UserAccountService {
 
-    void save(UserAccount account);
-    
-    void delete(UserAccount account);
+	void save(UserAccount account);
 
-    UserAccount findOne(long accountId);
+	void delete(UserAccount account);
 
-    List<UserAccount> findAll();
+	UserAccount findOne(long accountId);
 
-    UserAccount findByEmail(String email);
-    
-    //--------------------------------------- Операции с аккаунтом пользователя
+	List<UserAccount> findAll();
 
-    /**
-     * Создание нового аккаунта.
-     *
-     * @param userAccount данные нового пользователя
-     * @return вновь созданный аккаунт
-     * @throws EmailExistsException если пользователь с таким адресом уже существует
-     */
-    UserAccount createUser(UserAccount userAccount) throws EmailExistsException;
-    
-    /**
-     * Получение аккаунта пользователя.
-     *
-     * @param userLogin логин пользователя
-     * @return аккаунт пользователя с запрошенным логином
-     */
-    UserAccount getUserAccount(String userLogin);
+	UserAccount findByEmail(String email);
+
+	//--------------------------------------- Операции с аккаунтом пользователя
+
+	/**
+	 * Создание нового аккаунта.
+	 *
+	 * @param userAccount данные нового пользователя
+	 * @return вновь созданный аккаунт
+	 * @throws EmailExistsException если пользователь с таким адресом уже существует
+	 */
+	UserAccount createUser(UserAccount userAccount) throws EmailExistsException;
+
+	/**
+	 * Получение аккаунта пользователя.
+	 *
+	 * @param userLogin логин пользователя
+	 * @return аккаунт пользователя с запрошенным логином
+	 */
+	UserAccount getUserAccount(String userLogin);
 }
