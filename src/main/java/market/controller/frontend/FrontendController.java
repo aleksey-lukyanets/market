@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.security.Principal;
+
 /**
  * Контроллер пользовательского интерфейса.
  */
@@ -24,7 +26,7 @@ public class FrontendController {
 	 * Главная страница.
 	 */
 	@RequestMapping(value = {"", "/", "/index"}, method = RequestMethod.GET)
-	public String index(Principal principal, Model model) {
+	public String index(Model model) {
 		model.addAttribute("regions", regionService.findAllOrderByName());
 		model.addAttribute("selectedRegion", Region.NULL);
 		return "index";

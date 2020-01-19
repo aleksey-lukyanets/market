@@ -6,6 +6,7 @@ import market.service.StorageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Реализация сервиса единицы хранения.
  */
+@Service
 public class StorageServiceImpl implements StorageService {
 	private final StorageDAO storageDAO;
 
@@ -49,7 +51,7 @@ public class StorageServiceImpl implements StorageService {
 	@Transactional(readOnly = true)
 	@Override
 	public Storage findOne(long productId) {
-		return storageDAO.findOne(productId);
+		return storageDAO.findById(productId).orElse(null);
 	}
 
 	@Transactional(readOnly = true)

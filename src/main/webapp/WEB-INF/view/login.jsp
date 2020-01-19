@@ -23,7 +23,7 @@
 <div style="margin-top:70px; margin-bottom:100px;">
 	<div>
 		<form id="signupForm" class="form-horizontal"
-			  action="<c:url value='j_spring_security_check'/>" method="post">
+			  action="<c:url value='/login' var="/login"/>" method="post">
 			<div class="form-group">
 				<label for="email" class="col-sm-4 control-label">
 					электронная почта

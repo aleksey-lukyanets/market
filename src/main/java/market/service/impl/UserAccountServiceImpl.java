@@ -6,6 +6,7 @@ import market.domain.UserAccount;
 import market.exception.EmailExistsException;
 import market.service.UserAccountService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Реализация сервиса аккаунта пользователя.
  */
+@Service
 public class UserAccountServiceImpl implements UserAccountService {
 	private final UserAccountDAO userAccountDAO;
 
@@ -35,7 +37,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 	@Transactional(readOnly = true)
 	@Override
 	public UserAccount findOne(long accountId) {
-		return userAccountDAO.findOne(accountId);
+		return userAccountDAO.findById(accountId).orElse(null);
 	}
 
 	@Transactional(readOnly = true)

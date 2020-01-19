@@ -5,6 +5,7 @@ import market.domain.Distillery;
 import market.domain.Region;
 import market.service.DistilleryService;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Реализация сервиса винокурни.
  */
+@Service
 public class DistilleryServiceImpl implements DistilleryService {
 	private final DistilleryDAO distilleryDAO;
 
@@ -36,19 +38,19 @@ public class DistilleryServiceImpl implements DistilleryService {
 	@Transactional(readOnly = true)
 	@Override
 	public Distillery findOne(long distilleryId) {
-		return distilleryDAO.findOne(distilleryId);
+		return distilleryDAO.findById(distilleryId).orElse(null);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public List<Distillery> findAllOrderById() {
-		return distilleryDAO.findAll(new Sort(Sort.Direction.ASC, "id"));
+		return distilleryDAO.findAll(Sort.by(Sort.Direction.ASC, "id"));
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public List<Distillery> findAllOrderByTitle() {
-		return distilleryDAO.findAll(new Sort(Sort.Direction.ASC, "title"));
+		return distilleryDAO.findAll(Sort.by(Sort.Direction.ASC, "title"));
 	}
 
 	@Transactional(readOnly = true)

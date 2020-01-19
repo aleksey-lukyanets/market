@@ -9,14 +9,21 @@ import market.domain.Product;
 import market.domain.UserAccount;
 import market.exception.UnknownProductException;
 import market.service.CartService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Реализация сервиса корзины.
  */
+@Service
 public class CartServiceImpl implements CartService {
+	private static final Logger log = LoggerFactory.getLogger(CartServiceImpl.class);
+
 	private final CartDAO cartDAO;
 	private final UserAccountDAO userAccountDAO;
 	private final ProductDAO productDAO;
@@ -42,7 +49,13 @@ public class CartServiceImpl implements CartService {
 	@Transactional
 	@Override
 	public Cart findOne(long cartId) {
-		return cartDAO.findOne(cartId);
+		Optional<Cart> optionalCart = cartDAO.findById(cartId);
+		if (!optionalCart.isPresent()) {
+			log.warn("Cart doesn't exist: cartId=" + cartId);
+			return null;
+		} else {
+			return optionalCart.get();
+		}
 	}
 
 	@Transactional(readOnly = true)
@@ -54,9 +67,7 @@ public class CartServiceImpl implements CartService {
 	@Transactional
 	@Override
 	public Cart updateCartObject(Cart cart, Long productId, Short quantity) throws UnknownProductException {
-		Product product = productDAO.findOne(productId);
-		if (product == null)
-			throw new UnknownProductException();
+		Product product = productDAO.findById(productId).orElseThrow(UnknownProductException::new);
 		if (product.getStorage().isAvailable())
 			cart.update(product, quantity);
 		return cart;

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Контроллер панели управления.
  */
 @Controller
+@RequestMapping(value = "/admin")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class BackendController {
 

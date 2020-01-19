@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Реализация сервиса товара.
  */
+@Service
 public class ProductServiceImpl implements ProductService {
 	private final ProductDAO productDAO;
 
@@ -39,17 +41,13 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional(readOnly = true)
 	@Override
 	public Product findOne(long productId) throws ProductNotFoundException {
-		Product product = productDAO.findOne(productId);
-		if (product == null) {
-			throw new ProductNotFoundException();
-		}
-		return product;
+		return productDAO.findById(productId).orElseThrow(ProductNotFoundException::new);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public List<Product> findAllOrderById() {
-		return productDAO.findAll(new Sort(Sort.Direction.ASC, "id"));
+		return productDAO.findAll(Sort.by(Sort.Direction.ASC, "id"));
 	}
 
 	@Transactional(readOnly = true)
