@@ -24,7 +24,7 @@ public abstract class AbstractSorter<T> implements ISorter<T> {
 
 	public static Integer FIRST_PAGE = 1;
 	public static Integer PAGE_SIZE_DEFAULT = 5;
-	public static String DIRECTION_DEFAULT = "asc";
+	public static Sort.Direction DIRECTION_DEFAULT = Sort.Direction.ASC;
 
 	protected final Map<String, String> sortFieldOptions = new LinkedHashMap<>();
 	private final Map<Integer, String> pageSizeOptions = new LinkedHashMap<>();
@@ -32,10 +32,10 @@ public abstract class AbstractSorter<T> implements ISorter<T> {
 	private Integer pageNumber;
 	private Integer pageSize;
 	private String sortBy;
-	private String sortDirection;
+	private Sort.Direction sortDirection;
 
 	{
-		directionOptions.put(DIRECTION_DEFAULT, "по возрастанию");
+		directionOptions.put(DIRECTION_DEFAULT.toString(), "по возрастанию");
 		directionOptions.put("desc", "по убыванию");
 
 		pageSizeOptions.put(3, "3");
@@ -46,12 +46,18 @@ public abstract class AbstractSorter<T> implements ISorter<T> {
 
 	//-------------------------------------------------------- Обновление опций
 
+	private static Sort.Direction parseSortDirection(String direction) {
+		if (direction == null)
+			return DIRECTION_DEFAULT;
+		return Sort.Direction.fromOptionalString(direction).orElse(DIRECTION_DEFAULT);
+	}
+
 	@Override
 	public PageRequest updateSorting(SortingValuesDTO values) {
 		this.sortBy = (values.getSort() == null) ? getSortFieldDefault() : values.getSort();
 		this.pageSize = (values.getSize() == null) ? getDefaultPageSize() : values.getSize();
 		this.pageNumber = (values.getPage() == null) ? FIRST_PAGE : values.getPage();
-		this.sortDirection = (values.getDirect() == null) ? DIRECTION_DEFAULT : values.getDirect();
+		this.sortDirection = parseSortDirection(values.getDirect());
 		return createPageRequest();
 	}
 
@@ -67,10 +73,10 @@ public abstract class AbstractSorter<T> implements ISorter<T> {
 	}
 
 	private PageRequest createPageRequest() {
-		return new PageRequest(
+		return PageRequest.of(
 			getPageNumber() - 1,
 			getPageSize(),
-			Sort.Direction.fromStringOrNull(getSortDirection()),
+			getSortDirection(),
 			getSortBy());
 	}
 
@@ -141,7 +147,7 @@ public abstract class AbstractSorter<T> implements ISorter<T> {
 		return sortBy;
 	}
 
-	public String getSortDirection() {
+	public Sort.Direction getSortDirection() {
 		return sortDirection;
 	}
 

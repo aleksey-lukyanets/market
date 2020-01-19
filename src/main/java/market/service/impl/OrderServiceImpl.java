@@ -10,6 +10,7 @@ import market.service.OrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -17,6 +18,7 @@ import java.util.*;
 /**
  * Реализация сервиса заказа.
  */
+@Service
 public class OrderServiceImpl implements OrderService {
 	private final OrderDAO orderDAO;
 	private final UserAccountDAO userAccountDAO;
@@ -43,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
 	@Transactional(readOnly = true)
 	@Override
 	public Order findOne(long orderId) {
-		return orderDAO.findOne(orderId);
+		return orderDAO.findById(orderId).orElse(null);
 	}
 
 	@Transactional(readOnly = true)

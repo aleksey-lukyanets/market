@@ -5,6 +5,7 @@ import market.dao.UserAccountDAO;
 import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.service.ContactsService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Реализация сервиса контактных данных пользователя.
  */
+@Service
 public class ContactsServiceImpl implements ContactsService {
 	private final ContactsDAO contactsDAO;
 	private final UserAccountDAO userAccountDAO;
@@ -36,7 +38,7 @@ public class ContactsServiceImpl implements ContactsService {
 	@Transactional(readOnly = true)
 	@Override
 	public Contacts findOne(long contactsId) {
-		return contactsDAO.findOne(contactsId);
+		return contactsDAO.findById(contactsId).orElse(null);
 	}
 
 	@Transactional(readOnly = true)

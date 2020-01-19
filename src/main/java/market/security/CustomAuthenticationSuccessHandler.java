@@ -2,7 +2,6 @@ package market.security;
 
 import market.domain.UserAccount;
 import market.service.UserAccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -17,11 +16,13 @@ import java.util.Set;
  * Обработчик успешной аутентификации пользователя.
  */
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+	private final ServletContext servletContext;
+	private final UserAccountService userAccountService;
 
-	@Autowired
-	private ServletContext servletContext;
-	@Autowired
-	private UserAccountService userAccountService;
+	public CustomAuthenticationSuccessHandler(ServletContext servletContext, UserAccountService userAccountService) {
+		this.servletContext = servletContext;
+		this.userAccountService = userAccountService;
+	}
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
