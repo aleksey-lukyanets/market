@@ -1,7 +1,7 @@
 package market.dto;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 /**
  * Адаптер данных пользователя.
  */
-public class UserDTO extends ResourceSupport {
+public class UserDTO extends RepresentationModel<UserDTO> {
 
 	@NotEmpty
 	@Size(max = 50)

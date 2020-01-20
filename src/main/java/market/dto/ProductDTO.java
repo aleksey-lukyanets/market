@@ -1,7 +1,7 @@
 package market.dto;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 /**
  * Адаптер товара.
  */
-public class ProductDTO extends ResourceSupport {
+public class ProductDTO extends RepresentationModel<ProductDTO> {
 
 	private long productId;
 

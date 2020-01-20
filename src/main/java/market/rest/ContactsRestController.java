@@ -39,7 +39,7 @@ public class ContactsRestController {
 	public ContactsDTO getContacts(Principal principal) {
 		String login = principal.getName();
 		Contacts contacts = contactsService.getUserContacts(login);
-		return contactsDtoAssembler.toResource(contacts);
+		return contactsDtoAssembler.toModel(contacts);
 	}
 
 	/**
@@ -59,6 +59,6 @@ public class ContactsRestController {
 		String newPhone = contactsDto.getPhone();
 		String newAddress = contactsDto.getAddress();
 		Contacts updatedContacts = contactsService.updateUserContacts(login, newPhone, newAddress);
-		return contactsDtoAssembler.toResource(updatedContacts);
+		return contactsDtoAssembler.toModel(updatedContacts);
 	}
 }

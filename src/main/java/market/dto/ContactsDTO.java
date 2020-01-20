@@ -1,7 +1,7 @@
 package market.dto;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 /**
  * Контактные данные пользователя.
  */
-public class ContactsDTO extends ResourceSupport {
+public class ContactsDTO extends RepresentationModel<ContactsDTO> {
 
 	@Size(max = 20)
 	@Pattern(regexp = "^\\+[1-9][0-9]?[\\s]*\\(?\\d{3}\\)?[-\\s]?\\d{3}[-\\s]?\\d{2}[-\\s]?\\d{2}$")

@@ -13,7 +13,6 @@ import market.exception.UnknownProductException;
 import market.service.CartService;
 import market.service.OrderService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -127,11 +126,10 @@ public class CartRestController {
 	public ResponseEntity<OrderDTO> payByCard(Principal principal, @Valid @RequestBody CreditCardDTO card) throws EmptyCartException {
 		String login = principal.getName();
 		Order order = orderService.createUserOrder(login, deliveryCost, card.getNumber());
-		OrderDTO dto = orderDtoAssembler.toResource(order);
+		OrderDTO dto = orderDtoAssembler.toModel(order);
 
 		HttpHeaders headers = new HttpHeaders();
-		Link link = dto.getLink("self");
-		headers.setLocation(URI.create(link.getHref()));
+		dto.getLink("self").ifPresent(link -> headers.setLocation(URI.create(link.getHref())));
 		return new ResponseEntity<>(dto, headers, HttpStatus.CREATED);
 	}
 }

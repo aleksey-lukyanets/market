@@ -102,7 +102,7 @@ public class CustomerController {
 			UserAccount userData = userAccountDtoAssembler.toDomain(user);
 			UserAccount newAccount = userAccountService.createUser(userData);
 			authenticationService.authenticate(newAccount);
-			model.addAttribute("userDTO", userAccountDtoAssembler.toResource(newAccount));
+			model.addAttribute("userDTO", userAccountDtoAssembler.toModel(newAccount));
 		} catch (EmailExistsException ex) {
 			bindingResult.addError(ex.getFieldError());
 			return view;

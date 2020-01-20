@@ -1,11 +1,11 @@
 package market.dto;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
  * Адаптер товара.
  */
-public class ProductPreviewDTO extends ResourceSupport {
+public class ProductPreviewDTO extends RepresentationModel<ProductPreviewDTO> {
 
 	private long productId;
 	private String distillery;

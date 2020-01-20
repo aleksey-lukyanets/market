@@ -7,13 +7,14 @@ import market.dto.assembler.ProductDtoAssembler;
 import market.dto.assembler.ProductPreviewAssembler;
 import market.exception.ProductNotFoundException;
 import market.service.ProductService;
-import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -38,10 +39,9 @@ public class ProductsRestController {
 		method = RequestMethod.GET,
 		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public List<ProductPreviewDTO> getProducts() {
+	public Collection<ProductPreviewDTO> getProducts() {
 		List<Product> products = productService.findAllOrderById();
-		List<ProductPreviewDTO> dtos = new ProductPreviewAssembler().toResources(products);
-		return dtos;
+		return new ProductPreviewAssembler().toCollectionModel(products).getContent();
 	}
 
 	/**
@@ -57,7 +57,6 @@ public class ProductsRestController {
 	@ResponseBody
 	public ProductDTO getProduct(@PathVariable long id) throws ProductNotFoundException {
 		Product product = productService.findOne(id);
-		ProductDTO dto = new ProductDtoAssembler().toResource(product);
-		return dto;
+		return new ProductDtoAssembler().toModel(product);
 	}
 }

@@ -96,7 +96,7 @@ public class CheckoutController {
 			String newPhone = contactsDto.getPhone();
 			String newAddress = contactsDto.getAddress();
 			Contacts updatedContacts = contactsService.updateUserContacts(login, newPhone, newAddress);
-			model.addAttribute("userDetails", contactsDtoAssembler.toResource(updatedContacts));
+			model.addAttribute("userDetails", contactsDtoAssembler.toModel(updatedContacts));
 		}
 		return "redirect:/checkout/payment";
 	}
@@ -145,7 +145,7 @@ public class CheckoutController {
 		String login = principal.getName();
 		try {
 			Order order = orderService.createUserOrder(login, deliveryCost, creditCard.getNumber());
-			request.getSession().setAttribute("createdOrder", orderDtoAssembler.toResource(order));
+			request.getSession().setAttribute("createdOrder", orderDtoAssembler.toModel(order));
 			return "redirect:/checkout/confirmation";
 		} catch (EmptyCartException ex) {
 			bindingResult.addError(ex.getFieldError());
@@ -171,7 +171,7 @@ public class CheckoutController {
 		String login = principal.getName();
 		Contacts contacts = contactsService.getUserContacts(login);
 		model.addAttribute("userAccount", userAccountService.getUserAccount(login));
-		model.addAttribute("userDetails", contactsDtoAssembler.toResource(contacts));
+		model.addAttribute("userDetails", contactsDtoAssembler.toModel(contacts));
 		return "checkout/confirmation";
 	}
 }

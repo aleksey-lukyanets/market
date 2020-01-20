@@ -4,24 +4,24 @@ import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.dto.UserDTO;
 import market.rest.CartRestController;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  *
  */
 @Component
-public class UserAccountDtoAssembler extends ResourceAssemblerSupport<UserAccount, UserDTO> {
+public class UserAccountDtoAssembler extends RepresentationModelAssemblerSupport<UserAccount, UserDTO> {
 
 	public UserAccountDtoAssembler() {
 		super(CartRestController.class, UserDTO.class);
 	}
 
 	@Override
-	public UserDTO toResource(UserAccount userAccount) {
-		UserDTO dto = instantiateResource(userAccount);
+	public UserDTO toModel(UserAccount userAccount) {
+		UserDTO dto = instantiateModel(userAccount);
 		dto.setEmail(userAccount.getEmail());
 		dto.setPassword("hidden");
 		dto.setName(userAccount.getName());

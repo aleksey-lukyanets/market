@@ -50,29 +50,27 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>5.1.12.RELEASE</spring.version>
-        <spring.boot.version>2.1.11.RELEASE</spring.boot.version>
-        <spring.data.version>2.1.14.RELEASE</spring.data.version>
+        <spring.version>5.2.3.RELEASE</spring.version>
+        <spring.boot.version>2.2.3.RELEASE</spring.boot.version>
+        <spring.data.version>2.2.4.RELEASE</spring.data.version>
+        <spring.security.version>5.2.1.RELEASE</spring.security.version> <!-- on spring-boot upgrade change to the version of others 'spring-security-*' -->
+        <spring.plugin.version>2.0.0.RELEASE</spring.plugin.version>
         <hibernate.version>5.4.10.Final</hibernate.version>
+        <tomcat.jasper.version>9.0.30</tomcat.jasper.version> <!-- on spring-boot upgrade change to the version of others 'tomcat-embed-*' -->
         <tiles.version>3.0.0</tiles.version>
     </properties>
 
     <dependencies>
         <!-- Spring -->
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.plugin</groupId>
             <artifactId>spring-plugin-core</artifactId>
-            <version>1.2.0.RELEASE</version>
+            <version>${spring.plugin.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
-            <version>5.1.7.RELEASE</version> <!-- on spring-boot upgrade change to the version of others 'spring-security-*' -->
+            <version>${spring.security.version}</version>
         </dependency>
 
         <!-- Зависимости интеграционных тестов -->
@@ -131,29 +129,12 @@
             <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>0.8.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path-assert</artifactId>
-            <version>0.8.1</version>
-            <scope>test</scope>
-        </dependency>
 
         <!-- Hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>6.1.1.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -207,7 +188,7 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
-            <version>9.0.27</version> <!-- on spring-boot upgrade change to the version of others 'tomcat-embed-*' -->
+            <version>${tomcat.jasper.version}</version>
             <scope>provided</scope>
         </dependency>
 

@@ -2,19 +2,15 @@ package market.controller.frontend;
 
 import market.domain.Region;
 import market.service.RegionService;
-import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.security.Principal;
-
 /**
  * Контроллер пользовательского интерфейса.
  */
 @Controller
-@EnableEntityLinks
 public class FrontendController {
 	private final RegionService regionService;
 

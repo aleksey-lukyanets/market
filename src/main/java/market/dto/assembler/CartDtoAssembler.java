@@ -1,30 +1,32 @@
 package market.dto.assembler;
 
 import market.domain.Cart;
+import market.domain.CartItem;
 import market.dto.CartDTO;
 import market.dto.CartItemDTO;
 import market.rest.CartRestController;
 import market.rest.ContactsRestController;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  *
  */
 @Component
-public class CartDtoAssembler extends ResourceAssemblerSupport<Cart, CartDTO> {
+public class CartDtoAssembler extends RepresentationModelAssemblerSupport<Cart, CartDTO> {
 
 	public CartDtoAssembler() {
 		super(CartRestController.class, CartDTO.class);
 	}
 
 	@Override
-	public CartDTO toResource(Cart cart) {
-		return instantiateResource(cart);
+	public CartDTO toModel(Cart cart) {
+		return instantiateModel(cart);
 	}
 
 	public CartDTO toUserResource(Cart cart, int deliveryСost) {
@@ -39,15 +41,16 @@ public class CartDtoAssembler extends ResourceAssemblerSupport<Cart, CartDTO> {
 		int currentDeliveryCost = cart.isDeliveryIncluded() ? deliveryСost : 0;
 		int totalCost = cart.isEmpty() ? 0 : (cart.getProductsCost() + currentDeliveryCost);
 
-		CartDTO dto = toResource(cart);
+		CartDTO dto = toModel(cart);
 		dto.setDeliveryIncluded(cart.isDeliveryIncluded());
 		dto.setDeliveryCost(deliveryСost);
 		dto.setProductsCost(cart.getProductsCost());
 		dto.setTotalCost(totalCost);
 		dto.setTotalItems(cart.getTotalItems());
 
-		List<CartItemDTO> items = new CartItemDtoAssembler().toResources(cart.getCartItems());
-		dto.setItems(items);
+		List<CartItem> cartItems = cart.getCartItems();
+		List<CartItemDTO> cartItemsDto = new ArrayList<>(new CartItemDtoAssembler().toCollectionModel(cartItems).getContent());
+		dto.setItems(cartItemsDto);
 
 		return dto;
 	}
