@@ -1,13 +1,13 @@
 package market.dto;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Date;
 
 /**
  *
  */
-public class OrderDTO extends ResourceSupport {
+public class OrderDTO extends RepresentationModel<OrderDTO> {
 
 	private String user;
 	private long orderId;

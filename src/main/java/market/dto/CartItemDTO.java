@@ -1,12 +1,12 @@
 package market.dto;
 
 import market.domain.CartItem;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
  * Адаптер элемента корзины.
  */
-public class CartItemDTO extends ResourceSupport {
+public class CartItemDTO extends RepresentationModel<CartItemDTO> {
 
 	private Long productId;
 	private Short quantity;

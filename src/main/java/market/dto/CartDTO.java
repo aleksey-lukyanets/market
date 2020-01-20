@@ -1,13 +1,13 @@
 package market.dto;
 
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 
 /**
  * Адаптер корзины.
  */
-public class CartDTO extends ResourceSupport {
+public class CartDTO extends RepresentationModel<CartDTO> {
 
 	private String user;
 	private List<CartItemDTO> items;

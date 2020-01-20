@@ -3,22 +3,22 @@ package market.dto.assembler;
 import market.domain.Order;
 import market.dto.OrderDTO;
 import market.rest.OrdersRestController;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 /**
  *
  */
 @Component
-public class OrderDtoAssembler extends ResourceAssemblerSupport<Order, OrderDTO> {
+public class OrderDtoAssembler extends RepresentationModelAssemblerSupport<Order, OrderDTO> {
 
 	public OrderDtoAssembler() {
 		super(OrdersRestController.class, OrderDTO.class);
 	}
 
 	@Override
-	public OrderDTO toResource(Order order) {
-		OrderDTO dto = createResourceWithId(order.getId(), order);
+	public OrderDTO toModel(Order order) {
+		OrderDTO dto = createModelWithId(order.getId(), order);
 		dto.setOrderId(order.getId());
 		dto.setUser(order.getUserAccount().getEmail());
 		dto.setBillNumber(order.getBill().getNumber());

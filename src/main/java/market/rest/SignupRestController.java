@@ -49,7 +49,7 @@ public class SignupRestController {
 		UserAccount userData = userAccountDtoAssembler.toDomain(user);
 		UserAccount newAccount = userAccountService.createUser(userData);
 		authenticationService.authenticate(newAccount);
-		return userAccountDtoAssembler.toResource(newAccount);
+		return userAccountDtoAssembler.toModel(newAccount);
 	}
 
 	private UserAccount toUserAccount(UserDTO user) {

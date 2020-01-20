@@ -5,7 +5,7 @@ import market.dto.OrderDTO;
 import market.dto.assembler.OrderDtoAssembler;
 import market.exception.OrderNotFoundException;
 import market.service.OrderService;
-import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,10 +40,10 @@ public class OrdersRestController {
 		method = RequestMethod.GET,
 		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public List<OrderDTO> getOrders(Principal principal) {
+	public Collection<OrderDTO> getOrders(Principal principal) {
 		String login = principal.getName();
 		List<Order> orders = orderService.getUserOrders(login);
-		return orderDtoAssembler.toResources(orders);
+		return orderDtoAssembler.toCollectionModel(orders).getContent();
 	}
 
 	/**
@@ -60,6 +61,6 @@ public class OrdersRestController {
 	public OrderDTO getOrder(Principal principal, @PathVariable long id) throws OrderNotFoundException {
 		String login = principal.getName();
 		Order order = orderService.getUserOrder(login, id);
-		return orderDtoAssembler.toResource(order);
+		return orderDtoAssembler.toModel(order);
 	}
 }

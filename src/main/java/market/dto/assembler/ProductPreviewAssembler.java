@@ -3,20 +3,20 @@ package market.dto.assembler;
 import market.domain.Product;
 import market.dto.ProductPreviewDTO;
 import market.rest.ProductsRestController;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
 /**
  *
  */
-public class ProductPreviewAssembler extends ResourceAssemblerSupport<Product, ProductPreviewDTO> {
+public class ProductPreviewAssembler extends RepresentationModelAssemblerSupport<Product, ProductPreviewDTO> {
 
 	public ProductPreviewAssembler() {
 		super(ProductsRestController.class, ProductPreviewDTO.class);
 	}
 
 	@Override
-	public ProductPreviewDTO toResource(Product product) {
-		ProductPreviewDTO dto = createResourceWithId(product.getId(), product);
+	public ProductPreviewDTO toModel(Product product) {
+		ProductPreviewDTO dto = createModelWithId(product.getId(), product);
 		dto.setProductId(product.getId());
 		dto.setDistillery(product.getDistillery().getTitle());
 		dto.setName(product.getName());
