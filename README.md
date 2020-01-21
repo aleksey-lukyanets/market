@@ -50,8 +50,8 @@
 <p>Ниже приведена диаграмма процесса оформления заказа, на которую нанесены
     элементы данных и доступные покупателю действия.</p>
 <center>
-    <a href="http://goformalts.jelasticloud.com/resources/img/checkout-flow.png">
-        <img src="http://goformalts.jelasticloud.com/resources/img/checkout-flow.png"
+    <a href="http://46.101.111.55:8080/resources/img/checkout-flow.png">
+        <img src="http://46.101.111.55:8080/resources/img/checkout-flow.png"
              alt="процесс оформления заказа"/>
     </a>
 </center>
@@ -121,8 +121,8 @@
 <p>База данных приложения состоит из 13 связанных таблиц, отображаемых средствами Hibernate в 14 классов.</p>
 
 <center>
-    <a href="http://goformalts.jelasticloud.com/resources/img/database-model.png">
-        <img src="http://goformalts.jelasticloud.com/resources/img/database-model.png"
+    <a href="http://46.101.111.55:8080/resources/img/database-model.png">
+        <img src="http://46.101.111.55:8080/resources/img/database-model.png"
              width="500" alt="схема базы данных"/>
     </a>
 </center>
