@@ -1,3 +1,5 @@
+![build](https://github.com/aleksey-lukyanets/market/workflows/build/badge.svg)
+
 <a name="tech"></a>
 <h2>Технологии</h2>
 
