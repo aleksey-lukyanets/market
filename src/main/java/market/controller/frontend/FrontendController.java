@@ -1,35 +1,46 @@
 package market.controller.frontend;
 
 import market.domain.Region;
+import market.dto.RegionDTO;
+import market.dto.assembler.RegionDtoAssembler;
 import market.service.RegionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 /**
- * Контроллер пользовательского интерфейса.
+ * Frontend root pages controller.
  */
 @Controller
 public class FrontendController {
 	private final RegionService regionService;
+	private final RegionDtoAssembler regionDTOAssembler;
 
-	public FrontendController(RegionService regionService) {
+	public FrontendController(RegionService regionService, RegionDtoAssembler regionDTOAssembler) {
 		this.regionService = regionService;
+		this.regionDTOAssembler = regionDTOAssembler;
 	}
 
 	/**
-	 * Главная страница.
+	 * Title page.
 	 */
 	@RequestMapping(value = {"", "/", "/index"}, method = RequestMethod.GET)
 	public String index(Model model) {
-		model.addAttribute("regions", regionService.findAllOrderByName());
+		List<RegionDTO> regionsDto = regionService.findAll().stream()
+			.map(regionDTOAssembler::toModel)
+			.collect(toList());
+		model.addAttribute("regions", regionsDto);
 		model.addAttribute("selectedRegion", Region.NULL);
 		return "index";
 	}
 
 	/**
-	 * Страница входа в магазин.
+	 * Login page.
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login() {
@@ -37,7 +48,7 @@ public class FrontendController {
 	}
 
 	/**
-	 * Описание реализации магазина.
+	 * Implementation description page.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/inside")
 	public String whatsInside() {
@@ -45,7 +56,7 @@ public class FrontendController {
 	}
 
 	/**
-	 * Описание веб-службы REST.
+	 * REST description page.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/rest-api")
 	public String restApi() {

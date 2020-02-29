@@ -15,9 +15,9 @@ public class StorageSorting extends AbstractSorter {
 	private final Map<String, String> availableOptions = new LinkedHashMap<>();
 
 	{
-		sortFieldOptions.put("product.price", "по цене");
-		sortFieldOptions.put("product.distillery.title", "по винокурне");
-		sortFieldOptions.put("product.age", "по возрасту");
+		sortFieldOptions.put("price", "по цене");
+		sortFieldOptions.put("distillery.title", "по винокурне");
+		sortFieldOptions.put("age", "по возрасту");
 
 		availableOptions.put("all", "все товары");
 		availableOptions.put("true", "только в наличии");

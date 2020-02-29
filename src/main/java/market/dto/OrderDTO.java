@@ -13,10 +13,10 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 	private long orderId;
 	private int billNumber;
 	private Date dateCreated;
-	private int productsCost;
+	private double productsCost;
 	private int deliveryCost;
 	private boolean deliveryIncluded;
-	private int totalCost;
+	private double totalCost;
 	private boolean payed;
 	private boolean executed;
 
@@ -39,11 +39,11 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 		this.billNumber = billNumber;
 	}
 
-	public int getProductsCost() {
+	public double getProductsCost() {
 		return productsCost;
 	}
 
-	public void setProductsCost(int productsCost) {
+	public void setProductsCost(double productsCost) {
 		this.productsCost = productsCost;
 	}
 
@@ -63,11 +63,11 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 		this.deliveryCost = deliveryCost;
 	}
 
-	public int getTotalCost() {
+	public double getTotalCost() {
 		return totalCost;
 	}
 
-	public void setTotalCost(int totalCost) {
+	public void setTotalCost(double totalCost) {
 		this.totalCost = totalCost;
 	}
 

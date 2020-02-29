@@ -10,7 +10,7 @@ public class ProductPreviewDTO extends RepresentationModel<ProductPreviewDTO> {
 	private long productId;
 	private String distillery;
 	private String name;
-	private Integer price;
+	private Double price;
 
 	public ProductPreviewDTO() {
 	}
@@ -39,11 +39,11 @@ public class ProductPreviewDTO extends RepresentationModel<ProductPreviewDTO> {
 		this.name = name;
 	}
 
-	public Integer getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Integer price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 }

@@ -2,13 +2,12 @@ package market.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
-/**
- * Элемент корзины.
- */
 @Entity
 @Table(name = "cart_item")
 public class CartItem implements Serializable {
+	private static final long serialVersionUID = -3995571478236070123L;
 
 	@EmbeddedId
 	private CartItemId pk = new CartItemId();
@@ -36,32 +35,8 @@ public class CartItem implements Serializable {
 		this.quantity = quantity;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		CartItem that = (CartItem) o;
-		if (getPk() != null ? !getPk().equals(that.getPk()) : that.getPk() != null) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return (getPk() != null ? getPk().hashCode() : 0);
-	}
-
-	public CartItemId getPk() {
-		return pk;
-	}
-
-	public void setPk(CartItemId pk) {
-		this.pk = pk;
+	public double calculateCost() {
+		return quantity * product.getPrice();
 	}
 
 	public int getQuantity() {
@@ -72,34 +47,38 @@ public class CartItem implements Serializable {
 		this.quantity = quantity;
 	}
 
-	/**
-	 * @return the order
-	 */
 	public Cart getOrder() {
 		return cart;
 	}
 
-	/**
-	 * @param cart the order to set
-	 */
 	public void setOrder(Cart cart) {
 		this.cart = cart;
-		getPk().setCart(cart.getId());
+		pk.setCart(cart.getId());
 	}
 
-	/**
-	 * @return the product
-	 */
 	public Product getProduct() {
 		return product;
 	}
 
-	/**
-	 * @param product the product to set
-	 */
 	public void setProduct(Product product) {
 		this.product = product;
-		getPk().setProduct(product.getId());
+		pk.setProduct(product.getId());
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		CartItem that = (CartItem) o;
+		return Objects.equals(pk, that.pk);
+	}
+
+	@Override
+	public int hashCode() {
+		return (pk != null ? pk.hashCode() : 0);
+	}
 }

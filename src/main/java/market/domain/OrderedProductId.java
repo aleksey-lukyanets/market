@@ -4,7 +4,7 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 /**
- * Первичный ключ товара в составе заказа.
+ * Primary key of a {@link Product} inside the {@link Order}.
  */
 @Embeddable
 public class OrderedProductId implements Serializable {
@@ -56,5 +56,4 @@ public class OrderedProductId implements Serializable {
 		result = 31 * result + (productId != null ? productId.hashCode() : 0);
 		return result;
 	}
-
 }

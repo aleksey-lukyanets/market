@@ -39,12 +39,13 @@
 					</tr>
 					</thead>
 
-					<c:forEach var="orderedProduct" items="${orderedProductsMap[order.id]}">
+					<c:forEach var="orderedProduct" items="${orderedProductsByOrderId[order.id]}">
+						<c:set var="product" value="${productsByOrderId[orderedProduct.productId]}"/>
 						<tr>
-							<td>${orderedProduct.product.distillery.title} ${orderedProduct.product.name}</td>
-							<td>${orderedProduct.product.price} руб.</td>
+							<td>${product.distillery} ${product.name}</td>
+							<td>${product.price} руб.</td>
 							<td>${orderedProduct.quantity}</td>
-							<td>${orderedProduct.quantity * orderedProduct.product.price} руб.</td>
+							<td>${orderedProduct.quantity * product.price} руб.</td>
 						</tr>
 					</c:forEach>
 

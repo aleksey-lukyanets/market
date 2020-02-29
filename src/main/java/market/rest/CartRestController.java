@@ -9,13 +9,14 @@ import market.dto.OrderDTO;
 import market.dto.assembler.CartDtoAssembler;
 import market.dto.assembler.OrderDtoAssembler;
 import market.exception.EmptyCartException;
-import market.exception.UnknownProductException;
+import market.exception.UnknownEntityException;
 import market.service.CartService;
 import market.service.OrderService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +24,9 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 
-/**
- * REST-контроллер корзины.
- */
 @Controller
 @RequestMapping(value = "/rest/cart")
+@Secured({"ROLE_USER"})
 public class CartRestController {
 	private final CartService cartService;
 	private final OrderService orderService;
@@ -38,7 +37,8 @@ public class CartRestController {
 	private int deliveryCost;
 
 	public CartRestController(CartService cartService, OrderService orderService,
-		CartDtoAssembler cartDtoAssembler, OrderDtoAssembler orderDtoAssembler) {
+		CartDtoAssembler cartDtoAssembler, OrderDtoAssembler orderDtoAssembler)
+	{
 		this.cartService = cartService;
 		this.orderService = orderService;
 		this.cartDtoAssembler = cartDtoAssembler;
@@ -46,58 +46,52 @@ public class CartRestController {
 	}
 
 	/**
-	 * Просмотр корзины.
-	 *
-	 * @return корзина
+	 * Viewing the cart.
 	 */
 	@RequestMapping(
 		method = RequestMethod.GET,
 		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public CartDTO getCart(Principal principal) {
-		Cart cart = cartService.getUserCart(principal.getName());
-		return cartDtoAssembler.toUserResource(cart, deliveryCost);
+		Cart cart = cartService.getCartOrCreate(principal.getName());
+		return cartDtoAssembler.toAnonymousResource(cart);
 	}
 
 	/**
-	 * Добавление товара.
+	 * Adding a product.
 	 *
-	 * @param item      добавляемый элемент корзины
-	 * @param principal
-	 * @return обновлённая корзина
-	 * @throws UnknownProductException при добавлении неизвестного товара
+	 * @return updated cart
+	 * @throws UnknownEntityException if the specified product does not exist
 	 */
 	@RequestMapping(
 		method = RequestMethod.PUT,
 		consumes = MediaUtf8.APPLICATION_JSON_UTF8_VALUE,
 		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public CartDTO addItem(Principal principal, @RequestBody CartItemDTO item) throws UnknownProductException {
+	public CartDTO addItem(Principal principal, @RequestBody CartItemDTO item) throws UnknownEntityException {
 		String login = principal.getName();
-		Cart cart = cartService.updateUserCart(login, item.getProductId(), item.getQuantity());
-		return cartDtoAssembler.toUserResource(cart, deliveryCost);
+		Cart cart = cartService.addToCart(login, item.getProductId(), item.getQuantity());
+		return cartDtoAssembler.toAnonymousResource(cart);
 	}
 
 	/**
-	 * Очистка корзины.
+	 * Clearing the cart.
 	 *
-	 * @return пустая корзина
+	 * @return cleared cart
 	 */
 	@RequestMapping(
 		method = RequestMethod.DELETE,
 		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public CartDTO clearCart(Principal principal) {
-		Cart cart = cartService.clearUserCart(principal.getName());
-		return cartDtoAssembler.toUserResource(cart, deliveryCost);
+		Cart cart = cartService.clearCart(principal.getName());
+		return cartDtoAssembler.toAnonymousResource(cart);
 	}
 
 	/**
-	 * Установка способа доставки.
+	 * Setting delivery option.
 	 *
-	 * @param delivery  значение опции доставки
-	 * @param principal
-	 * @return изменённая корзина
+	 * @return updated cart
 	 */
 	@RequestMapping(value = "/delivery/{delivery}",
 		method = RequestMethod.PUT,
@@ -105,18 +99,16 @@ public class CartRestController {
 	@ResponseBody
 	public CartDTO setDelivery(Principal principal, @PathVariable String delivery) {
 		String login = principal.getName();
-		Boolean included = Boolean.valueOf(delivery);
-		Cart cart = cartService.setUserCartDelivery(login, included);
-		return cartDtoAssembler.toUserResource(cart, deliveryCost);
+		boolean included = Boolean.parseBoolean(delivery);
+		Cart cart = cartService.setDelivery(login, included);
+		return cartDtoAssembler.toAnonymousResource(cart);
 	}
 
 	/**
-	 * Оформление заказа.
+	 * Order registration.
 	 *
-	 * @param card      данные банковской карты
-	 * @param principal
-	 * @return созданный заказ
-	 * @throws EmptyCartException при оплате пустой корзины
+	 * @return created order
+	 * @throws EmptyCartException if the cart is empty
 	 */
 	@RequestMapping(value = "/payment",
 		method = RequestMethod.POST,

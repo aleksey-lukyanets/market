@@ -8,9 +8,9 @@
 
 <br>
 
-<s:url value="/admin/products" var="post_path"/>
+<s:url value="/admin/products/new" var="post_path"/>
 <sf:form id="productForm" class="form-horizontal"
-		 modelAttribute="product" commandName="product"
+		 modelAttribute="product"
 		 action="${post_path}" method="post">
 
 	<tiles:insertAttribute name="form-fields"/>

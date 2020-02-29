@@ -11,9 +11,9 @@
 	<div class="col-sm-5">
 		<div class="btn-group">
 			<sf:select multiple="single"
-					   path="distillery.id" class="form-control"
+					   path="distillery" class="form-control"
 					   name="distillery" id="distillery">
-				<sf:options items="${distilleries}" itemValue="id" itemLabel="title"/>
+				<sf:options items="${distilleries}" itemValue="title" itemLabel="title"/>
 			</sf:select>
 		</div>
 	</div>

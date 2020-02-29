@@ -7,9 +7,9 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-/**
- * ДАО винокурни.
- */
 public interface DistilleryDAO extends CrudRepository<Distillery, Long>, JpaRepository<Distillery, Long> {
+
 	List<Distillery> findByRegionOrderByTitleAsc(Region region);
+
+	Distillery findByTitle(String title);
 }

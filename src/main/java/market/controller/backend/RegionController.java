@@ -1,6 +1,8 @@
 package market.controller.backend;
 
 import market.domain.Region;
+import market.dto.RegionDTO;
+import market.dto.assembler.RegionDtoAssembler;
 import market.service.RegionService;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -11,96 +13,91 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.Comparator;
+import java.util.List;
 
-/**
- * Контроллер управления регионами.
- */
+import static java.util.stream.Collectors.toList;
+
 @Controller
 @RequestMapping("/admin/regions")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class RegionController {
-	private final RegionService regionService;
+	private static final String REGIONS_BASE = "admin/regions";
+	private static final String REGIONS_NEW = REGIONS_BASE + "/new";
+	private static final String REGIONS_EDIT = REGIONS_BASE + "/edit";
 
-	public RegionController(RegionService regionService) {
+	private final RegionService regionService;
+	private final RegionDtoAssembler regionDTOAssembler;
+
+	public RegionController(RegionService regionService, RegionDtoAssembler regionDTOAssembler) {
 		this.regionService = regionService;
+		this.regionDTOAssembler = regionDTOAssembler;
 	}
 
-	/**
-	 * Перечень регионов.
-	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String regions(Model model) {
-		model.addAttribute("regions", regionService.findAllOrderById());
-		return "admin/regions";
+		List<RegionDTO> regionsDto = regionService.findAll().stream()
+			.sorted(Comparator.comparing(Region::getId))
+			.map(regionDTOAssembler::toModel)
+			.collect(toList());
+		model.addAttribute("regions", regionsDto);
+		return REGIONS_BASE;
 	}
 
-	//------------------------------------------------- Создание нового региона
+	//------------------------------------------------- Creating new region
 
-	/**
-	 * Страница добавления.
-	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/new")
 	public String newRegion(Model model) {
-		model.addAttribute("region", new Region());
-		return "admin/regions/new";
+		model.addAttribute("region", regionDTOAssembler.toModel(new Region()));
+		return REGIONS_NEW;
 	}
 
-	/**
-	 * Сохранение нового региона.
-	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String postRegion(
-		@Valid Region region,
+		@Valid RegionDTO regionDto,
 		BindingResult bindingResult
 	) {
-		if (bindingResult.hasErrors()) {
-			return "admin/regions/new";
-		}
-		regionService.save(region);
-		return "redirect:/admin/regions";
+		if (bindingResult.hasErrors())
+			return REGIONS_NEW;
+
+		Region newRegion = regionDTOAssembler.toDomain(regionDto);
+		regionService.create(newRegion);
+		return "redirect:/" + REGIONS_BASE;
 	}
 
-	//-------------------------------------------------- Редактирование региона
+	//-------------------------------------------------- Updating region
 
-	/**
-	 * Страница редактирования.
-	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/{regionId}/edit")
 	public String editRegion(
 		@PathVariable long regionId,
 		Model model
 	) {
-		model.addAttribute("region", regionService.findOne(regionId));
-		return "admin/regions/edit";
+		Region region = regionService.findOne(regionId);
+		model.addAttribute("region", regionDTOAssembler.toModel(region));
+		return REGIONS_EDIT;
 	}
 
-	/**
-	 * Изменение региона.
-	 */
 	@RequestMapping(method = RequestMethod.PUT, value = "/{regionId}")
 	public String putRegion(
 		@PathVariable long regionId,
-		@Valid Region region,
+		@Valid RegionDTO regionDto,
 		BindingResult bindingResult
 	) {
-		if (bindingResult.hasErrors()) {
-			return "admin/regions/edit";
-		}
-		regionService.save(region);//!
-		return "redirect:/admin/regions";
+		if (bindingResult.hasErrors())
+			return REGIONS_EDIT;
+
+		Region changedRegion = regionDTOAssembler.toDomain(regionDto);
+		regionService.update(regionId, changedRegion);
+		return "redirect:/" + REGIONS_BASE;
 	}
 
-	//-------------------------------------------------------- Удаление региона
+	//-------------------------------------------------------- Deleting region
 
-	/**
-	 * Удаление региона.
-	 */
-	@RequestMapping(method = RequestMethod.DELETE, value = "/{regionId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/{regionId}/delete")
 	public String deleteRegion(
 		@PathVariable long regionId
 	) {
-		Region region = regionService.findOne(regionId);
-		regionService.delete(region);
-		return "redirect:/admin/regions";
+		regionService.delete(regionId);
+		return "redirect:/" + REGIONS_BASE;
 	}
 }

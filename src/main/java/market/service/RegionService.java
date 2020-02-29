@@ -4,18 +4,36 @@ import market.domain.Region;
 
 import java.util.List;
 
-/**
- * Сервис региона.
- */
 public interface RegionService {
 
-	void save(Region region);
+	/**
+	 * @return all the existing regions sorted by region name
+	 */
+	List<Region> findAll();
 
-	void delete(Region region);
-
+	/**
+	 * @return region with the specified id
+	 */
 	Region findOne(long regionId);
 
-	List<Region> findAllOrderById();
+	/**
+	 * @return region with the specified name
+	 */
+	Region findOne(String regionName);
 
-	List<Region> findAllOrderByName();
+	/**
+	 * Creates new region.
+	 */
+	void create(Region newRegion);
+
+	/**
+	 * Updates existing region.
+	 */
+	void update(long regionId, Region changedRegion);
+
+	/**
+	 * Removes region.
+	 */
+	void delete(long regionId);
+
 }

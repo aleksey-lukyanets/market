@@ -33,7 +33,7 @@
 			<c:set var="shortDesc" value="${fn:substring(product.description, 0, 60)}"/>
 			<tr>
 				<td>${product.id}</td>
-				<td>${product.distillery.title}</td>
+				<td>${product.distillery}</td>
 				<td>${product.name}</td>
 				<td>${product.age}</td>
 				<td>${product.distillery.region.name}</td>
@@ -49,10 +49,10 @@
 					<s:url value="products/{productId}/edit" var="edit_product_url">
 						<s:param name="productId" value="${product.id}"/>
 					</s:url>
-					<s:url value="products/{productId}" var="delete_product_url">
+					<s:url value="products/{productId}/delete" var="delete_product_url">
 						<s:param name="productId" value="${product.id}"/>
 					</s:url>
-					<sf:form action="${delete_product_url}" method="delete">
+					<sf:form action="${delete_product_url}" method="post">
 						<div class="pull-right">
 							<a href="${edit_product_url}" class="btn btn-xs btn-default">изменить</a>
 							<br>

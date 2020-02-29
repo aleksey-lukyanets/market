@@ -1,113 +1,74 @@
 package market.service.impl;
 
 import market.dao.OrderDAO;
-import market.dao.UserAccountDAO;
 import market.domain.*;
 import market.exception.EmptyCartException;
-import market.exception.OrderNotFoundException;
+import market.exception.UnknownEntityException;
 import market.service.CartService;
 import market.service.OrderService;
+import market.service.UserAccountService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-/**
- * Реализация сервиса заказа.
- */
 @Service
 public class OrderServiceImpl implements OrderService {
+	private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
+
 	private final OrderDAO orderDAO;
-	private final UserAccountDAO userAccountDAO;
+	private final UserAccountService userAccountService;
 	private final CartService cartService;
 
-	public OrderServiceImpl(OrderDAO orderDAO, UserAccountDAO userAccountDAO, CartService cartService) {
+	public OrderServiceImpl(OrderDAO orderDAO, UserAccountService userAccountService, CartService cartService) {
 		this.orderDAO = orderDAO;
-		this.userAccountDAO = userAccountDAO;
+		this.userAccountService = userAccountService;
 		this.cartService = cartService;
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	@Override
-	public void save(Order order) {
-		orderDAO.save(order);
-	}
-
-	@Transactional
-	@Override
-	public void delete(Order order) {
-		orderDAO.delete(order);
+	public List<Order> getUserOrders(String userLogin) {
+		UserAccount account = userAccountService.findByEmail(userLogin);
+		return orderDAO.findByUserAccountOrderByDateCreatedDesc(account);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public Order findOne(long orderId) {
-		return orderDAO.findById(orderId).orElse(null);
+	public Order getUserOrder(String userLogin, long id) throws UnknownEntityException {
+		// todo: add user check
+		Order order = orderDAO.findById(id).orElse(null);
+		if ((order == null) || !order.getUserAccount().getEmail().equals(userLogin))
+			throw new UnknownEntityException(Order.class, id);
+		return order;
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Order> findAll() {
-		return orderDAO.findAll();
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public Page<Order> findAll(PageRequest request) {
-		return orderDAO.findAll(request);
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public List<Order> findByUserAccount(UserAccount userAccount) {
-		return orderDAO.findByUserAccountOrderByDateCreatedDesc(userAccount);
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public Page<Order> findByExecuted(boolean stored, Pageable pageable) {
-		return orderDAO.findByExecuted(stored, pageable);
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public Page<Order> findByExecutedAndDateCreatedGreaterThan(boolean executed, Date created, Pageable pageable) {
-		return orderDAO.findByExecutedAndDateCreatedGreaterThan(executed, created, pageable);
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public Page<Order> findByDateCreatedGreaterThan(Date created, Pageable pageable) {
-		return orderDAO.findByDateCreatedGreaterThan(created, pageable);
-	}
-
-	//---------------------------------------- Операции с заказами пользователя
-
-	@Transactional(readOnly = true)
-	@Override
-	public Page<Order> fetchFilteredAndPaged(String executed, String created, PageRequest request) {
+	public Page<Order> fetchFiltered(String executed, String orderAgeInDays, PageRequest request) {
 		Page<Order> pagedList;
 		Date dateCreated = new Date();
-		if (!created.equals("all")) {
-			int days = Integer.valueOf(created);
+		if (!orderAgeInDays.equals("all")) {
+			int days = Integer.parseInt(orderAgeInDays);
 			Calendar c = Calendar.getInstance();
 			c.setTime(new Date());
 			c.add(Calendar.HOUR_OF_DAY, -(days * 24));
 			dateCreated = c.getTime();
 		}
-		if (!executed.equals("all") && !created.equals("all")) {
-			boolean executedState = Boolean.valueOf(executed);
-			pagedList = findByExecutedAndDateCreatedGreaterThan(executedState, dateCreated, request);
+		if (!executed.equals("all") && !orderAgeInDays.equals("all")) {
+			boolean executedState = Boolean.parseBoolean(executed);
+			pagedList = orderDAO.findByExecutedAndDateCreatedGreaterThan(executedState, dateCreated, request);
 		} else if (!executed.equals("all")) {
-			boolean executedState = Boolean.valueOf(executed);
-			pagedList = findByExecuted(executedState, request);
-		} else if (!created.equals("all")) {
-			pagedList = findByDateCreatedGreaterThan(dateCreated, request);
+			boolean executedState = Boolean.parseBoolean(executed);
+			pagedList = orderDAO.findByExecuted(executedState, request);
+		} else if (!orderAgeInDays.equals("all")) {
+			pagedList = orderDAO.findByDateCreatedGreaterThan(dateCreated, request);
 		} else {
-			pagedList = findAll(request);
+			pagedList = orderDAO.findAll(request);
 		}
 		return pagedList;
 	}
@@ -115,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
 	@Transactional
 	@Override
 	public Order createUserOrder(String userLogin, int deliveryCost, String cardNumber) throws EmptyCartException {
-		Cart cart = cartService.getUserCart(userLogin);
+		Cart cart = cartService.getCartOrCreate(userLogin);
 		if (cart.isEmpty())
 			throw new EmptyCartException();
 
@@ -125,10 +86,19 @@ public class OrderServiceImpl implements OrderService {
 		orderDAO.saveAndFlush(order);
 
 		fillOrderItems(cart, order);
-		save(order);
-		cartService.clearUserCart(userLogin);
+		orderDAO.save(order);
+		cartService.clearCart(userLogin);
 
 		return order;
+	}
+
+	@Override
+	public void updateStatus(long orderId, boolean executed) {
+		Order order = orderDAO.findById(orderId).orElse(null);
+		if (order != null) {
+			order.setExecuted(executed);
+			orderDAO.save(order);
+		}
 	}
 
 	private Order createNewOrder(String userLogin, Cart cart, int deliveryCost) {
@@ -140,8 +110,8 @@ public class OrderServiceImpl implements OrderService {
 			order.setDeliveryIncluded(false);
 			order.setDeliveryСost(0);
 		}
-		order.setUserAccount(userAccountDAO.findByEmail(userLogin));
-		order.setProductsCost(cart.getProductsCost());
+		order.setUserAccount(userAccountService.findByEmail(userLogin));
+		order.setProductsCost(cart.getItemsCost());
 		order.setDateCreated(new Date());
 		order.setExecuted(false);
 		return order;
@@ -169,23 +139,5 @@ public class OrderServiceImpl implements OrderService {
 			ordered.add(orderedProduct);
 		}
 		order.setOrderedProducts(ordered);
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public List<Order> getUserOrders(String userLogin) {
-		UserAccount account = userAccountDAO.findByEmail(userLogin);
-		// todo: handle account doesn't exist
-		return findByUserAccount(account);
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public Order getUserOrder(String userLogin, long id) throws OrderNotFoundException {
-		// todo: add user check
-		Order order = findOne(id);
-		if ((order == null) || !order.getUserAccount().getEmail().equals(userLogin))
-			throw new OrderNotFoundException("У пользователя " + userLogin + " не существует заказа с id " + id);
-		return order;
 	}
 }

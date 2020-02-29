@@ -10,7 +10,7 @@
 
 <s:url value="/admin/distilleries" var="post_path"/>
 <sf:form id="distilleryForm" class="form-horizontal"
-		 modelAttribute="distillery" commandName="distillery"
+		 modelAttribute="distillery"
 		 action="${post_path}" method="post">
 
 	<tiles:insertAttribute name="form-fields"/>

@@ -3,9 +3,10 @@ package market.rest;
 import market.domain.Order;
 import market.dto.OrderDTO;
 import market.dto.assembler.OrderDtoAssembler;
-import market.exception.OrderNotFoundException;
+import market.exception.UnknownEntityException;
 import market.service.OrderService;
 import org.springframework.hateoas.server.ExposesResourceFor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,14 +14,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
-import java.util.Collection;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 /**
- * REST-контроллер истории заказов покупателя.
+ * Customer orders history.
  */
 @Controller
 @RequestMapping(value = "/rest/customer/orders")
+@Secured({"ROLE_USER"})
 @ExposesResourceFor(OrderDTO.class)
 public class OrdersRestController {
 	private final OrderService orderService;
@@ -32,33 +35,31 @@ public class OrdersRestController {
 	}
 
 	/**
-	 * Просмотр всех заказов покупателя.
+	 * View orders.
 	 *
-	 * @return список заказов
+	 * @return orders list of the specified customer
 	 */
 	@RequestMapping(
 		method = RequestMethod.GET,
 		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public Collection<OrderDTO> getOrders(Principal principal) {
-		String login = principal.getName();
-		List<Order> orders = orderService.getUserOrders(login);
-		return orderDtoAssembler.toCollectionModel(orders).getContent();
+	public List<OrderDTO> getOrders(Principal principal) {
+		return orderService.getUserOrders(principal.getName()).stream()
+			.map(orderDtoAssembler::toModel)
+			.collect(toList());
 	}
 
 	/**
-	 * Просмотр одного заказа покупателя.
+	 * View a single order.
 	 *
-	 * @param id        идентификатор заказа
-	 * @param principal
-	 * @return запрошенный заказ покупателя
-	 * @throws OrderNotFoundException если заказ не существует у текущего покупателя
+	 * @return order of the specified customer
+	 * @throws UnknownEntityException if the order with the specified id doesn't exist
 	 */
 	@RequestMapping(value = "/{id}",
 		method = RequestMethod.GET,
 		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public OrderDTO getOrder(Principal principal, @PathVariable long id) throws OrderNotFoundException {
+	public OrderDTO getOrder(Principal principal, @PathVariable long id) throws UnknownEntityException {
 		String login = principal.getName();
 		Order order = orderService.getUserOrder(login, id);
 		return orderDtoAssembler.toModel(order);

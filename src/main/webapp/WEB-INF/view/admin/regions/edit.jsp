@@ -12,7 +12,7 @@
 	<s:param name="regionId" value="${region.id}"/>
 </s:url>
 <sf:form id="regionForm" class="form-horizontal"
-		 modelAttribute="region" commandName="region"
+		 modelAttribute="region"
 		 action="${edit_action}" method="put">
 
 	<sf:hidden path="id" name="id" value="${region.id}"/>

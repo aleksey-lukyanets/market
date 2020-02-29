@@ -34,10 +34,10 @@
 					<s:url value="distilleries/{distilleryId}/edit" var="edit_distillery_url">
 						<s:param name="distilleryId" value="${distillery.id}"/>
 					</s:url>
-					<s:url value="distilleries/{distilleryId}" var="delete_distillery_url">
+					<s:url value="distilleries/{distilleryId}/delete" var="delete_distillery_url">
 						<s:param name="distilleryId" value="${distillery.id}"/>
 					</s:url>
-					<sf:form action="${delete_distillery_url}" method="delete">
+					<sf:form action="${delete_distillery_url}" method="post">
 						<div class="btn-group btn-group-xs pull-right">
 							<a href="${edit_distillery_url}" class="btn btn-default">изменить</a>
 							<button type="submit" class="btn btn-default">удалить</button>

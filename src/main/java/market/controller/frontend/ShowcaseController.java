@@ -3,6 +3,12 @@ package market.controller.frontend;
 import market.domain.Distillery;
 import market.domain.Product;
 import market.domain.Region;
+import market.dto.DistilleryDTO;
+import market.dto.ProductDTO;
+import market.dto.RegionDTO;
+import market.dto.assembler.DistilleryDtoAssembler;
+import market.dto.assembler.ProductDtoAssembler;
+import market.dto.assembler.RegionDtoAssembler;
 import market.service.DistilleryService;
 import market.service.ProductService;
 import market.service.RegionService;
@@ -17,33 +23,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Comparator;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 /**
- * Контроллер витрины.
+ * Region products showcase.
  */
 @Controller
 @RequestMapping("/regions")
 public class ShowcaseController {
+	private static final String REGIONS_BASE = "regions";
+
 	private final RegionService regionService;
 	private final ProductService productService;
 	private final DistilleryService distilleryService;
-	private final ISorter<Product> productSorting;
+	private final ISorter<ProductDTO> productSorting;
+	private final ProductDtoAssembler productAssembler;
+	private final RegionDtoAssembler regionDTOAssembler;
+	private final DistilleryDtoAssembler distilleryDTOAssembler;
 
 	public ShowcaseController(RegionService regionService, ProductService productService,
-		DistilleryService distilleryService, ISorter<Product> productSorting) {
+		DistilleryService distilleryService, ISorter<ProductDTO> productSorting, ProductDtoAssembler productAssembler,
+		RegionDtoAssembler regionDTOAssembler, DistilleryDtoAssembler distilleryDTOAssembler)
+	{
 		this.regionService = regionService;
 		this.productService = productService;
 		this.distilleryService = distilleryService;
 		this.productSorting = productSorting;
+		this.productAssembler = productAssembler;
+		this.regionDTOAssembler = regionDTOAssembler;
+		this.distilleryDTOAssembler = distilleryDTOAssembler;
 	}
 
 	/**
-	 * Страница товаров региона. Фильтрация по винокурне и сортировка.
-	 *
-	 * @param regionId      идентификатор региона
-	 * @param sortingValues параметры сортировки
-	 * @param distilleryId  идентификатор винокурни
-	 * @param model
-	 * @return
+	 * Region products page. Filtering by distillery and sorting.
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/{regionId}")
 	public String getRegionProducts(
@@ -55,19 +70,27 @@ public class ShowcaseController {
 		Region region = regionService.findOne(regionId);
 
 		PageRequest request = productSorting.updateSorting(sortingValues);
-		Page<Product> pagedList;
+		Page<Product> pagedProducts;
 		if (distilleryId == 0) {
-			pagedList = productService.findByDistilleriesOfRegion(region, request);
+			pagedProducts = productService.findByRegion(region, request);
 		} else {
-			Distillery distillery = distilleryService.findOne(distilleryId);
-			pagedList = productService.findByDistillery(distillery, request);
+			Distillery distillery = distilleryService.findById(distilleryId);
+			pagedProducts = productService.findByDistillery(distillery, request);
 			model.addAttribute("currentDistilleryTitle", distillery.getTitle());
 		}
-		productSorting.prepareModel(model, pagedList);
-		model.addAttribute("distilleries", distilleryService.findByRegionOrderByTitle(region));
+		productSorting.prepareModel(model, pagedProducts.map(productAssembler::toModel));
 
-		model.addAttribute("selectedRegion", region);
-		model.addAttribute("regions", regionService.findAllOrderByName());
-		return "regions";
+		List<DistilleryDTO> distilleriesDto = distilleryService.findByRegion(region).stream()
+			.map(distilleryDTOAssembler::toModel)
+			.collect(toList());
+		model.addAttribute("distilleries", distilleriesDto);
+
+		List<RegionDTO> regionsDto = regionService.findAll().stream()
+			.sorted(Comparator.comparing(Region::getId))
+			.map(regionDTOAssembler::toModel)
+			.collect(toList());
+		model.addAttribute("regions", regionsDto);
+		model.addAttribute("selectedRegion", regionDTOAssembler.toModel(region));
+		return REGIONS_BASE;
 	}
 }

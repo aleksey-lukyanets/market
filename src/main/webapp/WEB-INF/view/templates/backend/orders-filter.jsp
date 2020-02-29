@@ -25,7 +25,7 @@
 								</c:if>
 							</c:forEach>
 							<c:param name="page" value="1"/>
-							<c:param name="exec" value="${executed.key}"/>
+							<c:param name="executed" value="${executed.key}"/>
 						</c:url>
 						<li><a href="${paramed_url}">${executed.value}</a></li>
 					</c:forEach>

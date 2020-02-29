@@ -33,20 +33,12 @@
 				</tr>
 				</thead>
 				<c:forEach var="cartItem" items="${cart.cartItems}" varStatus="iter">
-					<c:set var="product" value="${cartItem.product}"/>
+					<c:set var="product" value="${productsById[cartItem.productId]}"/>
 					<tr>
-						<td>
-								${product.distillery.title} ${product.name}
-						</td>
-						<td>
-								${product.price} руб.
-						</td>
-						<td>
-								${cartItem.quantity}
-						</td>
-						<td>
-								${product.price * cartItem.quantity} руб.
-						</td>
+						<td>${product.distillery} ${product.name}</td>
+						<td>${product.price} руб.</td>
+						<td>${cartItem.quantity}</td>
+						<td>${product.price * cartItem.quantity} руб.</td>
 					</tr>
 				</c:forEach>
 				<c:choose>
@@ -81,7 +73,7 @@
 				<c:choose>
 					<c:when test="${cart.deliveryIncluded}">
 						<p>доставка курьером</p>
-						<p>${userAccount.name}<br>
+						<p>${userName}<br>
 								${contacts.phone}<br>
 								${contacts.address}<br>
 							г. Санкт-Петербург</p>
@@ -99,7 +91,7 @@
 <br>
 
 <sf:form id="paymentForm" class="form-horizontal"
-		 modelAttribute="creditCard" commandName="creditCard" method="post">
+		 modelAttribute="creditCard" method="post">
 	<div class="form-group">
 		<label for="creditcard" class="col-sm-4 control-label">
 			номер банковской карты

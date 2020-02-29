@@ -32,10 +32,10 @@
 					<br>
 					<c:if test="${createdOrder.deliveryIncluded}">
 						г. Санкт-Петербург<br>
-						${userDetails.address}
+						${userContacts.address}
 						<hr/>
 					</c:if>
-					${userDetails.phone}
+					${userContacts.phone}
 					<br>
 					${userAccount.email}
 				</div>

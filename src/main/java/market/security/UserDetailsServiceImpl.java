@@ -28,8 +28,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	@Transactional
-	public UserDetails loadUserByUsername(String login)
-		throws UsernameNotFoundException, DataAccessException {
+	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException, DataAccessException
+	{
 		UserAccount userEntity = userAccountService.findByEmail(login);
 		if (userEntity == null) {
 			throw new UsernameNotFoundException("user not found");

@@ -21,7 +21,7 @@ public class UserAccountDtoAssembler extends RepresentationModelAssemblerSupport
 
 	@Override
 	public UserDTO toModel(UserAccount userAccount) {
-		UserDTO dto = instantiateModel(userAccount);
+		UserDTO dto = createModelWithId(userAccount.getId(), userAccount);
 		dto.setEmail(userAccount.getEmail());
 		dto.setPassword("hidden");
 		dto.setName(userAccount.getName());

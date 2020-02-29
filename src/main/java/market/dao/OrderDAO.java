@@ -10,10 +10,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Date;
 import java.util.List;
 
-/**
- * ДАО заказа.
- */
 public interface OrderDAO extends CrudRepository<Order, Long>, JpaRepository<Order, Long> {
+
 	List<Order> findByUserAccountOrderByDateCreatedDesc(UserAccount userAccount);
 
 	Page<Order> findByExecuted(boolean stored, Pageable pageable);

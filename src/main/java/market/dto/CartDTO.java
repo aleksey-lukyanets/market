@@ -2,6 +2,7 @@ package market.dto;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,12 +11,12 @@ import java.util.List;
 public class CartDTO extends RepresentationModel<CartDTO> {
 
 	private String user;
-	private List<CartItemDTO> items;
-	private int totalItems;
-	private int productsCost;
+	private List<CartItemDTO> cartItems = Collections.emptyList();
+	private int itemsCount;
+	private double productsCost;
 	private int deliveryCost;
 	private boolean deliveryIncluded;
-	private int totalCost;
+	private double totalCost;
 
 	public CartDTO() {
 	}
@@ -28,12 +29,12 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 		this.user = user;
 	}
 
-	public List<CartItemDTO> getItems() {
-		return items;
+	public List<CartItemDTO> getCartItems() {
+		return cartItems;
 	}
 
-	public void setItems(List<CartItemDTO> items) {
-		this.items = items;
+	public void setCartItems(List<CartItemDTO> cartItems) {
+		this.cartItems = cartItems;
 	}
 
 	public boolean isDeliveryIncluded() {
@@ -44,19 +45,19 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 		this.deliveryIncluded = deliveryIncluded;
 	}
 
-	public int getProductsCost() {
+	public double getProductsCost() {
 		return productsCost;
 	}
 
-	public void setProductsCost(int productsCost) {
+	public void setProductsCost(double productsCost) {
 		this.productsCost = productsCost;
 	}
 
-	public int getTotalCost() {
+	public double getTotalCost() {
 		return totalCost;
 	}
 
-	public void setTotalCost(int totalCost) {
+	public void setTotalCost(double totalCost) {
 		this.totalCost = totalCost;
 	}
 
@@ -68,11 +69,11 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 		this.deliveryCost = deliveryCost;
 	}
 
-	public int getTotalItems() {
-		return totalItems;
+	public int getItemsCount() {
+		return itemsCount;
 	}
 
-	public void setTotalItems(int totalItems) {
-		this.totalItems = totalItems;
+	public void setItemsCount(int itemsCount) {
+		this.itemsCount = itemsCount;
 	}
 }

@@ -25,20 +25,20 @@
 		</tr>
 		</thead>
 
-		<c:forEach var="storedUnit" items="${page.content}" varStatus="status">
+		<c:forEach var="product" items="${page.content}" varStatus="status">
 			<tr>
-				<td>${storedUnit.product.id}</td>
-				<td>${storedUnit.product.distillery.title} ${storedUnit.product.name}</td>
-				<td>${storedUnit.product.volume}</td>
-				<td>${storedUnit.product.alcohol}</td>
+				<td>${product.id}</td>
+				<td>${product.distillery} ${storedUnit.product.name}</td>
+				<td>${product.volume}</td>
+				<td>${product.alcohol}</td>
 
-				<td>${storedUnit.product.price}</td>
+				<td>${product.price}</td>
 				<td>
-					<input type="hidden" id="productIds" name="productIds" value="${storedUnit.product.id}"/>
+					<input type="hidden" id="productsIds" name="productsIds" value="${product.id}"/>
 					<input type="checkbox"
-						   name="actualIds"
-						   <c:if test="${storedUnit.available}">checked</c:if>
-						   value="${storedUnit.product.id}"/>
+						   name="availableProductsIds"
+						   <c:if test="${product.available}">checked</c:if>
+						   value="${product.id}"/>
 				</td>
 			</tr>
 		</c:forEach>

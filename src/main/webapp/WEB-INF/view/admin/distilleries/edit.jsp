@@ -12,7 +12,7 @@
 	<s:param name="distilleryId" value="${distillery.id}"/>
 </s:url>
 <sf:form id="distilleryForm" class="form-horizontal"
-		 modelAttribute="distillery" commandName="distillery"
+		 modelAttribute="distillery"
 		 action="${edit_action}" method="put">
 
 	<sf:hidden path="id" name="id" value="${distillery.id}"/>

@@ -20,6 +20,8 @@ public class ContactsDTO extends RepresentationModel<ContactsDTO> {
 	@Pattern(regexp = "^[^#$%^*()']*$")
 	private String address;
 
+	private String cityAndRegion;
+
 	public ContactsDTO() {
 	}
 
@@ -42,5 +44,13 @@ public class ContactsDTO extends RepresentationModel<ContactsDTO> {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getCityAndRegion() {
+		return cityAndRegion;
+	}
+
+	public void setCityAndRegion(String cityAndRegion) {
+		this.cityAndRegion = cityAndRegion;
 	}
 }
