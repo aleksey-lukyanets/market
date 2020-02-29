@@ -15,8 +15,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -36,37 +34,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-			.antMatchers("/rest/**").permitAll().and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-		http.csrf()
-			.disable()
-			.authorizeRequests()
-			.antMatchers("/**").permitAll().and()
-			.formLogin()
-			.loginPage("/login")
-			.loginProcessingUrl("/login")
-			.usernameParameter("email")
-			.passwordParameter("password")
-			.successHandler(customAuthenticationSuccessHandler)
-			.failureUrl("/login?error").and()
-			.logout()
-			.logoutUrl("/logout")
-			.logoutSuccessUrl("/")
-			.invalidateHttpSession(true)
-			.deleteCookies("JSESSIONID").and()
-			.rememberMe()
-			.key("marketAppKey").and()
-			.sessionManagement()
-			.maximumSessions(25).and().and()
+				.antMatchers("/**").permitAll()
+				.antMatchers("/rest/**").permitAll()
+				.antMatchers("/admin/**").access("hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN')").and()
 			.anonymous()
-			.authorities("ROLE_ANONYMOUS")
+				.authorities("ROLE_ANONYMOUS").and()
+			.formLogin()
+				.loginPage("/login")
+				.loginProcessingUrl("/login")
+				.usernameParameter("email")
+				.passwordParameter("password")
+				.successHandler(customAuthenticationSuccessHandler)
+				.failureUrl("/login?error").and()
+			.rememberMe()
+				.key("marketAppKey").and()
+			.logout()
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/")
+				.invalidateHttpSession(true)
+				.deleteCookies("JSESSIONID").and()
+			.sessionManagement().maximumSessions(25).and().and()
+			.csrf().disable()
 		;
 	}
 
 	@Bean
-	public AuthenticationSuccessHandler customAuthenticationSuccessHandler(ServletContext servletContext, UserAccountService userAccountService) {
+	public AuthenticationSuccessHandler customAuthenticationSuccessHandler(ServletContext servletContext,
+		UserAccountService userAccountService)
+	{
 		return new CustomAuthenticationSuccessHandler(servletContext, userAccountService);
 	}
 
@@ -87,15 +82,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public DaoAuthenticationProvider daoAuthenticationProvider(
-		UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+		UserDetailsServiceImpl customUserDetailsService, PasswordEncoder passwordEncoder)
+	{
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-		provider.setUserDetailsService(userDetailsService);
+		provider.setUserDetailsService(customUserDetailsService);
 		provider.setPasswordEncoder(passwordEncoder);
 		return provider;
 	}
 
 	@Bean
-	public UserDetailsService customUserDetailsService(UserAccountService userAccountService) {
+	public UserDetailsServiceImpl customUserDetailsService(UserAccountService userAccountService) {
 		return new UserDetailsServiceImpl(userAccountService);
 	}
 

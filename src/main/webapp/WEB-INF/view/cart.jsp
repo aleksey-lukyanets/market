@@ -97,7 +97,7 @@
 							${product.price}&nbsp;руб.
 					</td>
 					<td width="125">
-						<sf:form method="put" modelAttribute="cartItem" commandName="cartItem">
+						<sf:form method="put" modelAttribute="cartItem">
 							<input type="hidden" name="productId" value="${product.id}">
 							<div class="input-group input-group-sm">
 								<input type="text" name="quantity" class="form-control"
