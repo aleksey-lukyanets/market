@@ -1,3 +1,4 @@
+[![](https://tokei.rs/b1/github/aleksey-lukyanets/market)](https://github.com/aleksey-lukyanets/market)
 ![build](https://github.com/aleksey-lukyanets/market/workflows/build/badge.svg)
 
 <a name="tech"></a>
