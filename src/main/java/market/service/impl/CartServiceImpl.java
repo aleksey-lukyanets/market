@@ -1,119 +1,92 @@
 package market.service.impl;
 
 import market.dao.CartDAO;
-import market.dao.ProductDAO;
-import market.dao.UserAccountDAO;
 import market.domain.Cart;
 import market.domain.CartItem;
 import market.domain.Product;
 import market.domain.UserAccount;
-import market.exception.UnknownProductException;
+import market.exception.UnknownEntityException;
 import market.service.CartService;
+import market.service.ProductService;
+import market.service.UserAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Реализация сервиса корзины.
- */
 @Service
 public class CartServiceImpl implements CartService {
 	private static final Logger log = LoggerFactory.getLogger(CartServiceImpl.class);
 
 	private final CartDAO cartDAO;
-	private final UserAccountDAO userAccountDAO;
-	private final ProductDAO productDAO;
+	private final UserAccountService userAccountService;
+	private final ProductService productService;
 
-	public CartServiceImpl(CartDAO cartDAO, UserAccountDAO userAccountDAO, ProductDAO productDAO) {
+	public CartServiceImpl(CartDAO cartDAO, UserAccountService userAccountService, ProductService productService) {
 		this.cartDAO = cartDAO;
-		this.userAccountDAO = userAccountDAO;
-		this.productDAO = productDAO;
+		this.userAccountService = userAccountService;
+		this.productService = productService;
+	}
+
+	@Transactional(propagation = Propagation.SUPPORTS)
+	@Override
+	public Cart getCartOrCreate(String userEmail) {
+		UserAccount account = userAccountService.findByEmail(userEmail);
+		Optional<Cart> cartOptional = cartDAO.findById(account.getId());
+		return cartOptional.orElseGet(() -> createCart(account));
+	}
+
+	private Cart createCart(UserAccount account) {
+		if (log.isDebugEnabled())
+			log.debug("Creating new cart for account #" + account.getId());
+		return cartDAO.save(new Cart(account));
 	}
 
 	@Transactional
 	@Override
-	public Cart save(Cart cart) {
+	public Cart addToCart(String userEmail, long productId, int quantity) throws UnknownEntityException {
+		Cart cart = getCartOrCreate(userEmail);
+		Product product = productService.getProduct(productId);
+		if (product.isAvailable()) {
+			cart.update(product, quantity);
+			return cartDAO.save(cart);
+		} else {
+			return cart;
+		}
+	}
+
+	@Transactional
+	@Override
+	public Cart addAllToCart(String userEmail, List<CartItem> itemsToAdd) {
+		Cart cart = getCartOrCreate(userEmail);
+		boolean updated = false;
+		for (CartItem item : itemsToAdd) {
+			Optional<Product> product = productService.findOne(item.getProduct().getId());
+			if (product.isPresent() && product.get().isAvailable()) {
+				cart.update(product.get(), item.getQuantity());
+				updated = true;
+			}
+		}
+		return updated ? cartDAO.save(cart) : cart;
+	}
+
+	@Transactional
+	@Override
+	public Cart setDelivery(String userEmail, boolean deliveryIncluded) {
+		Cart cart = getCartOrCreate(userEmail);
+		cart.setDeliveryIncluded(deliveryIncluded);
 		return cartDAO.save(cart);
 	}
 
 	@Transactional
 	@Override
-	public void delete(Cart cart) {
-		cartDAO.delete(cart);
-	}
-
-	@Transactional
-	@Override
-	public Cart findOne(long cartId) {
-		Optional<Cart> optionalCart = cartDAO.findById(cartId);
-		if (!optionalCart.isPresent()) {
-			log.warn("Cart doesn't exist: cartId=" + cartId);
-			return null;
-		} else {
-			return optionalCart.get();
-		}
-	}
-
-	@Transactional(readOnly = true)
-	@Override
-	public List<Cart> findAll() {
-		return cartDAO.findAll();
-	}
-
-	@Transactional
-	@Override
-	public Cart updateCartObject(Cart cart, Long productId, Short quantity) throws UnknownProductException {
-		Product product = productDAO.findById(productId).orElseThrow(UnknownProductException::new);
-		if (product.getStorage().isAvailable())
-			cart.update(product, quantity);
-		return cart;
-	}
-
-	//---------------------------------------- Операции с корзиной пользователя
-
-	@Transactional
-	@Override
-	public Cart getUserCart(String userLogin) {
-		UserAccount account = userAccountDAO.findByEmail(userLogin);
-		return findOne(account.getId());
-		// todo: handle user doesn't exist
-	}
-
-	@Transactional
-	@Override
-	public Cart clearUserCart(String userLogin) {
-		Cart cart = getUserCart(userLogin);
+	public Cart clearCart(String userEmail) {
+		Cart cart = getCartOrCreate(userEmail);
 		cart.clear();
-		return save(cart);
-	}
-
-	@Transactional(rollbackFor = {UnknownProductException.class})
-	@Override
-	public Cart updateUserCart(String userLogin, Long productId, Short quantity) throws UnknownProductException {
-		Cart cart = getUserCart(userLogin);
-		cart = updateCartObject(cart, productId, quantity);
-		return save(cart);
-	}
-
-	@Transactional
-	@Override
-	public Cart setUserCartDelivery(String userLogin, boolean deliveryIncluded) {
-		Cart cart = getUserCart(userLogin);
-		cart.setDeliveryIncluded(deliveryIncluded);
-		return save(cart);
-	}
-
-	@Transactional
-	@Override
-	public Cart fillUserCart(String userLogin, List<CartItem> itemsToCopy) {
-		Cart cart = getUserCart(userLogin);
-		for (CartItem item : itemsToCopy) {
-			cart.update(item.getProduct(), item.getQuantity());
-		}
-		return save(cart);
+		return cartDAO.save(cart);
 	}
 }

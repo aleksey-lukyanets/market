@@ -1,6 +1,5 @@
 package market.rest;
 
-import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.dto.UserDTO;
 import market.dto.assembler.UserAccountDtoAssembler;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 
-/**
- * REST-контроллер регистрации покупателя.
- */
 @Controller
 @RequestMapping(value = "/rest/signup")
 public class SignupRestController {
@@ -34,11 +30,10 @@ public class SignupRestController {
 	}
 
 	/**
-	 * Регистрация нового покупателя.
+	 * New account registration.
 	 *
-	 * @param user данные нового покупателя
-	 * @return вновь зарегистрированный покупатель
-	 * @throws EmailExistsException если покупатель с таким адресом уже существует
+	 * @return newly created account
+	 * @throws EmailExistsException if the account with the specified email already exists
 	 */
 	@RequestMapping(
 		method = RequestMethod.POST,
@@ -47,14 +42,8 @@ public class SignupRestController {
 	@ResponseBody
 	public UserDTO postNewUser(@Valid @RequestBody UserDTO user) throws EmailExistsException {
 		UserAccount userData = userAccountDtoAssembler.toDomain(user);
-		UserAccount newAccount = userAccountService.createUser(userData);
+		UserAccount newAccount = userAccountService.create(userData);
 		authenticationService.authenticate(newAccount);
 		return userAccountDtoAssembler.toModel(newAccount);
-	}
-
-	private UserAccount toUserAccount(UserDTO user) {
-		UserAccount userAccount = new UserAccount(user.getEmail(), user.getPassword(), user.getName(), true);
-		userAccount.setContacts(new Contacts(userAccount, user.getPhone(), user.getAddress()));
-		return userAccount;
 	}
 }

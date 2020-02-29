@@ -20,10 +20,10 @@
 <h1 class="post-title">Корзина</h1>
 
 <c:choose>
-	<c:when test="${cart.totalItems > 1}">
-		<p>В вашей корзине находится ${cart.totalItems} товаров.</p>
+	<c:when test="${cart.itemsCount > 1}">
+		<p>В вашей корзине находится ${cart.itemsCount} товаров.</p>
 	</c:when>
-	<c:when test="${cart.totalItems == 1}">
+	<c:when test="${cart.itemsCount == 1}">
 		<p>В вашей корзине находится один товар.</p>
 	</c:when>
 	<c:otherwise>
@@ -35,8 +35,8 @@
 
 <div>
 	<div class="col-md-4" align="center">
-		<c:if test="${!empty cart && cart.totalItems != 0}">
-			<sf:form method="delete">
+		<c:if test="${!empty cart && cart.itemsCount != 0}">
+			<sf:form method="post" action="${pageContext.request.contextPath}/cart/clear">
 				<button type="submit" class="btn btn-default">
 					очистить корзину
 				</button>
@@ -47,7 +47,7 @@
 		<a href="<c:url value='/'/>" class="btn btn-primary">продолжить покупки</a>
 	</div>
 	<div class="col-md-4" align="center">
-		<c:if test="${!empty cart && cart.totalItems != 0}">
+		<c:if test="${!empty cart && cart.itemsCount != 0}">
 			<security:authorize access="isAuthenticated()">
 				<a id="next-step"
 				   href="<c:url value="${cart.deliveryIncluded ? '/checkout/details' : '/checkout/payment'}" />"
@@ -68,7 +68,7 @@
 <br>
 <br>
 
-<c:if test="${!empty cart && cart.totalItems != 0}">
+<c:if test="${!empty cart && cart.itemsCount != 0}">
 	<div class="table">
 		<table class="table" width="100%">
 			<thead>
@@ -82,23 +82,19 @@
 			</thead>
 
 			<c:forEach var="cartItem" items="${cart.cartItems}" varStatus="iter">
-				<c:set var="product" value="${cartItem.product}"/>
+				<c:set var="product" value="${productsById[cartItem.productId]}"/>
 				<tr>
 					<td>
 						<img
-							src="${pageContext.request.contextPath}${initParam.productImagePath}${product.distillery.title}/${product.name}.jpg"
-							alt="${product.distillery.title} ${product.name}"
+							src="${pageContext.request.contextPath}${initParam.productImagePath}${product.distillery}/${product.name}.jpg"
+							alt="${product.distillery} ${product.name}"
 							width="100">
 					</td>
-					<td>
-							${product.distillery.title} ${product.name}
-					</td>
-					<td>
-							${product.price}&nbsp;руб.
-					</td>
+					<td>${product.distillery} ${product.name}</td>
+					<td>${product.price}&nbsp;руб.</td>
 					<td width="125">
 						<sf:form method="put" modelAttribute="cartItem">
-							<input type="hidden" name="productId" value="${product.id}">
+							<input type="hidden" name="productId" value="${product.productId}">
 							<div class="input-group input-group-sm">
 								<input type="text" name="quantity" class="form-control"
 									   value="${cartItem.quantity}"
@@ -175,7 +171,7 @@
 			<div class="panel panel-primary included-true">
 				<div class="panel-heading"><h3 class="panel-title">Гарантия доставки<br>на следующий день</h3></div>
 				<div class="panel-body">Цена курьерской доставки в объёме
-						${deliveryCost} руб. включена в заказ
+						${cart.deliveryCost} руб. включена в заказ
 				</div>
 			</div>
 		</div>

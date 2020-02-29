@@ -4,58 +4,75 @@ import market.dao.DistilleryDAO;
 import market.domain.Distillery;
 import market.domain.Region;
 import market.service.DistilleryService;
-import org.springframework.data.domain.Sort;
+import market.service.RegionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-/**
- * Реализация сервиса винокурни.
- */
 @Service
 public class DistilleryServiceImpl implements DistilleryService {
+	private final RegionService regionService;
 	private final DistilleryDAO distilleryDAO;
 
-	public DistilleryServiceImpl(DistilleryDAO distilleryDAO) {
+	public DistilleryServiceImpl(RegionService regionService, DistilleryDAO distilleryDAO) {
+		this.regionService = regionService;
 		this.distilleryDAO = distilleryDAO;
-	}
-
-	@Transactional
-	@Override
-	public void save(Distillery distillery) {
-		distilleryDAO.save(distillery);
-	}
-
-	@Transactional
-	@Override
-	public void delete(Distillery distillery) {
-		if (distillery != null) {
-			distilleryDAO.delete(distillery);
-		}
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public Distillery findOne(long distilleryId) {
+	public List<Distillery> findAll() {
+		return distilleryDAO.findAll().stream()
+			.sorted(Comparator.comparing(Distillery::getTitle))
+			.collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public List<Distillery> findByRegion(Region region) {
+		return distilleryDAO.findByRegionOrderByTitleAsc(region);
+	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public Distillery findById(long distilleryId) {
 		return distilleryDAO.findById(distilleryId).orElse(null);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Distillery> findAllOrderById() {
-		return distilleryDAO.findAll(Sort.by(Sort.Direction.ASC, "id"));
+	public Distillery findByTitle(String title) {
+		return distilleryDAO.findByTitle(title);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	@Override
-	public List<Distillery> findAllOrderByTitle() {
-		return distilleryDAO.findAll(Sort.by(Sort.Direction.ASC, "title"));
+	public void create(Distillery newDistillery, String regionTitle) {
+		saveInternal(newDistillery, regionTitle);
 	}
 
-	@Transactional(readOnly = true)
 	@Override
-	public List<Distillery> findByRegionOrderByTitle(Region region) {
-		return distilleryDAO.findByRegionOrderByTitleAsc(region);
+	public void update(Distillery changedDistillery, String regionTitle) {
+		Optional<Distillery> originalDistillery = distilleryDAO.findById(changedDistillery.getId());
+		if (originalDistillery.isPresent())
+			saveInternal(changedDistillery, regionTitle);
+	}
+
+	private void saveInternal(Distillery distillery, String regionTitle) {
+		Region region = regionService.findOne(regionTitle);
+		if (region != null) {
+			distillery.setRegion(region);
+			distilleryDAO.save(distillery);
+		}
+	}
+
+	@Transactional
+	@Override
+	public void delete(long distilleryId) {
+		distilleryDAO.deleteById(distilleryId);
 	}
 }

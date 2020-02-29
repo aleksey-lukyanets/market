@@ -23,7 +23,16 @@ public class ContactsDtoAssembler extends RepresentationModelAssemblerSupport<Co
 		ContactsDTO dto = instantiateModel(contacts);
 		dto.setPhone(contacts.getPhone());
 		dto.setAddress(contacts.getAddress());
+		dto.setCityAndRegion(contacts.getCityAndRegion());
 		dto.add(linkTo(CartRestController.class).withRel("Shopping cart"));
 		return dto;
+	}
+
+	public Contacts toDomain(ContactsDTO dto) {
+		Contacts contacts = new Contacts();
+		contacts.setAddress(dto.getAddress());
+		contacts.setPhone(dto.getPhone());
+		contacts.setCityAndRegion(dto.getCityAndRegion());
+		return contacts;
 	}
 }

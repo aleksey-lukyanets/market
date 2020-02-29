@@ -15,7 +15,7 @@
 <br>
 
 <sf:form id="signupForm" class="form-horizontal"
-		 modelAttribute="userDTO" commandName="userDTO" method="post">
+		 modelAttribute="userAccount" method="post">
 	<div class="form-group">
 		<label for="name" class="col-sm-4 control-label">
 			полное&nbsp;имя

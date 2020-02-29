@@ -1,7 +1,9 @@
 package market.controller.backend;
 
-import market.domain.Storage;
-import market.service.StorageService;
+import market.domain.Product;
+import market.dto.ProductDTO;
+import market.dto.assembler.ProductDtoAssembler;
+import market.service.ProductService;
 import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
 import org.springframework.data.domain.Page;
@@ -13,28 +15,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-/**
- * Контроллер управления единицами хранения.
- */
+import static java.util.stream.Collectors.groupingBy;
+
 @Controller
 @RequestMapping("/admin/storage")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class StorageController {
-	private final StorageService storageService;
-	private final ISorter<Storage> storageSorting;
+	private static final String STORAGE_BASE = "admin/storage";
 
-	public StorageController(StorageService storageService, ISorter<Storage> storageSorting) {
-		this.storageService = storageService;
+	private final ProductService productService;
+	private final ISorter<ProductDTO> storageSorting;
+	private final ProductDtoAssembler productAssembler;
+
+	public StorageController(ProductService productService, ISorter<ProductDTO> storageSorting,
+		ProductDtoAssembler productAssembler)
+	{
+		this.productService = productService;
 		this.storageSorting = storageSorting;
+		this.productAssembler = productAssembler;
 	}
 
-	/**
-	 * Перечень единиц хранения.
-	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String getStorageUnits(
 		SortingValuesDTO sortingValues,
@@ -42,36 +44,25 @@ public class StorageController {
 		Model model
 	) {
 		PageRequest request = storageSorting.updateSorting(sortingValues);
-		Page<Storage> pagedList = storageService.fetchFilteredAndPaged(available, request);
-		storageSorting.prepareModel(model, pagedList);
+		Page<Product> pagedProducts = productService.findByAvailability(available, request);
+		storageSorting.prepareModel(model, pagedProducts.map(productAssembler::toModel));
 
-		model.addAttribute("currentAvailable", available);
-		return "admin/storage";
+		model.addAttribute("currentlyAvailable", available);
+		return STORAGE_BASE;
 	}
 
-	/**
-	 * Установка наличия перечня товаров.
-	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String postStorage(
-		@RequestParam(value = "productIds", required = false) Long[] productIds,
-		@RequestParam(value = "actualIds", required = false) Long[] actualIds
+		@RequestParam(value = "productsIds", required = false) Long[] productsIds,
+		@RequestParam(value = "availableProductsIds", required = false) Long[] availableProductsIds
 	) {
-		if ((actualIds == null) && (productIds == null)) {
-			for (Storage stored : storageService.findAll()) {
-				stored.setAvailable(false);
-				storageService.save(stored);
-			}
-		} else {
-			Set<Long> products = new HashSet<>(Arrays.asList(productIds));
-			Set<Long> actuals = new HashSet<>(Arrays.asList(actualIds));
-			for (Long actualId : products) {
-				Storage stored = storageService.findOne(actualId);
-				boolean refreshedAvailable = actuals.contains(stored.getId());
-				stored.setAvailable(refreshedAvailable);
-				storageService.save(stored);
-			}
+		if (availableProductsIds != null && productsIds != null) {
+			Set<Long> available = new HashSet<>(Arrays.asList(availableProductsIds));
+			Map<Boolean, List<Long>> productIdsByAvailability = Arrays.stream(productsIds)
+				.filter(Objects::nonNull)
+				.collect(groupingBy(available::contains));
+			productService.updateAvailability(productIdsByAvailability);
 		}
-		return "redirect:/admin/storage";
+		return "redirect:/" + STORAGE_BASE;
 	}
 }

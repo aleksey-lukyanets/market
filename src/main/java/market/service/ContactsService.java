@@ -2,39 +2,16 @@ package market.service;
 
 import market.domain.Contacts;
 
-import java.util.List;
-
-/**
- * Сервис контактных данных пользователя.
- */
 public interface ContactsService {
 
-	Contacts save(Contacts contacts);
-
-	void delete(Contacts contacts);
-
-	Contacts findOne(long contactsId);
-
-	List<Contacts> findAll();
-
-	//-------------------------------------- Операции с контактами пользователя
+	/**
+	 * @return contacts of the specified user
+	 */
+	Contacts getContacts(String userLogin);
 
 	/**
-	 * Получение контактных данных пользователя.
-	 *
-	 * @param userLogin логин покупателя
-	 * @return контактные данные
+	 * Updates contacts of the specified user.
 	 */
+	void updateUserContacts(Contacts changedContacts, String userLogin);
 
-	Contacts getUserContacts(String userLogin);
-
-	/**
-	 * Изменение контактных данных пользователя.
-	 *
-	 * @param userLogin логин покупателя
-	 * @param phone
-	 * @param address
-	 * @return изменённые контактные данные
-	 */
-	Contacts updateUserContacts(String userLogin, String phone, String address);
 }

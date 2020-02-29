@@ -39,7 +39,7 @@
 							<b class="caret"></b>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="<c:url value="${pageContext.request.contextPath}/j_spring_security_logout" />">Выйти</a>
+							<li><a href="<c:url value="/logout" />">Выйти</a>
 							</li>
 						</ul>
 					</li>

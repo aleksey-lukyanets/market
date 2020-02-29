@@ -8,14 +8,14 @@
 
 <br>
 
-<s:url value="/admin/products/{productId}" var="edit_action">
-	<s:param name="productId" value="${product.id}"/>
+<s:url value="/admin/products/{productId}/edit" var="edit_action">
+	<s:param name="productId" value="${product.productId}"/>
 </s:url>
 <sf:form id="productForm" class="form-horizontal"
-		 modelAttribute="product" commandName="product"
-		 action="${edit_action}" method="put">
+		 modelAttribute="product"
+		 action="${edit_action}" method="post">
 
-	<sf:hidden path="id" name="id" value="${product.id}"/>
+	<sf:hidden path="productId" name="productId" value="${product.productId}"/>
 
 	<tiles:insertAttribute name="form-fields"/>
 

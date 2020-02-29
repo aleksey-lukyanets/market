@@ -1,6 +1,5 @@
 package market.dto;
 
-import market.domain.CartItem;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
@@ -8,23 +7,18 @@ import org.springframework.hateoas.RepresentationModel;
  */
 public class CartItemDTO extends RepresentationModel<CartItemDTO> {
 
-	private Long productId;
-	private Short quantity;
+	private long productId;
+	private int quantity;
 
 	public CartItemDTO() {
 	}
 
-	public CartItemDTO(long productId, short quantity) {
+	public CartItemDTO(long productId, int quantity) {
 		this.productId = productId;
 		this.quantity = quantity;
 	}
 
-	public CartItemDTO(CartItem item) {
-		this.productId = item.getProduct().getId();
-		this.quantity = (short) item.getQuantity();
-	}
-
-	public Long getProductId() {
+	public long getProductId() {
 		return productId;
 	}
 
@@ -32,11 +26,11 @@ public class CartItemDTO extends RepresentationModel<CartItemDTO> {
 		this.productId = productId;
 	}
 
-	public Short getQuantity() {
+	public int getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Short quantity) {
+	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 }

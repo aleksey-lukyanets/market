@@ -15,7 +15,7 @@
 <br>
 
 <sf:form id="detailsForm" class="form-horizontal"
-		 modelAttribute="userContacts" commandName="userContacts" method="put">
+		 modelAttribute="userContacts" method="put">
 	<div class="form-group">
 		<label class="col-sm-4 control-label">
 			использовать данные:

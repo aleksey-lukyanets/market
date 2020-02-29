@@ -6,20 +6,23 @@ import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * Корзина.
+ * Cart of the {@link UserAccount}.
  */
 @Entity
 @Table(name = "cart")
 public class Cart implements Serializable {
+	private static final long serialVersionUID = -6884843696895527904L;
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	@GeneratedValue(generator = "gen")
 	@GenericGenerator(name = "gen", strategy = "foreign", parameters = @Parameter(name = "property", value = "userAccount"))
-	private Long id;
+	private long id;
 
 	@OneToOne
 	@PrimaryKeyJoinColumn
@@ -30,70 +33,74 @@ public class Cart implements Serializable {
 	private List<CartItem> cartItems = new ArrayList<>(0);
 
 	@Column(name = "delivery_included", nullable = false)
-	private boolean deliveryIncluded;
+	private boolean deliveryIncluded = true;
 
-	@Column(name = "total_items")
-	private int totalItems;
-
-	@Column(name = "products_cost")
-	private int productsCost;
+	@Transient
+	private double itemsCost;
 
 	public Cart() {
-		this.deliveryIncluded = true;
-		this.totalItems = 0;
-		this.productsCost = 0;
+		this(null);
 	}
 
 	public Cart(UserAccount userAccount) {
 		this.userAccount = userAccount;
-		this.deliveryIncluded = true;
-		this.totalItems = 0;
-		this.productsCost = 0;
+		itemsCost = calculateItemsCost();
 	}
 
 	public boolean isEmpty() {
-		return (totalItems == 0);
+		return cartItems.isEmpty();
 	}
 
-	public void update(Product product, int quantity) {
-		CartItem newItem = new CartItem(this, product, quantity);
-		List<CartItem> items = getCartItems();
-		if (items.contains(newItem)) {
-			int index = items.indexOf(newItem);
-			if (quantity > 0) {
-				items.get(index).setQuantity(quantity);
+	public void update(Product product, int newQuantity) {
+		if (product == null)
+			return;
+
+		if (newQuantity > 0) {
+			CartItem existingItem = findItem(product.getId());
+			if (existingItem == null) {
+				cartItems.add(new CartItem(this, product, newQuantity));
 			} else {
-				items.remove(newItem);
+				existingItem.setQuantity(newQuantity);
 			}
 		} else {
-			items.add(newItem);
+			removeItem(product.getId());
 		}
-		revalidateCartMetrics();
+		itemsCost = calculateItemsCost();
+	}
+
+	private void removeItem(long productId) {
+		Iterator<CartItem> iterator = cartItems.iterator();
+		while (iterator.hasNext()) {
+			CartItem item = iterator.next();
+			if (item.getProduct().getId() == productId)
+				iterator.remove();
+		}
+	}
+
+	private CartItem findItem(long productId) {
+		for (CartItem existingItem : cartItems) {
+			if (existingItem.getProduct().getId() == productId)
+				return existingItem;
+		}
+		return null;
+	}
+
+	private double calculateItemsCost() {
+		return cartItems.stream()
+			.mapToDouble(CartItem::calculateCost)
+			.sum();
 	}
 
 	public void clear() {
-		getCartItems().clear();
-		revalidateCartMetrics();
+		cartItems.clear();
+		itemsCost = 0;
 	}
 
-	public void revalidateCartMetrics() {
-		int total = 0;
-		int cost = 0;
-		for (CartItem item : getCartItems()) {
-			total += item.getQuantity();
-			cost += item.getQuantity() * item.getProduct().getPrice();
-		}
-		setProductsCost(cost);
-		setTotalItems(total);
-	}
-
-	//---------------------------------------------------- Аксессоры и мутаторы
-
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -111,6 +118,7 @@ public class Cart implements Serializable {
 
 	public void setCartItems(List<CartItem> cartItems) {
 		this.cartItems = cartItems;
+		itemsCost = calculateItemsCost();
 	}
 
 	public boolean isDeliveryIncluded() {
@@ -121,19 +129,27 @@ public class Cart implements Serializable {
 		this.deliveryIncluded = deliveryIncluded;
 	}
 
-	public int getTotalItems() {
-		return totalItems;
+	public int getItemsCount() {
+		return cartItems.size();
 	}
 
-	public void setTotalItems(int totalItems) {
-		this.totalItems = totalItems;
+	public double getItemsCost() {
+		return itemsCost;
 	}
 
-	public int getProductsCost() {
-		return productsCost;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Cart cart = (Cart) o;
+		return deliveryIncluded == cart.deliveryIncluded &&
+			Objects.equals(id, cart.id) &&
+			Objects.equals(userAccount, cart.userAccount) &&
+			Objects.equals(cartItems, cart.cartItems);
 	}
 
-	public void setProductsCost(int productsCost) {
-		this.productsCost = productsCost;
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, userAccount, cartItems, deliveryIncluded);
 	}
 }

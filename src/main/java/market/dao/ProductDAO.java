@@ -10,17 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
-/**
- * ДАО товара.
- */
 public interface ProductDAO extends CrudRepository<Product, Long>, JpaRepository<Product, Long> {
-	List<Product> findByDistillery(Distillery distillery);
 
-	Page<Product> findByDistillery(Distillery distillery, Pageable pageable);
+	Page<Product> findByDistilleryOrderByName(Distillery distillery, Pageable pageable);
 
-	@Query(value = "SELECT p FROM Product p WHERE p.distillery IN "
-		+ "(SELECT d FROM Distillery d WHERE d.region = :region)")
-	public Page<Product> findByDistilleriesOfRegion(@Param("region") Region region, Pageable pageable);
+	@Query(value = "SELECT p FROM Product p WHERE p.distillery IN (SELECT d FROM Distillery d WHERE d.region = :region) order by p.name")
+	Page<Product> findByRegionOrderByName(@Param("region") Region region, Pageable pageable);
+
+	Page<Product> findByAvailableOrderByName(boolean available, Pageable pageable);
 }

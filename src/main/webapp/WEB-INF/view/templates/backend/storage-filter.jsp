@@ -12,7 +12,7 @@
 		<div class="btn-group btn-xs">наличие:</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-				${availableOptions[currentAvailable]}
+				${availableOptions[currentlyAvailable]}
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right">

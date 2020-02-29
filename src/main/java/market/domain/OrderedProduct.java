@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Товар как единица заказа.
+ * {@link Product} of the {@link Order}.
  */
 @Entity
 @Table(name = "ordered_product")
@@ -62,34 +62,21 @@ public class OrderedProduct implements Serializable {
 		this.quantity = quantity;
 	}
 
-	/**
-	 * @return the order
-	 */
 	public Order getOrder() {
 		return order;
 	}
 
-	/**
-	 * @param order the order to set
-	 */
 	public void setOrder(Order order) {
 		this.order = order;
 		getPk().setCustomerOrder(order.getId());
 	}
 
-	/**
-	 * @return the product
-	 */
 	public Product getProduct() {
 		return product;
 	}
 
-	/**
-	 * @param product the product to set
-	 */
 	public void setProduct(Product product) {
 		this.product = product;
 		getPk().setProduct(product.getId());
 	}
-
 }

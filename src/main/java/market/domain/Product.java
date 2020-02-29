@@ -9,24 +9,19 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
-/**
- * Товар.
- */
 @Entity
 @Table(name = "product")
 public class Product implements Serializable {
+	private static final long serialVersionUID = -5637368176838137416L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", insertable = false, updatable = false, nullable = false)
-	private Long id;
+	private long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "distillery_id", nullable = false)
 	private Distillery distillery;
-
-	@OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
-	private Storage storage;
 
 	@Column(name = "name", nullable = false)
 	@NotEmpty
@@ -35,7 +30,7 @@ public class Product implements Serializable {
 
 	@Column(name = "price", nullable = false)
 	@NotNull
-	private Integer price;
+	private Double price;
 
 	@Column(name = "description")
 	private String description;
@@ -54,138 +49,149 @@ public class Product implements Serializable {
 	@Max(value = 2000)
 	private Integer age;
 
-	public Product() {
-	}
+	@Column(name = "available", nullable = false)
+	private boolean available = true;
 
-	public Product(Distillery distillery, String name, int price) {
-		this.distillery = distillery;
-		this.name = name;
-		this.price = price;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the name
-	 */
 	public String getName() {
 		return name;
 	}
 
-	/**
-	 * @param name the name to set
-	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/**
-	 * @return the price
-	 */
-	public Integer getPrice() {
+	public @NotNull Double getPrice() {
 		return price;
 	}
 
-	/**
-	 * @param price the price to set
-	 */
-	public void setPrice(Integer price) {
+	public void setPrice(@NotNull Double price) {
 		this.price = price;
 	}
 
-	/**
-	 * @return the description
-	 */
 	public String getDescription() {
 		return description;
 	}
 
-	/**
-	 * @param description the description to set
-	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	/**
-	 * @return the volume
-	 */
 	public Integer getVolume() {
 		return volume;
 	}
 
-	/**
-	 * @param volume the volume to set
-	 */
 	public void setVolume(Integer volume) {
 		this.volume = volume;
 	}
 
-	/**
-	 * @return the alcohol
-	 */
 	public Float getAlcohol() {
 		return alcohol;
 	}
 
-	/**
-	 * @param alcohol the alcohol to set
-	 */
 	public void setAlcohol(Float alcohol) {
 		this.alcohol = alcohol;
 	}
 
-	/**
-	 * @return the age
-	 */
 	public Integer getAge() {
 		return age;
 	}
 
-	/**
-	 * @param age the age to set
-	 */
 	public void setAge(Integer age) {
 		this.age = age;
 	}
 
-	/**
-	 * @return the storage
-	 */
-	public Storage getStorage() {
-		return storage;
-	}
-
-	/**
-	 * @param storage the storage to set
-	 */
-	public void setStorage(Storage storage) {
-		this.storage = storage;
-	}
-
-	/**
-	 * @return the distillery
-	 */
 	public Distillery getDistillery() {
 		return distillery;
 	}
 
-	/**
-	 * @param distillery the distillery to set
-	 */
 	public void setDistillery(Distillery distillery) {
 		this.distillery = distillery;
+	}
+
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+
+	public static class Builder {
+		private long id;
+		private Distillery distillery;
+		private String name;
+		private Double price;
+		private String description;
+		private Integer volume;
+		private Float alcohol;
+		private Integer age;
+		private boolean available = true;
+
+		public Product build() {
+			Product product = new Product();
+			product.id = id;
+			product.distillery = distillery;
+			product.name = name;
+			product.price = price;
+			product.description = description;
+			product.volume = volume;
+			product.alcohol = alcohol;
+			product.age = age;
+			product.available = available;
+			return product;
+		}
+
+		public Builder setId(long id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder setDistillery(Distillery distillery) {
+			this.distillery = distillery;
+			return this;
+		}
+
+		public Builder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Builder setPrice(@NotNull Double price) {
+			this.price = price;
+			return this;
+		}
+
+		public Builder setDescription(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public Builder setVolume(Integer volume) {
+			this.volume = volume;
+			return this;
+		}
+
+		public Builder setAlcohol(Float alcohol) {
+			this.alcohol = alcohol;
+			return this;
+		}
+
+		public Builder setAge(Integer age) {
+			this.age = age;
+			return this;
+		}
+
+		public Builder setAvailable(boolean available) {
+			this.available = available;
+			return this;
+		}
 	}
 }

@@ -29,21 +29,21 @@
 						 class="img-responsive" alt=""/>
 					</object>--%>
 			<img
-				src="${pageContext.request.contextPath}${initParam.productImagePath}${product.distillery.title}/${product.name}.jpg"
+				src="${pageContext.request.contextPath}${initParam.productImagePath}${product.distillery}/${product.name}.jpg"
 				class="img-responsive" width="90%" alt=""/>
 		</div>
 		<div class="col-sm-9 col-xs-9 product-unit">
 			<div class="pull-right price-block">
 				<div class="product-price product-label">${product.price} руб.</div>
 				<form method="put" id="quantity-form" action="<c:url value="/cart"/>">
-					<input type="hidden" name="productId" value="${product.id}">
+					<input type="hidden" name="productId" value="${product.productId}">
 					<input type="hidden" name="quantity" value="1">
 					<c:choose>
-						<c:when test="${product.storage.available}">
+						<c:when test="${product.available}">
 							<c:set var="insideCart" value="false"/>
 							<c:forEach var="cartItem" items="${cart.cartItems}" varStatus="iter">
 								<c:set var="cartProduct" value="${cartItem.product}"/>
-								<c:if test="${cartProduct.id == product.id}">
+								<c:if test="${cartProduct.id == product.productId}">
 									<c:set var="insideCart" value="true"/>
 								</c:if>
 							</c:forEach>
@@ -62,7 +62,7 @@
 					</c:choose>
 				</form>
 			</div>
-			<div class="product-item product-label">${product.distillery.title} ${product.name}</div>
+			<div class="product-item product-label">${product.distillery} ${product.name}</div>
 			<i>${product.alcohol}% об. / ${product.volume} мл.</i>
 			<div class="product-description">${product.description}</div>
 		</div>
@@ -119,10 +119,10 @@
             contentType: "application/json; charset=utf-8",
             data: jsonData,
             success: function (data) {
-                var totalItems = data["totalItems"];
+                var itemsCount = data["itemsCount"];
                 $this.after('<a href="' + url + '" class="btn btn-warning">в корзине</a>');
                 $this.remove();
-                $('#cart-total-items').empty().html('<span class="badge">' + totalItems + '</span>');
+                $('#cart-total-items').empty().html('<span class="badge">' + itemsCount + '</span>');
             },
             error: function () {
                 alert("Что-то пошло не так.\nПопробуйте добавить товар ещё раз.");

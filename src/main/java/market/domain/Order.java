@@ -12,7 +12,7 @@ import java.util.Set;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 /**
- * Заказ.
+ * Order of the {@link UserAccount}.
  */
 @Entity
 @Table(name = "customer_order")
@@ -39,7 +39,7 @@ public class Order implements Serializable {
 	private Bill bill;
 
 	@Column(name = "products_cost", nullable = false)
-	private int productsCost;
+	private double productsCost;
 
 	@Column(name = "date_created", nullable = false)
 	@Temporal(TIMESTAMP)
@@ -57,128 +57,74 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	/**
-	 * @return the id
-	 */
 	public Long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the amount
-	 */
-	public int getProductsCost() {
+	public double getProductsCost() {
 		return productsCost;
 	}
 
-	/**
-	 * @param amount the amount to set
-	 */
-	public void setProductsCost(int amount) {
+	public void setProductsCost(double amount) {
 		this.productsCost = amount;
 	}
 
-	/**
-	 * @return the name
-	 */
 	public Date getDateCreated() {
 		return dateCreated;
 	}
 
-	/**
-	 * @param name the name to set
-	 */
 	public void setDateCreated(Date name) {
 		this.dateCreated = name;
 	}
 
-	/**
-	 * @return the userAccount
-	 */
 	public UserAccount getUserAccount() {
 		return userAccount;
 	}
 
-	/**
-	 * @param userAccount the userAccount to set
-	 */
 	public void setUserAccount(UserAccount userAccount) {
 		this.userAccount = userAccount;
 	}
 
-	/**
-	 * @return the products
-	 */
 	public Set<OrderedProduct> getOrderedProducts() {
 		return orderedProducts;
 	}
 
-	/**
-	 * @param products the products to set
-	 */
 	public void setOrderedProducts(Set<OrderedProduct> products) {
 		this.orderedProducts = products;
 	}
 
-	/**
-	 * @return the deliveryСost
-	 */
 	public int getDeliveryСost() {
 		return deliveryСost;
 	}
 
-	/**
-	 * @param deliveryСost the deliveryСost to set
-	 */
 	public void setDeliveryСost(int deliveryСost) {
 		this.deliveryСost = deliveryСost;
 	}
 
-	/**
-	 * @return the deliveryIncluded
-	 */
 	public boolean isDeliveryIncluded() {
 		return deliveryIncluded;
 	}
 
-	/**
-	 * @param deliveryIncluded the deliveryIncluded to set
-	 */
 	public void setDeliveryIncluded(boolean deliveryIncluded) {
 		this.deliveryIncluded = deliveryIncluded;
 	}
 
-	/**
-	 * @return the bill
-	 */
 	public Bill getBill() {
 		return bill;
 	}
 
-	/**
-	 * @param bill the bill to set
-	 */
 	public void setBill(Bill bill) {
 		this.bill = bill;
 	}
 
-	/**
-	 * @return the executed
-	 */
 	public boolean isExecuted() {
 		return executed;
 	}
 
-	/**
-	 * @param executed the executed to set
-	 */
 	public void setExecuted(boolean executed) {
 		this.executed = executed;
 	}

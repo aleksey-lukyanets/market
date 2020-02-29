@@ -1,5 +1,6 @@
-package market.exception;
+package market.controller;
 
+import market.exception.*;
 import market.exception.dto.ValidationErrorDTO;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -41,7 +42,7 @@ public class SpringExceptionHandler {
 	/**
 	 * Запрос пользователем несуществующих объектов.
 	 */
-	@ExceptionHandler({ProductNotFoundException.class, OrderNotFoundException.class})
+	@ExceptionHandler(UnknownEntityException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ResponseBody
 	public String handleProductNotFoundException(Exception ex) {
@@ -54,7 +55,7 @@ public class SpringExceptionHandler {
 	 *
 	 * @return перечень нарушенных ограничений
 	 */
-	@ExceptionHandler({EmailExistsException.class, EmptyCartException.class, UnknownProductException.class})
+	@ExceptionHandler({EmailExistsException.class, EmptyCartException.class})
 	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
 	@ResponseBody
 	public ValidationErrorDTO handleEmailExistsException(CustomNotValidException ex) {

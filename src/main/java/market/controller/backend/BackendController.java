@@ -6,19 +6,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-/**
- * Контроллер панели управления.
- */
 @Controller
 @RequestMapping(value = "/admin")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class BackendController {
 
 	/**
-	 * Главная страница панели управления.
+	 * Backend title page.
 	 */
 	@RequestMapping(value = {"", "/", "/index"}, method = RequestMethod.GET)
-	public String index(Model model) {
+	public String index() {
 		return "admin/index";
 	}
 }

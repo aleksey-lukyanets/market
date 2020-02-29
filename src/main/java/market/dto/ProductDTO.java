@@ -22,7 +22,7 @@ public class ProductDTO extends RepresentationModel<ProductDTO> {
 	private String name;
 
 	@NotNull
-	private Integer price;
+	private Double price;
 
 	@Max(value = 2000)
 	private Integer age;
@@ -36,7 +36,7 @@ public class ProductDTO extends RepresentationModel<ProductDTO> {
 	private Float alcohol;
 
 	private String description;
-	private boolean inStock;
+	private boolean available;
 
 	public ProductDTO() {
 	}
@@ -65,11 +65,11 @@ public class ProductDTO extends RepresentationModel<ProductDTO> {
 		this.name = name;
 	}
 
-	public Integer getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Integer price) {
+	public void setPrice(@NotNull Double price) {
 		this.price = price;
 	}
 
@@ -105,11 +105,11 @@ public class ProductDTO extends RepresentationModel<ProductDTO> {
 		this.description = description;
 	}
 
-	public boolean isInStock() {
-		return inStock;
+	public boolean isAvailable() {
+		return available;
 	}
 
-	public void setInStock(boolean inStock) {
-		this.inStock = inStock;
+	public void setAvailable(boolean available) {
+		this.available = available;
 	}
 }

@@ -50,8 +50,8 @@
 								корзина&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-shopping-cart"
 															   style="font-size:13px;"></span>
 								<span id="cart-total-items">
-                                            <c:if test="${cart.totalItems > 0}">
-												<span class="badge">${cart.totalItems}</span>
+                                            <c:if test="${cart.itemsCount > 0}">
+												<span class="badge">${cart.itemsCount}</span>
 											</c:if>
                                         </span>
 							</a>

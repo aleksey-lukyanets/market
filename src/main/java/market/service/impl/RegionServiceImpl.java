@@ -3,15 +3,14 @@ package market.service.impl;
 import market.dao.RegionDAO;
 import market.domain.Region;
 import market.service.RegionService;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-/**
- * Реализация сервиса региона.
- */
 @Service
 public class RegionServiceImpl implements RegionService {
 	private final RegionDAO regionDAO;
@@ -20,16 +19,12 @@ public class RegionServiceImpl implements RegionService {
 		this.regionDAO = regionDAO;
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	@Override
-	public void save(Region region) {
-		regionDAO.save(region);
-	}
-
-	@Transactional
-	@Override
-	public void delete(Region region) {
-		regionDAO.delete(region);
+	public List<Region> findAll() {
+		return regionDAO.findAll().stream()
+			.sorted(Comparator.comparing(Region::getName))
+			.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
@@ -40,13 +35,28 @@ public class RegionServiceImpl implements RegionService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Region> findAllOrderById() {
-		return regionDAO.findAll(Sort.by(Sort.Direction.ASC, "id"));
+	public Region findOne(String regionName) {
+		return regionDAO.findByName(regionName).orElse(null);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	@Override
-	public List<Region> findAllOrderByName() {
-		return regionDAO.findAll(Sort.by(Sort.Direction.ASC, "name"));
+	public void create(Region newRegion) {
+		regionDAO.save(newRegion);
+	}
+
+	@Override
+	public void update(long regionId, Region changedRegion) {
+		Optional<Region> originalOptional = regionDAO.findById(regionId);
+		if (originalOptional.isPresent()) {
+			changedRegion.setId(originalOptional.get().getId());
+			regionDAO.save(changedRegion);
+		}
+	}
+
+	@Transactional
+	@Override
+	public void delete(long regionId) {
+		regionDAO.deleteById(regionId);
 	}
 }

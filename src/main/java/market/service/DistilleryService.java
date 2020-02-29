@@ -5,20 +5,40 @@ import market.domain.Region;
 
 import java.util.List;
 
-/**
- * Сервис винокурни.
- */
 public interface DistilleryService {
 
-	void save(Distillery distillery);
+	/**
+	 * @return all the distilleries sorted by title
+	 */
+	List<Distillery> findAll();
 
-	void delete(Distillery distillery);
+	/**
+	 * @return all the distilleries of the specified region sorted by title
+	 */
+	List<Distillery> findByRegion(Region region);
 
-	Distillery findOne(long distilleryId);
+	/**
+	 * @return distillery with the specified id
+	 */
+	Distillery findById(long distilleryId);
 
-	List<Distillery> findByRegionOrderByTitle(Region region);
+	/**
+	 * @return distillery with the specified title
+	 */
+	Distillery findByTitle(String title);
 
-	List<Distillery> findAllOrderById();
+	/**
+	 * Creates new distillery.
+	 */
+	void create(Distillery newDistillery, String regionTitle);
 
-	List<Distillery> findAllOrderByTitle();
+	/**
+	 * Updates existing distillery.
+	 */
+	void update(Distillery changedDistillery, String regionTitle);
+
+	/**
+	 * Removes distillery.
+	 */
+	void delete(long distilleryId);
 }

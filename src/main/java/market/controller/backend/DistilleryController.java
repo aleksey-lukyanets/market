@@ -1,7 +1,10 @@
 package market.controller.backend;
 
 import market.domain.Distillery;
-import market.domain.Region;
+import market.dto.DistilleryDTO;
+import market.dto.RegionDTO;
+import market.dto.assembler.DistilleryDtoAssembler;
+import market.dto.assembler.RegionDtoAssembler;
 import market.service.DistilleryService;
 import market.service.RegionService;
 import org.springframework.security.access.annotation.Secured;
@@ -13,104 +16,105 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.List;
 
-/**
- * Контроллер управления винокурнями.
- */
+import static java.util.stream.Collectors.toList;
+
 @Controller
 @RequestMapping("/admin/distilleries")
 @Secured({"ROLE_STAFF", "ROLE_ADMIN"})
 public class DistilleryController {
+	private static final String DISTILLERIES_BASE = "admin/distilleries";
+	private static final String DISTILLERIES_NEW = DISTILLERIES_BASE + "/new";
+	private static final String DISTILLERIES_EDIT = DISTILLERIES_BASE+ "/edit";
+
 	private final DistilleryService distilleryService;
 	private final RegionService regionService;
+	private final RegionDtoAssembler regionDTOAssembler;
+	private final DistilleryDtoAssembler distilleryDTOAssembler;
 
-	public DistilleryController(DistilleryService distilleryService, RegionService regionService) {
+	public DistilleryController(DistilleryService distilleryService, RegionService regionService,
+		RegionDtoAssembler regionDTOAssembler, DistilleryDtoAssembler distilleryDTOAssembler)
+	{
 		this.distilleryService = distilleryService;
 		this.regionService = regionService;
+		this.regionDTOAssembler = regionDTOAssembler;
+		this.distilleryDTOAssembler = distilleryDTOAssembler;
 	}
 
-	/**
-	 * Перечень винокурен.
-	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String distillery(Model model) {
-		model.addAttribute("distilleries", distilleryService.findAllOrderByTitle());
-		return "admin/distilleries";
+		List<DistilleryDTO> distilleriesDto = distilleryService.findAll().stream()
+			.map(distilleryDTOAssembler::toModel)
+			.collect(toList());
+		model.addAttribute("distilleries", distilleriesDto);
+		return DISTILLERIES_BASE;
 	}
 
-	//------------------------------------------------ Создание новой категории
+	//------------------------------------------------ Creating new distillery
 
-	/**
-	 * Страница добавления.
-	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/new")
 	public String newDistillery(Model model) {
+		List<RegionDTO> regionsDto = regionService.findAll().stream()
+			.map(regionDTOAssembler::toModel)
+			.collect(toList());
+		model.addAttribute("regions", regionsDto);
 		model.addAttribute("distillery", new Distillery());
-		model.addAttribute("regions", regionService.findAllOrderByName());
-		return "admin/distilleries/new";
+		return DISTILLERIES_NEW;
 	}
 
-	/**
-	 * Сохранение новой винокурни.
-	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public String postDistillery(
-		@Valid Distillery distillery,
+		@Valid DistilleryDTO distilleryDto,
 		BindingResult bindingResult
 	) {
-		if (bindingResult.hasErrors()) {
-			return "admin/distilleries/new";
-		}
-		Region region = regionService.findOne(distillery.getRegion().getId());
-		distillery.setRegion(region);
-		distilleryService.save(distillery);
-		return "redirect:/admin/distilleries";
+		if (bindingResult.hasErrors())
+			return DISTILLERIES_NEW;
+
+		Distillery newDistillery = distilleryDTOAssembler.toDomain(distilleryDto, 0);
+		distilleryService.create(newDistillery, distilleryDto.getRegion());
+		return "redirect:/" + DISTILLERIES_BASE;
 	}
 
-	//------------------------------------------------ Редактирование категории
+	//------------------------------------------------ Changing distillery
 
-	/**
-	 * Страница редактирования.
-	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/{distilleryId}/edit")
 	public String editDistillery(
 		@PathVariable long distilleryId,
 		Model model
 	) {
-		model.addAttribute("distillery", distilleryService.findOne(distilleryId));
-		model.addAttribute("regions", regionService.findAllOrderByName());
-		return "admin/distilleries/edit";
+		List<RegionDTO> regionsDto = regionService.findAll().stream()
+			.map(regionDTOAssembler::toModel)
+			.collect(toList());
+		model.addAttribute("regions", regionsDto);
+
+		Distillery distillery = distilleryService.findById(distilleryId);
+		model.addAttribute("distillery", distilleryDTOAssembler.toModel(distillery));
+
+		return DISTILLERIES_EDIT;
 	}
 
-	/**
-	 * Изменение винокурни.
-	 */
 	@RequestMapping(method = RequestMethod.PUT, value = "/{distilleryId}")
 	public String putDistillery(
 		@PathVariable long distilleryId,
-		@Valid Distillery distillery,
+		@Valid DistilleryDTO distilleryDto,
 		BindingResult bindingResult
 	) {
-		if (bindingResult.hasErrors()) {
-			return "admin/distilleries/edit";
-		}
-		Region region = regionService.findOne(distillery.getRegion().getId());
-		distillery.setRegion(region);
-		distilleryService.save(distillery);//!
-		return "redirect:/admin/distilleries";
+		if (bindingResult.hasErrors())
+			return DISTILLERIES_EDIT;
+
+		Distillery changedDistillery = distilleryDTOAssembler.toDomain(distilleryDto, distilleryId);
+		distilleryService.update(changedDistillery, distilleryDto.getRegion());
+		return "redirect:/" + DISTILLERIES_BASE;
 	}
 
-	//------------------------------------------------------ Удаление категории
+	//------------------------------------------------------ Removing distillery
 
-	/**
-	 * Удаление винокурни.
-	 */
-	@RequestMapping(method = RequestMethod.DELETE, value = "/{distilleryId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/{distilleryId}/delete")
 	public String deleteDistillery(
 		@PathVariable long distilleryId
 	) {
-		Distillery distillery = distilleryService.findOne(distilleryId);
-		distilleryService.delete(distillery);
-		return "redirect:/admin/distilleries";
+		distilleryService.delete(distilleryId);
+		return "redirect:/" + DISTILLERIES_BASE;
 	}
 }

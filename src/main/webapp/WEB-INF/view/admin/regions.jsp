@@ -36,10 +36,10 @@
 					<s:url value="regions/{regionId}/edit" var="edit_region_url">
 						<s:param name="regionId" value="${region.id}"/>
 					</s:url>
-					<s:url value="regions/{regionId}" var="delete_region_url">
+					<s:url value="regions/{regionId}/delete" var="delete_region_url">
 						<s:param name="regionId" value="${region.id}"/>
 					</s:url>
-					<sf:form action="${delete_region_url}" method="delete">
+					<sf:form action="${delete_region_url}" method="post">
 						<div class="btn-group btn-group-xs pull-right">
 							<a href="${edit_region_url}" class="btn btn-xs btn-default">изменить</a>
 							<button type="submit" class="btn btn-xs btn-default">удалить</button>

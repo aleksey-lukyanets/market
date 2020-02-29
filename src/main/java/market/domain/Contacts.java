@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Контактные данные пользователя.
+ * Contacts of the {@link UserAccount}.
  */
 @Entity
 @Table(name = "contacts")
@@ -21,7 +21,7 @@ public class Contacts implements Serializable {
 
 	@OneToOne
 	@PrimaryKeyJoinColumn
-	private UserAccount userAccount;
+	private UserAccount userAccount; // todo: change to 'String userLogin'
 
 	@Column(name = "phone", nullable = false)
 	private String phone;
@@ -46,72 +46,42 @@ public class Contacts implements Serializable {
 		this.cityAndRegion = "13";
 	}
 
-	/**
-	 * @return the id
-	 */
 	public Long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the userAccount
-	 */
 	public UserAccount getUserAccount() {
 		return userAccount;
 	}
 
-	/**
-	 * @param userAccount the userAccount to set
-	 */
 	public void setUserAccount(UserAccount userAccount) {
 		this.userAccount = userAccount;
 	}
 
-	/**
-	 * @return the phone
-	 */
 	public String getPhone() {
 		return phone;
 	}
 
-	/**
-	 * @param phone the phone to set
-	 */
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 
-	/**
-	 * @return the address
-	 */
 	public String getAddress() {
 		return address;
 	}
 
-	/**
-	 * @param address the address to set
-	 */
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
-	/**
-	 * @return the cityAndRegion
-	 */
 	public String getCityAndRegion() {
 		return cityAndRegion;
 	}
 
-	/**
-	 * @param cityAndRegion the cityAndRegion to set
-	 */
 	public void setCityAndRegion(String cityAndRegion) {
 		this.cityAndRegion = cityAndRegion;
 	}

@@ -4,15 +4,17 @@ import market.domain.Cart;
 import market.domain.Order;
 import market.domain.OrderedProduct;
 import market.domain.UserAccount;
+import market.dto.CartDTO;
 import market.dto.UserDTO;
+import market.dto.assembler.CartDtoAssembler;
 import market.dto.assembler.UserAccountDtoAssembler;
 import market.exception.EmailExistsException;
 import market.security.AuthenticationService;
 import market.service.CartService;
 import market.service.OrderService;
+import market.service.ProductService;
 import market.service.UserAccountService;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,94 +24,95 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Контроллер аккаунта покупателя.
- */
 @Controller
 @RequestMapping("/customer")
 @SessionAttributes({"cart"})
 public class CustomerController {
+	private static final String CUSTOMER_ORDERS = "customer/orders";
+	private static final String CUSTOMER_NEW = "customer/new";
+	private static final String ROOT = "/";
+
 	private final UserAccountService userAccountService;
 	private final CartService cartService;
 	private final OrderService orderService;
+	private final ProductService productService;
 	private final AuthenticationService authenticationService;
 	private final UserAccountDtoAssembler userAccountDtoAssembler;
+	private final CartDtoAssembler cartDtoAssembler;
 
-	public CustomerController(UserAccountService userAccountService, CartService cartService, OrderService orderService,
-		AuthenticationService authenticationService, UserAccountDtoAssembler userAccountDtoAssembler) {
+	public CustomerController(UserAccountService userAccountService, OrderService orderService,
+		AuthenticationService authenticationService, CartService cartService, ProductService productService,
+		UserAccountDtoAssembler userAccountDtoAssembler, CartDtoAssembler cartDtoAssembler)
+	{
 		this.userAccountService = userAccountService;
-		this.cartService = cartService;
 		this.orderService = orderService;
 		this.authenticationService = authenticationService;
+		this.cartService = cartService;
+		this.productService = productService;
 		this.userAccountDtoAssembler = userAccountDtoAssembler;
+		this.cartDtoAssembler = cartDtoAssembler;
 	}
 
-	/**
-	 * Страница истории заказов.
-	 */
 	@Secured({"ROLE_USER"})
 	@RequestMapping(value = "/orders", method = RequestMethod.GET)
-	public String orders(Model model) {
-		String userLogin = SecurityContextHolder.getContext().getAuthentication().getName();
-		UserAccount account = userAccountService.findByEmail(userLogin);
-		List<Order> userOrders = orderService.findByUserAccount(account);
+	public String orders(Principal principal, Model model) {
+		if (!isAuthorized(principal))
+			return "redirect:" + ROOT;
 
+		List<Order> userOrders = orderService.getUserOrders(principal.getName());
 		Map<Long, List<OrderedProduct>> orderedProductsMap = new HashMap<>();
-		for (Order order : userOrders) {
+		for (Order order : userOrders)
 			orderedProductsMap.put(order.getId(), new ArrayList<>(order.getOrderedProducts()));
-		}
+
 		model.addAttribute("userOrders", userOrders);
 		model.addAttribute("orderedProductsMap", orderedProductsMap);
-		return "customer/orders";
+		return CUSTOMER_ORDERS;
 	}
 
-	//----------------------------------------- Регистрация нового пользователя
+	private boolean isAuthorized(Principal principal) {
+		return principal != null;
+	}
 
-	/**
-	 * Страница регистрации.
-	 */
+	//----------------------------------------- Registering new account
+
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String getSignup(Model model) {
+	public String getSignUp(Model model) {
 		model.addAttribute("userDTO", new UserDTO());
-		return "customer/new";
+		return CUSTOMER_NEW;
 	}
 
-	/**
-	 * Обработка формы регистрации.
-	 *
-	 * @param user          данные нового пользователя
-	 * @param bindingResult ошибки валидации данных пользователя
-	 * @param sessionCart   сеансовая корзина
-	 * @return
-	 */
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
-	public String postSignup(
+	public String postSignUp(
 		Model model,
 		@Valid UserDTO user,
-		BindingResult bindingResult,
-		@ModelAttribute(value = "cart") Cart sessionCart
+		@ModelAttribute(value = "cart") CartDTO cartDto,
+		BindingResult bindingResult
 	) {
-		String view = "customer/new";
 		if (bindingResult.hasErrors())
-			return view;
+			return CUSTOMER_NEW;
 
+		UserAccount account = userAccountDtoAssembler.toDomain(user);
+		UserAccount newAccount;
 		try {
-			UserAccount userData = userAccountDtoAssembler.toDomain(user);
-			UserAccount newAccount = userAccountService.createUser(userData);
-			authenticationService.authenticate(newAccount);
-			model.addAttribute("userDTO", userAccountDtoAssembler.toModel(newAccount));
-		} catch (EmailExistsException ex) {
-			bindingResult.addError(ex.getFieldError());
-			return view;
+			newAccount = userAccountService.create(account);
+		} catch (EmailExistsException e) {
+			bindingResult.addError(e.getFieldError());
+			return CUSTOMER_NEW;
 		}
-		if (!sessionCart.isEmpty())
-			cartService.fillUserCart(user.getEmail(), sessionCart.getCartItems());
+		authenticationService.authenticate(newAccount);
 
-		return "redirect:/";
+		model.addAttribute("userAccount", userAccountDtoAssembler.toModel(newAccount));
+
+		Cart unauthorisedCart = cartDtoAssembler.toDomain(cartDto, productService);
+		Cart updatedCart = cartService.addAllToCart(newAccount.getEmail(), unauthorisedCart.getCartItems());
+		model.addAttribute("cart", cartDtoAssembler.toModel(updatedCart));
+
+		return "redirect:" + ROOT;
 	}
 }
