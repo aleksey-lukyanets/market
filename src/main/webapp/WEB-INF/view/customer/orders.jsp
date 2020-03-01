@@ -16,18 +16,18 @@
 					<tr>
 						<td valign="bottom">
 							<h4 class="panel-title">
-								<a data-toggle="collapse" data-parent="#accordion" href="#collapse${iter.index}">
-									Заказ от ${order.dateCreated}
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapse<c:out value="${iter.index}"/>">
+									Заказ от <c:out value="${order.dateCreated}"/>
 								</a>
 							</h4>
 						</td>
 						<td align="right" valign="bottom">
-							номер счёта: ${order.bill.number}
+							номер счёта: <c:out value="${order.bill.number}"/>
 						</td>
 					</tr>
 				</table>
 			</div>
-			<div class="panel-collapse collapse" id="collapse${iter.index}">
+			<div class="panel-collapse collapse" id="collapse<c:out value="${iter.index}"/>">
 				<table class="table">
 
 					<thead>
@@ -42,26 +42,26 @@
 					<c:forEach var="orderedProduct" items="${orderedProductsByOrderId[order.id]}">
 						<c:set var="product" value="${productsByOrderId[orderedProduct.productId]}"/>
 						<tr>
-							<td>${product.distillery} ${product.name}</td>
-							<td>${product.price} руб.</td>
-							<td>${orderedProduct.quantity}</td>
-							<td>${orderedProduct.quantity * product.price} руб.</td>
+							<td><c:out value="${product.distillery} ${product.name}"/></td>
+							<td><c:out value="${product.price}"/> руб.</td>
+							<td><c:out value="${orderedProduct.quantity}"/></td>
+							<td><c:out value="${orderedProduct.quantity * product.price}"/> руб.</td>
 						</tr>
 					</c:forEach>
 
 					<c:if test="${order.deliveryIncluded}">
 						<tr>
 							<td colspan="3" align="right">подитог:</td>
-							<td>${order.productsCost} руб.</td>
+							<td><c:out value="${order.productsCost}"/> руб.</td>
 						</tr>
 						<tr>
 							<td colspan="3" align="right">доставка по Петербургу:</td>
-							<td>${order.deliveryСost} руб.</td>
+							<td><c:out value="${order.deliveryСost}"/> руб.</td>
 						</tr>
 					</c:if>
 					<tr>
 						<td colspan="3" align="right">итог:</td>
-						<td>${order.productsCost + order.deliveryСost} руб.</td>
+						<td><c:out value="${order.productsCost + order.deliveryСost}"/> руб.</td>
 					</tr>
 
 				</table>

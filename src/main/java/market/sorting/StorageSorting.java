@@ -1,10 +1,9 @@
 package market.sorting;
 
-import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
+import org.springframework.stereotype.*;
+import org.springframework.ui.*;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Опции сортировки и фильтрации списка единиц хранения.
@@ -14,7 +13,7 @@ public class StorageSorting extends AbstractSorter {
 
 	private final Map<String, String> availableOptions = new LinkedHashMap<>();
 
-	{
+	public StorageSorting() {
 		sortFieldOptions.put("price", "по цене");
 		sortFieldOptions.put("distillery.title", "по винокурне");
 		sortFieldOptions.put("age", "по возрасту");

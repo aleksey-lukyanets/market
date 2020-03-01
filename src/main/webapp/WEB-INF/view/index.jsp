@@ -7,22 +7,22 @@
 
 <div class="carousel-wrapper" style="margin-top: 20px;">
 	<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="10000">
-		<!-- Indicators -->
+		<%-- Indicators --%>
 		<ol class="carousel-indicators">
 			<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
 			<li data-target="#carousel-example-generic" data-slide-to="1"></li>
 		</ol>
 
-		<!-- Wrapper for slides -->
+		<%-- Wrapper for slides --%>
 		<div class="carousel-inner">
 			<div class="item active">
-				<img src="${pageContext.request.contextPath}${initParam.imagesPath}carousel/Balvenie.jpg"/>
+				<img src="<c:out value="${pageContext.request.contextPath}${initParam.imagesPath}"/>carousel/Balvenie.jpg"/>
 				<div class="carousel-caption">
 					<p>Винокурня The Balvenie, Даффтаун, Шотландия</p>
 				</div>
 			</div>
 			<div class="item">
-				<img src="${pageContext.request.contextPath}${initParam.imagesPath}carousel/Laphroaig.jpg"/>
+				<img src="<c:out value="${pageContext.request.contextPath}${initParam.imagesPath}"/>carousel/Laphroaig.jpg"/>
 				<div class="carousel-caption">
 					<p>Винокурня Laphroaig, остров Айла, Шотландия</p>
 				</div>
@@ -35,13 +35,13 @@
 	<c:forEach var="region" items="${regions}">
 		<div class="regionBox">
 			<a href="<c:url value='regions/${region.id}'/>">
-				<span class="regionLabel scheme-${region.color}"></span>
+				<span class="<c:out value="regionLabel scheme-${region.color}"/>"></span>
 				<span class="regionLabelText">
-                    <span class="regionTitle">${region.name}</span>
+                    <span class="regionTitle"><c:out value="${region.name}"/></span>
                     <br>${region.subtitle}
                 </span>
-				<img class="regionImage img-responsive" alt="${region.name}"
-					 src="${pageContext.request.contextPath}${initParam.regionImagePath}${region.name}-preview.jpg"/>
+				<img class="regionImage img-responsive" alt="<c:out value="${region.name}"/>"
+					 src="<c:out value="${pageContext.request.contextPath}${initParam.regionImagePath}${region.name}"/>-preview.jpg"/>
 			</a>
 		</div>
 	</c:forEach>

@@ -3,11 +3,11 @@ package market.domain;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
-import java.io.Serializable;
-import java.util.Date;
+import javax.validation.constraints.*;
+import java.io.*;
+import java.util.*;
 
-import static javax.persistence.TemporalType.TIMESTAMP;
+import static javax.persistence.TemporalType.*;
 
 /**
  * Bill of the {@link Order}.
@@ -15,6 +15,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @Entity
 @Table(name = "bill")
 public class Bill implements Serializable {
+	private static final long serialVersionUID = 3689283961628876802L;
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)

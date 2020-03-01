@@ -38,9 +38,6 @@ public class ProductDTO extends RepresentationModel<ProductDTO> {
 	private String description;
 	private boolean available;
 
-	public ProductDTO() {
-	}
-
 	public long getProductId() {
 		return productId;
 	}
