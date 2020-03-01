@@ -1,10 +1,12 @@
 package market.domain;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.*;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.*;
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * Contacts of the {@link UserAccount}.
@@ -12,6 +14,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "contacts")
 public class Contacts implements Serializable {
+	private static final long serialVersionUID = 582080671801480110L;
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)

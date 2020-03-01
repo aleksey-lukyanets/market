@@ -3,12 +3,13 @@ package market.domain;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
-import java.io.Serializable;
+import javax.validation.constraints.*;
+import java.io.*;
 
 @Entity
 @Table(name = "distillery")
 public class Distillery implements Serializable {
+	private static final long serialVersionUID = -1491932412037172392L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

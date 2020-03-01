@@ -6,22 +6,20 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="header-regions">
-	<div class="region-item region-item-title">
-		регионы:
-	</div>
+	<div class="region-item region-item-title">регионы:</div>
 </div>
 <div class="header-regions">
 	<c:forEach var="region" items="${regions}">
 		<c:choose>
 			<c:when test="${region.id == selectedRegion.id}">
 				<div class="region-item region-item-active">
-					<span class="regionText">${region.name}</span>
+					<span class="regionText"><c:out value="${region.name}"/></span>
 				</div>
 			</c:when>
 			<c:otherwise>
-				<div class="region-item border-${region.color} scheme-grey">
+				<div class="region-item border-<c:out value="${region.color}"/> scheme-grey">
 					<a class="regionText" href="<c:url value='/regions/${region.id}'/>">
-							${region.name}
+						<c:out value="${region.name}"/>
 					</a>
 				</div>
 			</c:otherwise>

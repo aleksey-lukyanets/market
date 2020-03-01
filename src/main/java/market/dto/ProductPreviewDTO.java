@@ -12,9 +12,6 @@ public class ProductPreviewDTO extends RepresentationModel<ProductPreviewDTO> {
 	private String name;
 	private Double price;
 
-	public ProductPreviewDTO() {
-	}
-
 	public long getProductId() {
 		return productId;
 	}

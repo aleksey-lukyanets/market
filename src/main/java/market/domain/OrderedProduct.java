@@ -1,7 +1,7 @@
 package market.domain;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * {@link Product} of the {@link Order}.
@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "ordered_product")
 public class OrderedProduct implements Serializable {
+	private static final long serialVersionUID = -2055528467252485472L;
 
 	@EmbeddedId
 	private OrderedProductId pk = new OrderedProductId();
@@ -35,10 +36,7 @@ public class OrderedProduct implements Serializable {
 			return false;
 		}
 		OrderedProduct that = (OrderedProduct) o;
-		if (getPk() != null ? !getPk().equals(that.getPk()) : that.getPk() != null) {
-			return false;
-		}
-		return true;
+		return getPk() != null ? getPk().equals(that.getPk()) : that.getPk() == null;
 	}
 
 	@Override

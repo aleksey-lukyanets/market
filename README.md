@@ -2,7 +2,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8c0bd51bdba44e04bd2cbbfd7f643e9f)](https://www.codacy.com/manual/aleksey-lukyanets/market?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aleksey-lukyanets/market&amp;utm_campaign=Badge_Grade)
 ![build](https://github.com/aleksey-lukyanets/market/workflows/build/badge.svg)
 
-<a name="tech"></a>
 <h2>Технологии</h2>
 
 <ul class="discharged">
@@ -17,7 +16,6 @@
 </ul>
 
 
-<a name="func"></a>
 <h2>Функционал магазина</h2>
 
 <ol class="discharged">
@@ -48,7 +46,6 @@
 </ol>
 
 
-<a name="ckeckout"></a>
 <h2>Оформление заказа</h2>
 
 <p>Ниже приведена диаграмма процесса оформления заказа, на которую нанесены
@@ -62,7 +59,6 @@
 <br>
 
 
-<a name="rest"></a>
 <h2>Веб-служба REST</h2>
 
 <p>Помимо гипертекстового интерфейса магазин представляет веб-службу, через которую
@@ -70,7 +66,6 @@
     <a href="<c:url value='/rest-api' />">REST API</a>.</p>
 
 
-<a name="web"></a>
 <h2>Сортировка, фильтрация, разбивка на страницы</h2>
 
 <p>Приложение предоставляет возможность просматривать ресурсы удобным пользователю способом.</p>
@@ -85,7 +80,6 @@
     Spring Data) и добавления всех необходимых данных к модели <code>Model</code> Spring MVC.</p>
 
 
-<a name="forms"></a>
 <h2>Валидация форм</h2>
 
 <p>Проверка данных всех форм пользовательского и административного интерфейса выполняется
@@ -102,7 +96,6 @@
     JavaScript в браузере пользователя.</p>
 
 
-<a name="exceptions"></a>
 <h2>Обработка исключений</h2>
 
 <p>В приложении реализована централизованная обработка исключений классом
@@ -119,7 +112,6 @@
     передаётся соответствующему контроллеру.</p>
 
 
-<a name="db"></a>
 <h2>Модель базы данных</h2>
 
 <p>База данных приложения состоит из 13 связанных таблиц, отображаемых средствами Hibernate в 14 классов.</p>
@@ -136,7 +128,6 @@
     с помощью репозитория Spring Data JPA.</p>
 
 
-<a name="customization"></a>
 <h2>Пользовательские классы Spring</h2>
 
 <p>Функционал фреймворков Spring MVC и Spring Security расширен следующими классами:</p>

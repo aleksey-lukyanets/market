@@ -1,15 +1,16 @@
 package market.domain;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.*;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
-import static javax.persistence.TemporalType.TIMESTAMP;
+import static javax.persistence.TemporalType.*;
 
 /**
  * Order of the {@link UserAccount}.
@@ -17,6 +18,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @Entity
 @Table(name = "customer_order")
 public class Order implements Serializable {
+	private static final long serialVersionUID = -8328584058042877489L;
 
 	@Id
 	@Column(name = "id", insertable = false, updatable = false, nullable = false)
@@ -53,9 +55,6 @@ public class Order implements Serializable {
 
 	@Column(name = "executed", nullable = false)
 	private boolean executed;
-
-	public Order() {
-	}
 
 	public Long getId() {
 		return id;

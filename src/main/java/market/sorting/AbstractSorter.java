@@ -34,7 +34,7 @@ public abstract class AbstractSorter<T> implements ISorter<T> {
 	private String sortBy;
 	private Sort.Direction sortDirection;
 
-	{
+	public AbstractSorter() {
 		directionOptions.put(DIRECTION_DEFAULT.toString(), "по возрастанию");
 		directionOptions.put("desc", "по убыванию");
 

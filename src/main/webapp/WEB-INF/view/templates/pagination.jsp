@@ -51,7 +51,7 @@
 							<li class="active"><span><c:out value="${i}"/></span></li>
 						</c:when>
 						<c:otherwise>
-							<li><a href="${pageUrl}"><c:out value="${i}"/></a></li>
+							<li><a href="<c:out value="${pageUrl}"/>"><c:out value="${i}"/></a></li>
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>

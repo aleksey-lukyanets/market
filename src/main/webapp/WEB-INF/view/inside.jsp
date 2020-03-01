@@ -81,8 +81,8 @@
 	элементы данных и доступные покупателю действия.</p>
 <br>
 <center>
-	<a href="${pageContext.request.contextPath}${initParam.imagesPath}checkout-flow.png">
-		<img src="${pageContext.request.contextPath}${initParam.imagesPath}checkout-flow.png"
+	<a href="<c:out value="${pageContext.request.contextPath}${initParam.imagesPath}"/>checkout-flow.png">
+		<img src="<c:out value="${pageContext.request.contextPath}${initParam.imagesPath}"/>checkout-flow.png"
 			 alt="процесс оформления заказа"/>
 	</a>
 </center>
@@ -156,8 +156,8 @@
 <p>База данных приложения состоит из 13 связанных таблиц, отображаемых средствами Hibernate в 14 классов.</p>
 
 <center>
-	<a href="${pageContext.request.contextPath}${initParam.imagesPath}database-model.png">
-		<img src="${pageContext.request.contextPath}${initParam.imagesPath}database-model.png"
+	<a href="<c:out value="${pageContext.request.contextPath}${initParam.imagesPath}"/>database-model.png">
+		<img src="<c:out value="${pageContext.request.contextPath}${initParam.imagesPath}"/>database-model.png"
 			 width="500" alt="схема базы данных"/>
 	</a>
 </center>
