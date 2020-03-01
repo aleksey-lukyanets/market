@@ -1,24 +1,17 @@
 package market.service.impl;
 
-import market.dao.OrderDAO;
+import market.dao.*;
 import market.domain.*;
-import market.exception.EmptyCartException;
-import market.exception.UnknownEntityException;
-import market.service.CartService;
-import market.service.OrderService;
-import market.service.UserAccountService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import market.exception.*;
+import market.service.*;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
 
 import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-	private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
 
 	private final OrderDAO orderDAO;
 	private final UserAccountService userAccountService;
@@ -52,20 +45,20 @@ public class OrderServiceImpl implements OrderService {
 	public Page<Order> fetchFiltered(String executed, String orderAgeInDays, PageRequest request) {
 		Page<Order> pagedList;
 		Date dateCreated = new Date();
-		if (!orderAgeInDays.equals("all")) {
+		if (!"all".equals(orderAgeInDays)) {
 			int days = Integer.parseInt(orderAgeInDays);
 			Calendar c = Calendar.getInstance();
 			c.setTime(new Date());
 			c.add(Calendar.HOUR_OF_DAY, -(days * 24));
 			dateCreated = c.getTime();
 		}
-		if (!executed.equals("all") && !orderAgeInDays.equals("all")) {
+		if (!"all".equals(executed) && !"all".equals(orderAgeInDays)) {
 			boolean executedState = Boolean.parseBoolean(executed);
 			pagedList = orderDAO.findByExecutedAndDateCreatedGreaterThan(executedState, dateCreated, request);
-		} else if (!executed.equals("all")) {
+		} else if (!"all".equals(executed)) {
 			boolean executedState = Boolean.parseBoolean(executed);
 			pagedList = orderDAO.findByExecuted(executedState, request);
-		} else if (!orderAgeInDays.equals("all")) {
+		} else if (!"all".equals(orderAgeInDays)) {
 			pagedList = orderDAO.findByDateCreatedGreaterThan(dateCreated, request);
 		} else {
 			pagedList = orderDAO.findAll(request);

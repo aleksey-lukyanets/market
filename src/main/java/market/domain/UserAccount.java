@@ -1,13 +1,13 @@
 package market.domain;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 @Entity
 @Table(name = "user_account")
 public class UserAccount implements Serializable {
+	private static final long serialVersionUID = -8278943418573848966L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

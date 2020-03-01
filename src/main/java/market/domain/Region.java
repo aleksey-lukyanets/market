@@ -3,15 +3,15 @@ package market.domain;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
-import java.io.Serializable;
+import javax.validation.constraints.*;
+import java.io.*;
 
 @Entity
 @Table(name = "region")
 public class Region implements Serializable {
+	private static final long serialVersionUID = 5413261502059862627L;
 
 	public static final Region NULL;
-
 	static {
 		NULL = new Region();
 		NULL.setId(Long.valueOf(0));

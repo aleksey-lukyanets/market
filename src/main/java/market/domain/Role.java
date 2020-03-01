@@ -1,9 +1,8 @@
 package market.domain;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 /**
  * Role of a {@link UserAccount}.
@@ -11,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "role")
 public class Role implements Serializable {
+	private static final long serialVersionUID = -1387354647838847103L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

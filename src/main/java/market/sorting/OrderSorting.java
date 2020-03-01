@@ -15,7 +15,7 @@ public class OrderSorting extends AbstractSorter {
 	private final Map<String, String> executedOptions = new LinkedHashMap<>();
 	private final Map<String, String> createdOptions = new LinkedHashMap<>();
 
-	{
+	public OrderSorting() {
 		sortFieldOptions.put("dateCreated", "по дате оформления");
 		sortFieldOptions.put("bill.totalCost", "по сумме");
 		sortFieldOptions.put("userAccount.name", "по имени покупателя");

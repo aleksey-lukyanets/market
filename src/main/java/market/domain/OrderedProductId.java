@@ -1,24 +1,18 @@
 package market.domain;
 
-import javax.persistence.Embeddable;
-import java.io.Serializable;
+import javax.persistence.*;
+import java.io.*;
+import java.util.*;
 
 /**
  * Primary key of a {@link Product} inside the {@link Order}.
  */
 @Embeddable
 public class OrderedProductId implements Serializable {
+	private static final long serialVersionUID = 5368453186150127449L;
 
 	private Long orderId;
 	private Long productId;
-
-	public OrderedProductId() {
-	}
-
-	public OrderedProductId(Long orderId, Long productId) {
-		this.orderId = orderId;
-		this.productId = productId;
-	}
 
 	public Long getCustomerOrder() {
 		return orderId;
@@ -43,10 +37,8 @@ public class OrderedProductId implements Serializable {
 
 		OrderedProductId that = (OrderedProductId) o;
 
-		if (orderId != null ? !orderId.equals(that.orderId) : that.orderId != null) return false;
-		if (productId != null ? !productId.equals(that.productId) : that.productId != null) return false;
-
-		return true;
+		if (!Objects.equals(orderId, that.orderId)) return false;
+		return Objects.equals(productId, that.productId);
 	}
 
 	@Override

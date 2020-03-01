@@ -1,35 +1,24 @@
 package market.controller.frontend;
 
 import market.domain.*;
-import market.dto.ContactsDTO;
-import market.dto.CreditCardDTO;
-import market.dto.ProductDTO;
-import market.dto.assembler.ContactsDtoAssembler;
-import market.dto.assembler.OrderDtoAssembler;
-import market.dto.assembler.ProductDtoAssembler;
-import market.dto.assembler.UserAccountDtoAssembler;
-import market.exception.EmptyCartException;
-import market.service.CartService;
-import market.service.ContactsService;
-import market.service.OrderService;
-import market.service.UserAccountService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import market.dto.*;
+import market.dto.assembler.*;
+import market.exception.*;
+import market.service.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.access.annotation.*;
+import org.springframework.stereotype.*;
+import org.springframework.ui.*;
+import org.springframework.validation.*;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.security.Principal;
-import java.util.Map;
-import java.util.function.Function;
+import javax.servlet.http.*;
+import javax.validation.*;
+import java.security.*;
+import java.util.*;
+import java.util.function.*;
 
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
 /**
  * Checkout steps controller.
@@ -95,7 +84,7 @@ public class CheckoutController {
 		if (bindingResult.hasErrors())
 			return CHECKOUT_DETAILS;
 
-		if (infoOption.equals("useNew")) {
+		if ("useNew".equals(infoOption)) {
 			String login = principal.getName();
 			Contacts changedContacts = contactsDtoAssembler.toDomain(contactsDto);
 			contactsService.updateUserContacts(changedContacts, login);

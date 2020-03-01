@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 
-<script src="${pageContext.request.contextPath}/resources/js/jquery-validate.min.js" type="text/javascript"></script>
+<script src="<c:out value="${pageContext.request.contextPath}"/>/resources/js/jquery-validate.min.js" type="text/javascript"></script>
 
 <div class="form-group">
 	<label for="distillery" class="col-sm-3 control-label">
@@ -11,8 +11,8 @@
 	<div class="col-sm-5">
 		<div class="btn-group">
 			<sf:select multiple="single"
-					   path="distillery" class="form-control"
-					   name="distillery" id="distillery">
+					path="distillery" class="form-control"
+					name="distillery" id="distillery">
 				<sf:options items="${distilleries}" itemValue="title" itemLabel="title"/>
 			</sf:select>
 		</div>

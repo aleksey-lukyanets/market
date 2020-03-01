@@ -1,23 +1,15 @@
 package market.service.impl;
 
-import market.dao.ProductDAO;
-import market.domain.Distillery;
-import market.domain.Product;
-import market.domain.Region;
-import market.exception.UnknownEntityException;
-import market.service.DistilleryService;
-import market.service.ProductService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import market.dao.*;
+import market.domain.*;
+import market.exception.*;
+import market.service.*;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.*;
+import org.springframework.transaction.annotation.*;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.stream.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -60,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Page<Product> findByAvailability(String available, PageRequest request) {
 		Page<Product> pagedList;
-		if (available.equals("all")) {
+		if ("all".equals(available)) {
 			pagedList = productDAO.findAll(request);
 		} else {
 			boolean availability = Boolean.parseBoolean(available);

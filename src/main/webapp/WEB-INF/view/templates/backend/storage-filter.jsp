@@ -12,7 +12,7 @@
 		<div class="btn-group btn-xs">наличие:</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-				${availableOptions[currentlyAvailable]}
+				<c:out value="${availableOptions[currentlyAvailable]}"/>
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right">
@@ -26,7 +26,7 @@
 						<c:param name="page" value="1"/>
 						<c:param name="available" value="${available.key}"/>
 					</c:url>
-					<li><a href="${paramed_url}">${available.value}</a></li>
+					<li><a href="<c:out value="${paramed_url}"/>"><c:out value="${available.value}"/></a></li>
 				</c:forEach>
 			</ul>
 		</div>
@@ -34,7 +34,7 @@
 		<div class="btn-group btn-xs">упорядочить:</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-				${sortOptions[currentSort]}&nbsp;
+				<c:out value="${sortOptions[currentSort]}"/>&nbsp;
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right">
@@ -48,13 +48,13 @@
 						<c:param name="page" value="1"/>
 						<c:param name="sort" value="${sort.key}"/>
 					</c:url>
-					<li><a href="${paramed_url}">${sort.value}</a></li>
+					<li><a href="<c:out value="${paramed_url}"/>"><c:out value="${sort.value}"/></a></li>
 				</c:forEach>
 			</ul>
 		</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-				${directOptions[currentDirection]}&nbsp;
+				<c:out value="${directOptions[currentDirection]}"/>&nbsp;
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right">
@@ -68,7 +68,7 @@
 						<c:param name="page" value="1"/>
 						<c:param name="direct" value="${direct.key}"/>
 					</c:url>
-					<li><a href="${paramed_url}">${direct.value}</a></li>
+					<li><a href="<c:out value="${paramed_url}"/>"><c:out value="${direct.value}"/></a></li>
 				</c:forEach>
 			</ul>
 		</div>
@@ -76,7 +76,7 @@
 		<div class="btn-group btn-xs">на странице:</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-				${pageSizeOptions[currentPageSize]}&nbsp;
+				<c:out value="${pageSizeOptions[currentPageSize]}"/>&nbsp;
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu dropdown-menu-right">
@@ -90,7 +90,7 @@
 						<c:param name="page" value="1"/>
 						<c:param name="size" value="${size.key}"/>
 					</c:url>
-					<li style="width:auto;"><a href="${paramed_url}">${size.value}</a></li>
+					<li style="width:auto;"><a href="<c:out value="${paramed_url}"/>"><c:out value="${size.value}"/>"/></a></li>
 				</c:forEach>
 			</ul>
 		</div>
