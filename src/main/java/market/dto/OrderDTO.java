@@ -20,9 +20,6 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 	private boolean payed;
 	private boolean executed;
 
-	public OrderDTO() {
-	}
-
 	public String getUser() {
 		return user;
 	}
