@@ -257,7 +257,6 @@ public class CheckoutControllerTest {
 	public void postPayment_Ok() throws Exception {
 		CartItemDTO item = MarketData.getCartItemDTO();
 		int productsCost = MarketData.PRODUCT_QUANTITY * MarketData.PRODUCT_UNIT_COST;
-		int totalCost = productsCost + MarketData.DELIVERY_COST;
 
 		clearCart(mockSession);
 		updateCart(mockSession, item);
