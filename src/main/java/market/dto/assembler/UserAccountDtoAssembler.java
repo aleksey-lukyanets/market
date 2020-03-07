@@ -32,8 +32,18 @@ public class UserAccountDtoAssembler extends RepresentationModelAssemblerSupport
 	}
 
 	public UserAccount toDomain(UserDTO user) {
-		UserAccount userAccount = new UserAccount(user.getEmail(), user.getPassword(), user.getName(), true);
-		userAccount.setContacts(new Contacts(userAccount, user.getPhone(), user.getAddress()));
+		UserAccount userAccount = new UserAccount.Builder()
+			.setEmail(user.getEmail())
+			.setPassword(user.getPassword())
+			.setName(user.getName())
+			.setActive(true)
+			.build();
+		Contacts contacts = new Contacts.Builder()
+			.setUserAccount(userAccount)
+			.setPhone(user.getPhone())
+			.setAddress(user.getAddress())
+			.build();
+		userAccount.setContacts(contacts);
 		return userAccount;
 	}
 }

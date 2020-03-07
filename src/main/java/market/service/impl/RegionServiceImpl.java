@@ -35,7 +35,7 @@ public class RegionServiceImpl implements RegionService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Region findOne(String regionName) {
+	public Region findByName(String regionName) {
 		return regionDAO.findByName(regionName).orElse(null);
 	}
 

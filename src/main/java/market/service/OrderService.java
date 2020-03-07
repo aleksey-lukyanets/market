@@ -19,7 +19,7 @@ public interface OrderService {
 	 * @return order of the specified user and id
 	 * @throws UnknownEntityException if the requested order does not exist
 	 */
-	Order getUserOrder(String userLogin, long id) throws UnknownEntityException;
+	Order getUserOrder(String userLogin, long orderId) throws UnknownEntityException;
 
 	/**
 	 * @return orders filtered according to the passed parameters
@@ -28,6 +28,7 @@ public interface OrderService {
 
 	/**
 	 * Creates new order for the specified user.
+	 *
 	 * @return newly created order
 	 * @throws EmptyCartException if the specified user cart is empty
 	 */

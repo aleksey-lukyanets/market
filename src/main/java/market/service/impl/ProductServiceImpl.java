@@ -1,15 +1,22 @@
 package market.service.impl;
 
-import market.dao.*;
-import market.domain.*;
-import market.exception.*;
-import market.service.*;
-import org.springframework.data.domain.*;
-import org.springframework.stereotype.*;
-import org.springframework.transaction.annotation.*;
+import market.dao.ProductDAO;
+import market.domain.Distillery;
+import market.domain.Product;
+import market.domain.Region;
+import market.exception.UnknownEntityException;
+import market.service.DistilleryService;
+import market.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -38,14 +45,14 @@ public class ProductServiceImpl implements ProductService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Page<Product> findByDistillery(Distillery distillery, Pageable pageable) {
-		return productDAO.findByDistilleryOrderByName(distillery, pageable);
+	public Page<Product> findByDistillery(Distillery distillery, PageRequest request) {
+		return productDAO.findByDistilleryOrderByName(distillery, request);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public Page<Product> findByRegion(Region region, Pageable pageable) {
-		return productDAO.findByRegionOrderByName(region, pageable);
+	public Page<Product> findByRegion(Region region, PageRequest request) {
+		return productDAO.findByRegionOrderByName(region, request);
 	}
 
 	@Transactional(readOnly = true)

@@ -24,10 +24,10 @@ public class DistilleryDtoAssembler extends RepresentationModelAssemblerSupport<
 	}
 
 	public Distillery toDomain(DistilleryDTO dto, long distilleryId) {
-		Distillery distillery = new Distillery();
-		distillery.setId(distilleryId);
-		distillery.setTitle(dto.getTitle());
-		distillery.setDescription(dto.getDescription());
-		return distillery;
+		return new Distillery.Builder()
+			.setId(distilleryId)
+			.setTitle(dto.getTitle())
+			.setDescription(dto.getDescription())
+			.build();
 	}
 }

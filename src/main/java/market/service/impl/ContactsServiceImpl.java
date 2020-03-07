@@ -1,29 +1,27 @@
 package market.service.impl;
 
 import market.dao.ContactsDAO;
-import market.dao.UserAccountDAO;
 import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.service.ContactsService;
+import market.service.UserAccountService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ContactsServiceImpl implements ContactsService {
 	private final ContactsDAO contactsDAO;
-	private final UserAccountDAO userAccountDAO;
+	private final UserAccountService userAccountService;
 
-	public ContactsServiceImpl(ContactsDAO contactsDAO, UserAccountDAO userAccountDAO) {
+	public ContactsServiceImpl(ContactsDAO contactsDAO, UserAccountService userAccountService) {
 		this.contactsDAO = contactsDAO;
-		this.userAccountDAO = userAccountDAO;
+		this.userAccountService = userAccountService;
 	}
-
-	//-------------------------------------- Операции с контактами пользователя
 
 	@Transactional(readOnly = true)
 	@Override
 	public Contacts getContacts(String userLogin) {
-		UserAccount account = userAccountDAO.findByEmail(userLogin);
+		UserAccount account = userAccountService.findByEmail(userLogin);
 		return contactsDAO.findByUserAccount(account);
 	}
 

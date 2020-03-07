@@ -6,7 +6,6 @@ import market.domain.Region;
 import market.exception.UnknownEntityException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -27,12 +26,12 @@ public interface ProductService {
 	/**
 	 * @return all the products of the specified distillery, sorted by title
 	 */
-	Page<Product> findByDistillery(Distillery distillery, Pageable pageable);
+	Page<Product> findByDistillery(Distillery distillery, PageRequest request);
 
 	/**
 	 * @return all the products of the specified region, sorted by title
 	 */
-	Page<Product> findByRegion(Region region, Pageable pageable);
+	Page<Product> findByRegion(Region region, PageRequest request);
 
 	/**
 	 * @return all the available products, sorted by title
@@ -57,6 +56,7 @@ public interface ProductService {
 
 	/**
 	 * Updates existing product.
+	 *
 	 * @throws UnknownEntityException if product does not exist
 	 */
 	void update(Product product, String distilleryTitle) throws UnknownEntityException;

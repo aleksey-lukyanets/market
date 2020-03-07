@@ -1,7 +1,15 @@
 package market.domain;
 
-import javax.persistence.*;
-import java.io.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * {@link Product} of the {@link Order}.
@@ -26,23 +34,6 @@ public class OrderedProduct implements Serializable {
 
 	@Column(name = "quantity")
 	private int quantity;
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		OrderedProduct that = (OrderedProduct) o;
-		return getPk() != null ? getPk().equals(that.getPk()) : that.getPk() == null;
-	}
-
-	@Override
-	public int hashCode() {
-		return (getPk() != null ? getPk().hashCode() : 0);
-	}
 
 	public OrderedProductId getPk() {
 		return pk;
@@ -76,5 +67,21 @@ public class OrderedProduct implements Serializable {
 	public void setProduct(Product product) {
 		this.product = product;
 		getPk().setProduct(product.getId());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		OrderedProduct that = (OrderedProduct) o;
+		return quantity == that.quantity &&
+			Objects.equals(pk, that.pk) &&
+			Objects.equals(order, that.order) &&
+			Objects.equals(product, that.product);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(pk, order, product, quantity);
 	}
 }

@@ -51,19 +51,19 @@ public class DistilleryServiceImpl implements DistilleryService {
 
 	@Transactional
 	@Override
-	public void create(Distillery newDistillery, String regionTitle) {
-		saveInternal(newDistillery, regionTitle);
+	public void create(Distillery newDistillery, String regionName) {
+		saveInternal(newDistillery, regionName);
 	}
 
 	@Override
-	public void update(Distillery changedDistillery, String regionTitle) {
+	public void update(Distillery changedDistillery, String regionName) {
 		Optional<Distillery> originalDistillery = distilleryDAO.findById(changedDistillery.getId());
 		if (originalDistillery.isPresent())
-			saveInternal(changedDistillery, regionTitle);
+			saveInternal(changedDistillery, regionName);
 	}
 
-	private void saveInternal(Distillery distillery, String regionTitle) {
-		Region region = regionService.findOne(regionTitle);
+	private void saveInternal(Distillery distillery, String regionName) {
+		Region region = regionService.findByName(regionName);
 		if (region != null) {
 			distillery.setRegion(region);
 			distilleryDAO.save(distillery);

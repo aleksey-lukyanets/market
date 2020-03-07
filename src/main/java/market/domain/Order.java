@@ -1,16 +1,16 @@
 package market.domain;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.*;
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
-import static javax.persistence.TemporalType.*;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 /**
  * Order of the {@link UserAccount}.
@@ -48,7 +48,7 @@ public class Order implements Serializable {
 	private Date dateCreated;
 
 	@Column(name = "delivery_cost")
-	private int deliveryСost;
+	private int deliveryCost;
 
 	@Column(name = "delivery_included", nullable = false)
 	private boolean deliveryIncluded;
@@ -96,12 +96,12 @@ public class Order implements Serializable {
 		this.orderedProducts = products;
 	}
 
-	public int getDeliveryСost() {
-		return deliveryСost;
+	public int getDeliveryCost() {
+		return deliveryCost;
 	}
 
-	public void setDeliveryСost(int deliveryСost) {
-		this.deliveryСost = deliveryСost;
+	public void setDeliveryCost(int deliveryСost) {
+		this.deliveryCost = deliveryСost;
 	}
 
 	public boolean isDeliveryIncluded() {
@@ -128,4 +128,95 @@ public class Order implements Serializable {
 		this.executed = executed;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Order order = (Order) o;
+		return Double.compare(order.productsCost, productsCost) == 0 &&
+			deliveryCost == order.deliveryCost &&
+			deliveryIncluded == order.deliveryIncluded &&
+			executed == order.executed &&
+			Objects.equals(id, order.id) &&
+			Objects.equals(userAccount, order.userAccount) &&
+			Objects.equals(orderedProducts, order.orderedProducts) &&
+			Objects.equals(bill, order.bill) &&
+			Objects.equals(dateCreated, order.dateCreated);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, userAccount, orderedProducts, bill, productsCost, dateCreated, deliveryCost, deliveryIncluded, executed);
+	}
+
+	public static class Builder {
+		private Long id;
+		private UserAccount userAccount;
+		private Set<OrderedProduct> orderedProducts = new HashSet<>();
+		private Bill bill;
+		private double productsCost;
+		private Date dateCreated;
+		private int deliveryCost;
+		private boolean deliveryIncluded;
+		private boolean executed;
+
+		public Order build() {
+			Order order = new Order();
+			order.id = id;
+			order.userAccount = userAccount;
+			order.orderedProducts = orderedProducts;
+			order.bill = bill;
+			order.productsCost = productsCost;
+			order.dateCreated = dateCreated;
+			order.deliveryCost = deliveryCost;
+			order.deliveryIncluded = deliveryIncluded;
+			order.executed = executed;
+			return order;
+		}
+
+		public Builder setId(Long id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder setUserAccount(UserAccount userAccount) {
+			this.userAccount = userAccount;
+			return this;
+		}
+
+		public Builder setOrderedProducts(Set<OrderedProduct> orderedProducts) {
+			this.orderedProducts = orderedProducts;
+			return this;
+		}
+
+		public Builder setBill(Bill bill) {
+			this.bill = bill;
+			return this;
+		}
+
+		public Builder setProductsCost(double productsCost) {
+			this.productsCost = productsCost;
+			return this;
+		}
+
+		public Builder setDateCreated(Date dateCreated) {
+			this.dateCreated = dateCreated;
+			return this;
+		}
+
+		public Builder setDeliveryCost(int deliveryCost) {
+			this.deliveryCost = deliveryCost;
+			return this;
+		}
+
+		public Builder setDeliveryIncluded(boolean deliveryIncluded) {
+			this.deliveryIncluded = deliveryIncluded;
+			return this;
+		}
+
+		public Builder setExecuted(boolean executed) {
+			this.executed = executed;
+			return this;
+		}
+	}
 }

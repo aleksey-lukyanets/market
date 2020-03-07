@@ -27,12 +27,18 @@ public class MarketData {
 
 	public static List<Region> getRegionsOrderedByName() {
 		List<Region> regions = new ArrayList<>();
-		regions.add(new Region("Campbeltown"));
-		regions.add(new Region("Highland"));
-		regions.add(new Region("Island"));
-		regions.add(new Region("Islay"));
-		regions.add(new Region("Lowland"));
-		regions.add(new Region("Speyside"));
+		regions.add(newRegion("Campbeltown"));
+		regions.add(newRegion("Highland"));
+		regions.add(newRegion("Island"));
+		regions.add(newRegion("Islay"));
+		regions.add(newRegion("Lowland"));
+		regions.add(newRegion("Speyside"));
 		return regions;
+	}
+
+	private static Region newRegion(String speyside) {
+		return new Region.Builder()
+			.setName(speyside)
+			.build();
 	}
 }
