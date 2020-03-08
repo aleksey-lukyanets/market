@@ -1,8 +1,9 @@
 package market.domain;
 
 import javax.persistence.*;
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_account")
@@ -39,20 +40,6 @@ public class UserAccount implements Serializable {
 		inverseJoinColumns = {
 			@JoinColumn(name = "role_id")})
 	private Set<Role> roles = new HashSet<>();
-
-	public UserAccount() {
-	}
-
-	public UserAccount(boolean active) {
-		this.active = active;
-	}
-
-	public UserAccount(String email, String password, String name, boolean active) {
-		this.email = email;
-		this.password = password;
-		this.name = name;
-		this.active = active;
-	}
 
 	public Long getId() {
 		return id;
@@ -116,5 +103,69 @@ public class UserAccount implements Serializable {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public static class Builder {
+		private Long id;
+		private String email;
+		private String password;
+		private String name;
+		private boolean active;
+		private Contacts contacts;
+		private Cart cart;
+		private Set<Role> roles = new HashSet<>();
+
+		public UserAccount build() {
+			UserAccount account = new UserAccount();
+			account.id = id;
+			account.email = email;
+			account.password = password;
+			account.name = name;
+			account.active = active;
+			account.contacts = contacts;
+			account.cart = cart;
+			account.roles = roles;
+			return account;
+		}
+
+		public Builder setId(Long id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder setEmail(String email) {
+			this.email = email;
+			return this;
+		}
+
+		public Builder setPassword(String password) {
+			this.password = password;
+			return this;
+		}
+
+		public Builder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Builder setActive(boolean active) {
+			this.active = active;
+			return this;
+		}
+
+		public Builder setContacts(Contacts contacts) {
+			this.contacts = contacts;
+			return this;
+		}
+
+		public Builder setCart(Cart cart) {
+			this.cart = cart;
+			return this;
+		}
+
+		public Builder setRoles(Set<Role> roles) {
+			this.roles = roles;
+			return this;
+		}
 	}
 }

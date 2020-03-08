@@ -1,12 +1,17 @@
 package market.domain;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.persistence.*;
-import java.io.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Contacts of the {@link UserAccount}.
@@ -36,10 +41,6 @@ public class Contacts implements Serializable {
 	private String cityAndRegion;
 
 	public Contacts() {
-	}
-
-	public Contacts(String phone, String address/*, String cityAndRegion*/) {
-		this(null, phone, address);
 	}
 
 	public Contacts(UserAccount userAccount, String phone, String address/*, String cityAndRegion*/) {
@@ -89,4 +90,63 @@ public class Contacts implements Serializable {
 		this.cityAndRegion = cityAndRegion;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Contacts contacts = (Contacts) o;
+		return Objects.equals(id, contacts.id) &&
+			Objects.equals(userAccount, contacts.userAccount) &&
+			Objects.equals(phone, contacts.phone) &&
+			Objects.equals(address, contacts.address) &&
+			Objects.equals(cityAndRegion, contacts.cityAndRegion);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, userAccount, phone, address, cityAndRegion);
+	}
+
+	public static class Builder {
+		private Long id;
+		private UserAccount userAccount;
+		private String phone;
+		private String address;
+		private String cityAndRegion;
+
+		public Contacts build() {
+			Contacts contacts = new Contacts();
+			contacts.id = id;
+			contacts.userAccount = userAccount;
+			contacts.phone = phone;
+			contacts.address = address;
+			contacts.cityAndRegion = cityAndRegion;
+			return contacts;
+		}
+
+		public Builder setId(Long id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder setUserAccount(UserAccount userAccount) {
+			this.userAccount = userAccount;
+			return this;
+		}
+
+		public Builder setPhone(String phone) {
+			this.phone = phone;
+			return this;
+		}
+
+		public Builder setAddress(String address) {
+			this.address = address;
+			return this;
+		}
+
+		public Builder setCityAndRegion(String cityAndRegion) {
+			this.cityAndRegion = cityAndRegion;
+			return this;
+		}
+	}
 }

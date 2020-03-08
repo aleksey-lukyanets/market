@@ -1,14 +1,29 @@
 package market.service.impl;
 
-import market.dao.*;
-import market.domain.*;
-import market.exception.*;
-import market.service.*;
-import org.springframework.data.domain.*;
-import org.springframework.stereotype.*;
-import org.springframework.transaction.annotation.*;
+import market.dao.OrderDAO;
+import market.domain.Bill;
+import market.domain.Cart;
+import market.domain.CartItem;
+import market.domain.Order;
+import market.domain.OrderedProduct;
+import market.domain.UserAccount;
+import market.exception.EmptyCartException;
+import market.exception.UnknownEntityException;
+import market.service.CartService;
+import market.service.OrderService;
+import market.service.UserAccountService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -32,38 +47,36 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Order getUserOrder(String userLogin, long id) throws UnknownEntityException {
+	public Order getUserOrder(String userLogin, long orderId) throws UnknownEntityException {
 		// todo: add user check
-		Order order = orderDAO.findById(id).orElse(null);
+		Order order = orderDAO.findById(orderId).orElse(null);
 		if ((order == null) || !order.getUserAccount().getEmail().equals(userLogin))
-			throw new UnknownEntityException(Order.class, id);
+			throw new UnknownEntityException(Order.class, orderId);
 		return order;
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public Page<Order> fetchFiltered(String executed, String orderAgeInDays, PageRequest request) {
-		Page<Order> pagedList;
-		Date dateCreated = new Date();
+		Date startTime = new Date();
 		if (!"all".equals(orderAgeInDays)) {
 			int days = Integer.parseInt(orderAgeInDays);
 			Calendar c = Calendar.getInstance();
 			c.setTime(new Date());
 			c.add(Calendar.HOUR_OF_DAY, -(days * 24));
-			dateCreated = c.getTime();
+			startTime = c.getTime();
 		}
 		if (!"all".equals(executed) && !"all".equals(orderAgeInDays)) {
 			boolean executedState = Boolean.parseBoolean(executed);
-			pagedList = orderDAO.findByExecutedAndDateCreatedGreaterThan(executedState, dateCreated, request);
+			return orderDAO.findByExecutedAndDateCreatedGreaterThan(executedState, startTime, request);
 		} else if (!"all".equals(executed)) {
 			boolean executedState = Boolean.parseBoolean(executed);
-			pagedList = orderDAO.findByExecuted(executedState, request);
+			return orderDAO.findByExecuted(executedState, request);
 		} else if (!"all".equals(orderAgeInDays)) {
-			pagedList = orderDAO.findByDateCreatedGreaterThan(dateCreated, request);
+			return orderDAO.findByDateCreatedGreaterThan(startTime, request);
 		} else {
-			pagedList = orderDAO.findAll(request);
+			return orderDAO.findAll(request);
 		}
-		return pagedList;
 	}
 
 	@Transactional
@@ -95,42 +108,39 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private Order createNewOrder(String userLogin, Cart cart, int deliveryCost) {
-		Order order = new Order();
-		if (cart.isDeliveryIncluded()) {
-			order.setDeliveryIncluded(true);
-			order.setDeliveryСost(deliveryCost);
-		} else {
-			order.setDeliveryIncluded(false);
-			order.setDeliveryСost(0);
-		}
-		order.setUserAccount(userAccountService.findByEmail(userLogin));
-		order.setProductsCost(cart.getItemsCost());
-		order.setDateCreated(new Date());
-		order.setExecuted(false);
-		return order;
+		return new Order.Builder()
+			.setDeliveryIncluded(cart.isDeliveryIncluded())
+			.setDeliveryCost(cart.isDeliveryIncluded() ? deliveryCost : 0)
+			.setUserAccount(userAccountService.findByEmail(userLogin))
+			.setProductsCost(cart.getItemsCost())
+			.setDateCreated(new Date())
+			.setExecuted(false)
+			.build();
 	}
 
 	private Bill createBill(Order order, String cardNumber) {
-		Bill bill = new Bill();
-		bill.setOrder(order);
-		bill.setNumber(new Random().nextInt(999999999));
-		bill.setTotalCost(order.getProductsCost() + order.getDeliveryСost());
-		bill.setPayed(true);
-		bill.setDateCreated(new Date());
-		bill.setCcNumber(cardNumber);
-		return bill;
+		return new Bill.Builder()
+			.setOrder(order)
+			.setNumber(new Random().nextInt(999999999))
+			.setTotalCost(order.getProductsCost() + order.getDeliveryCost())
+			.setPayed(true)
+			.setDateCreated(new Date())
+			.setCcNumber(cardNumber)
+			.build();
 	}
 
 	private void fillOrderItems(Cart cart, Order order) {
-		Set<OrderedProduct> ordered = new HashSet<>();
-		for (CartItem item : cart.getCartItems()) {
-			OrderedProduct orderedProduct = new OrderedProduct();
-			Product product = item.getProduct();
-			orderedProduct.setProduct(product);
-			orderedProduct.setOrder(order);
-			orderedProduct.setQuantity(item.getQuantity());
-			ordered.add(orderedProduct);
-		}
+		Set<OrderedProduct> ordered = cart.getCartItems().stream()
+			.map(item -> createOrderedProduct(order, item))
+			.collect(toSet());
 		order.setOrderedProducts(ordered);
+	}
+
+	private OrderedProduct createOrderedProduct(Order order, CartItem item) {
+		OrderedProduct orderedProduct = new OrderedProduct();
+		orderedProduct.setProduct(item.getProduct());
+		orderedProduct.setOrder(order);
+		orderedProduct.setQuantity(item.getQuantity());
+		return orderedProduct;
 	}
 }

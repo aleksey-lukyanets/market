@@ -24,8 +24,8 @@ public class OrderDtoAssembler extends RepresentationModelAssemblerSupport<Order
 		dto.setBillNumber(order.getBill().getNumber());
 		dto.setProductsCost(order.getProductsCost());
 		dto.setDateCreated(order.getDateCreated());
-		dto.setDeliveryCost(order.getDeliveryСost());
-		dto.setTotalCost(order.isDeliveryIncluded() ? (order.getProductsCost() + order.getDeliveryСost()) : order.getProductsCost());
+		dto.setDeliveryCost(order.getDeliveryCost());
+		dto.setTotalCost(order.isDeliveryIncluded() ? (order.getProductsCost() + order.getDeliveryCost()) : order.getProductsCost());
 		dto.setDeliveryIncluded(order.isDeliveryIncluded());
 		dto.setPayed(order.getBill().isPayed());
 		dto.setExecuted(order.isExecuted());

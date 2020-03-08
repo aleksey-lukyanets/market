@@ -4,7 +4,7 @@ import market.domain.Distillery;
 import market.domain.Product;
 import market.domain.Region;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,10 +12,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductDAO extends CrudRepository<Product, Long>, JpaRepository<Product, Long> {
 
-	Page<Product> findByDistilleryOrderByName(Distillery distillery, Pageable pageable);
+	Page<Product> findByDistilleryOrderByName(Distillery distillery, PageRequest request);
 
 	@Query(value = "SELECT p FROM Product p WHERE p.distillery IN (SELECT d FROM Distillery d WHERE d.region = :region) order by p.name")
-	Page<Product> findByRegionOrderByName(@Param("region") Region region, Pageable pageable);
+	Page<Product> findByRegionOrderByName(@Param("region") Region region, PageRequest request);
 
-	Page<Product> findByAvailableOrderByName(boolean available, Pageable pageable);
+	Page<Product> findByAvailableOrderByName(boolean available, PageRequest request);
 }

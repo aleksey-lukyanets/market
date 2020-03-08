@@ -25,12 +25,12 @@ public class RegionDtoAssembler extends RepresentationModelAssemblerSupport<Regi
 	}
 
 	public Region toDomain(RegionDTO dto) {
-		Region region = new Region();
-		region.setId(dto.getId());
-		region.setName(dto.getName());
-		region.setSubtitle(dto.getSubtitle());
-		region.setColor(dto.getColor());
-		region.setDescription(dto.getDescription());
-		return region;
+		return new Region.Builder()
+			.setId(dto.getId())
+			.setName(dto.getName())
+			.setSubtitle(dto.getSubtitle())
+			.setColor(dto.getColor())
+			.setDescription(dto.getDescription())
+			.build();
 	}
 }

@@ -19,7 +19,7 @@ public interface RegionService {
 	/**
 	 * @return region with the specified name
 	 */
-	Region findOne(String regionName);
+	Region findByName(String regionName);
 
 	/**
 	 * Creates new region.

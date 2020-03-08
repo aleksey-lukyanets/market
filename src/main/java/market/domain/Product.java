@@ -2,12 +2,21 @@ package market.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "product")
@@ -124,6 +133,27 @@ public class Product implements Serializable {
 		this.available = available;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Product product = (Product) o;
+		return id == product.id &&
+			available == product.available &&
+			Objects.equals(distillery, product.distillery) &&
+			Objects.equals(name, product.name) &&
+			Objects.equals(price, product.price) &&
+			Objects.equals(description, product.description) &&
+			Objects.equals(volume, product.volume) &&
+			Objects.equals(alcohol, product.alcohol) &&
+			Objects.equals(age, product.age);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, distillery, name, price, description, volume, alcohol, age, available);
+	}
+
 	public static class Builder {
 		private long id;
 		private Distillery distillery;
@@ -134,6 +164,21 @@ public class Product implements Serializable {
 		private Float alcohol;
 		private Integer age;
 		private boolean available = true;
+
+		public Builder() {
+		}
+
+		public Builder(Product product) {
+			id = product.id;
+			distillery = product.distillery;
+			name = product.name;
+			price = product.price;
+			description = product.description;
+			volume = product.volume;
+			alcohol = product.alcohol;
+			age = product.age;
+			available = product.available;
+		}
 
 		public Product build() {
 			Product product = new Product();

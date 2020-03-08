@@ -22,3 +22,5 @@ jobs:
         run: mvn --file pom.xml clean compile
       - name: Build
         run: mvn --file pom.xml install -DskipTests
+      - name: Tests
+        run: mvn test

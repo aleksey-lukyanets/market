@@ -30,7 +30,7 @@ public interface DistilleryService {
 	/**
 	 * Creates new distillery.
 	 */
-	void create(Distillery newDistillery, String regionTitle);
+	void create(Distillery newDistillery, String regionName);
 
 	/**
 	 * Updates existing distillery.
