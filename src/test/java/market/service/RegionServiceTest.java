@@ -3,6 +3,7 @@ package market.service;
 import market.dao.RegionDAO;
 import market.domain.Region;
 import market.service.impl.RegionServiceImpl;
+import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,8 +24,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class RegionServiceTest {
-	private static final long REGION_ID = 123L;
-	private static final String REGION_NAME = "region_name";
 
 	@Mock
 	private RegionDAO regionDAO;
@@ -39,16 +38,14 @@ public class RegionServiceTest {
 
 	@BeforeEach
 	public void setUp() {
-		region = new Region.Builder()
-			.setId(REGION_ID)
-			.setName(REGION_NAME)
-			.build();
+		region = FixturesFactory.region().build();
 		regionService = new RegionServiceImpl(regionDAO);
 	}
 
 	@Test
 	public void findAll() {
-		when(regionDAO.findAll()).thenReturn(Collections.singletonList(region));
+		when(regionDAO.findAll())
+			.thenReturn(Collections.singletonList(region));
 
 		List<Region> retrieved = regionService.findAll();
 
@@ -57,7 +54,8 @@ public class RegionServiceTest {
 
 	@Test
 	public void findOne() {
-		when(regionDAO.findById(region.getId())).thenReturn(Optional.of(region));
+		when(regionDAO.findById(region.getId()))
+			.thenReturn(Optional.of(region));
 
 		Region retrieved = regionService.findOne(region.getId());
 
@@ -66,7 +64,8 @@ public class RegionServiceTest {
 
 	@Test
 	public void findByName() {
-		when(regionDAO.findByName(region.getName())).thenReturn(Optional.of(region));
+		when(regionDAO.findByName(region.getName()))
+			.thenReturn(Optional.of(region));
 
 		Region retrieved = regionService.findByName(region.getName());
 
@@ -83,11 +82,11 @@ public class RegionServiceTest {
 
 	@Test
 	public void update() {
-		Region changedRegion = new Region.Builder()
-			.setId(region.getId())
-			.setName(REGION_NAME + "_changed")
+		Region changedRegion = new Region.Builder(region)
+			.setName(region.getName() + "_changed")
 			.build();
-		when(regionDAO.findById(region.getId())).thenReturn(Optional.of(region));
+		when(regionDAO.findById(region.getId()))
+			.thenReturn(Optional.of(region));
 
 		regionService.update(changedRegion.getId(), changedRegion);
 

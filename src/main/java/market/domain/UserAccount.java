@@ -167,5 +167,9 @@ public class UserAccount implements Serializable {
 			this.roles = roles;
 			return this;
 		}
+
+		public Long getId() {
+			return id;
+		}
 	}
 }

@@ -4,6 +4,7 @@ import market.dao.DistilleryDAO;
 import market.domain.Distillery;
 import market.domain.Region;
 import market.service.impl.DistilleryServiceImpl;
+import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +26,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class DistilleryServiceTest {
-	private static final long REGION_ID = 123L;
-	private static final String REGION_NAME = "region_name";
-	private static final long DISTILLERY_ID = 234L;
-	private static final String DISTILLERY_TITLE = "distillery_title";
-	private static final String DISTILLERY_DESCRIPTION = "distillery_description";
 
 	@Mock
 	private DistilleryDAO distilleryDAO;
@@ -47,22 +43,15 @@ public class DistilleryServiceTest {
 
 	@BeforeEach
 	public void setUp() {
-		region = new Region.Builder()
-			.setId(REGION_ID)
-			.setName(REGION_NAME)
-			.build();
-		distillery = new Distillery.Builder()
-			.setId(DISTILLERY_ID)
-			.setRegion(region)
-			.setTitle(DISTILLERY_TITLE)
-			.setDescription(DISTILLERY_DESCRIPTION)
-			.build();
+		region = FixturesFactory.region().build();
+		distillery = FixturesFactory.distillery(region).build();
 		distilleryService = new DistilleryServiceImpl(regionService, distilleryDAO);
 	}
 
 	@Test
 	public void findAll() {
-		when(distilleryDAO.findAll()).thenReturn(Collections.singletonList(distillery));
+		when(distilleryDAO.findAll())
+			.thenReturn(Collections.singletonList(distillery));
 
 		List<Distillery> retrieved = distilleryService.findAll();
 
@@ -71,7 +60,8 @@ public class DistilleryServiceTest {
 
 	@Test
 	public void findByRegion() {
-		when(distilleryDAO.findByRegionOrderByTitleAsc(any(Region.class))).thenReturn(Collections.singletonList(distillery));
+		when(distilleryDAO.findByRegionOrderByTitleAsc(any(Region.class)))
+			.thenReturn(Collections.singletonList(distillery));
 
 		List<Distillery> retrieved = distilleryService.findByRegion(region);
 
@@ -80,27 +70,30 @@ public class DistilleryServiceTest {
 
 	@Test
 	public void findById() {
-		when(distilleryDAO.findById(DISTILLERY_ID)).thenReturn(Optional.of(distillery));
+		when(distilleryDAO.findById(distillery.getId()))
+			.thenReturn(Optional.of(distillery));
 
-		Distillery retrieved = distilleryService.findById(DISTILLERY_ID);
+		Distillery retrieved = distilleryService.findById(distillery.getId());
 
 		assertThat(retrieved, equalTo(distillery));
 	}
 
 	@Test
 	public void findByTitle() {
-		when(distilleryDAO.findByTitle(DISTILLERY_TITLE)).thenReturn(distillery);
+		when(distilleryDAO.findByTitle(distillery.getTitle()))
+			.thenReturn(distillery);
 
-		Distillery retrieved = distilleryService.findByTitle(DISTILLERY_TITLE);
+		Distillery retrieved = distilleryService.findByTitle(distillery.getTitle());
 
 		assertThat(retrieved, equalTo(distillery));
 	}
 
 	@Test
 	public void create() {
-		when(regionService.findByName(REGION_NAME)).thenReturn(region);
+		when(regionService.findByName(region.getName()))
+			.thenReturn(region);
 
-		distilleryService.create(distillery, REGION_NAME);
+		distilleryService.create(distillery, region.getName());
 
 		verify(distilleryDAO).save(distilleryCaptor.capture());
 		assertThat(distilleryCaptor.getValue(), equalTo(distillery));
@@ -108,16 +101,16 @@ public class DistilleryServiceTest {
 
 	@Test
 	public void update() {
-		Distillery changedDistillery = new Distillery.Builder()
-			.setId(distillery.getId())
-			.setRegion(region)
-			.setTitle(DISTILLERY_TITLE + "_changed")
-			.setDescription(DISTILLERY_DESCRIPTION + "_changed")
+		Distillery changedDistillery = new Distillery.Builder(distillery)
+			.setTitle(distillery.getTitle() + "_changed")
+			.setDescription(distillery.getDescription() + "_changed")
 			.build();
-		when(regionService.findByName(region.getName())).thenReturn(region);
-		when(distilleryDAO.findById(distillery.getId())).thenReturn(Optional.of(distillery));
+		when(regionService.findByName(region.getName()))
+			.thenReturn(region);
+		when(distilleryDAO.findById(distillery.getId()))
+			.thenReturn(Optional.of(distillery));
 
-		distilleryService.update(changedDistillery, REGION_NAME);
+		distilleryService.update(changedDistillery, distillery.getRegion().getName());
 
 		verify(distilleryDAO).save(distilleryCaptor.capture());
 		assertThat(distilleryCaptor.getValue(), equalTo(changedDistillery));
@@ -125,9 +118,9 @@ public class DistilleryServiceTest {
 
 	@Test
 	public void delete() {
-		distilleryService.delete(DISTILLERY_ID);
+		distilleryService.delete(distillery.getId());
 
 		verify(distilleryDAO).deleteById(longCaptor.capture());
-		assertThat(longCaptor.getValue(), equalTo(DISTILLERY_ID));
+		assertThat(longCaptor.getValue(), equalTo(distillery.getId()));
 	}
 }

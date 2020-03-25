@@ -114,6 +114,17 @@ public class Contacts implements Serializable {
 		private String address;
 		private String cityAndRegion;
 
+		public Builder() {
+		}
+
+		public Builder(Contacts contacts) {
+			id = contacts.id;
+			userAccount = contacts.userAccount;
+			phone = contacts.phone;
+			address = contacts.address;
+			cityAndRegion = contacts.cityAndRegion;
+		}
+
 		public Contacts build() {
 			Contacts contacts = new Contacts();
 			contacts.id = id;

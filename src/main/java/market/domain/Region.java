@@ -110,6 +110,17 @@ public class Region implements Serializable {
 		private String description;
 		private String color;
 
+		public Builder() {
+		}
+
+		public Builder(Region region) {
+			id = region.id;
+			name = region.name;
+			subtitle = region.subtitle;
+			description = region.description;
+			color = region.color;
+		}
+
 		public Region build() {
 			Region region = new Region();
 			region.id = id;
