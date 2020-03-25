@@ -19,11 +19,10 @@ import static java.util.stream.Collectors.toList;
 @Controller
 public class FrontendController {
 	private final RegionService regionService;
-	private final RegionDtoAssembler regionDTOAssembler;
+	private final RegionDtoAssembler regionDTOAssembler = new RegionDtoAssembler();
 
-	public FrontendController(RegionService regionService, RegionDtoAssembler regionDTOAssembler) {
+	public FrontendController(RegionService regionService) {
 		this.regionService = regionService;
-		this.regionDTOAssembler = regionDTOAssembler;
 	}
 
 	/**

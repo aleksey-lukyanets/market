@@ -2,12 +2,16 @@ package market.controller.backend;
 
 import market.domain.Order;
 import market.domain.OrderedProduct;
+import market.dto.OrderDTO;
 import market.dto.OrderedProductDTO;
 import market.dto.ProductDTO;
+import market.dto.assembler.OrderDtoAssembler;
 import market.dto.assembler.OrderedProductDtoAssembler;
 import market.dto.assembler.ProductDtoAssembler;
+import market.properties.PaginationProperties;
 import market.service.OrderService;
 import market.sorting.ISorter;
+import market.sorting.OrderSorting;
 import market.sorting.SortingValuesDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,17 +36,14 @@ public class OrdersController {
 	private static final String ORDERS_BASE = "admin/orders";
 
 	private final OrderService orderService;
-	private final ISorter<Order> orderSorting;
-	private final OrderedProductDtoAssembler orderedProductDTOAssembler;
-	private final ProductDtoAssembler productDTOAssembler;
+	private final ISorter<OrderDTO> orderSorting;
+	private final OrderDtoAssembler orderDtoAssembler = new OrderDtoAssembler();
+	private final OrderedProductDtoAssembler orderedProductDTOAssembler = new OrderedProductDtoAssembler();
+	private final ProductDtoAssembler productDTOAssembler = new ProductDtoAssembler();
 
-	public OrdersController(OrderService orderService, ISorter<Order> orderSorting,
-		OrderedProductDtoAssembler orderedProductDTOAssembler, ProductDtoAssembler productDTOAssembler)
-	{
+	public OrdersController(OrderService orderService, PaginationProperties paginationProperties) {
 		this.orderService = orderService;
-		this.orderSorting = orderSorting;
-		this.orderedProductDTOAssembler = orderedProductDTOAssembler;
-		this.productDTOAssembler = productDTOAssembler;
+		orderSorting = new OrderSorting(paginationProperties.getBackendOrder());
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -53,9 +54,9 @@ public class OrdersController {
 		Model model
 	) {
 		PageRequest request = orderSorting.updateSorting(sortingValues);
-		Page<Order> pagedList = orderService.fetchFiltered(executed, created, request);
-		orderSorting.prepareModel(model, pagedList);
-		List<Order> orders = pagedList.getContent();
+		Page<Order> page = orderService.fetchFiltered(executed, created, request);
+		orderSorting.prepareModel(model, page.map(orderDtoAssembler::toModel));
+		List<Order> orders = page.getContent();
 
 		Map<Long, List<OrderedProductDTO>> orderedProductsMap = new HashMap<>();
 		for (Order order : orders) {
@@ -82,8 +83,8 @@ public class OrdersController {
 		return ORDERS_BASE;
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/{orderId}")
-	public String putOrderExecutionStatus(
+	@RequestMapping(method = RequestMethod.POST, value = "/{orderId}")
+	public String setExecutionStatus(
 		@PathVariable long orderId,
 		@RequestParam(value = "executed") boolean executed
 	) {

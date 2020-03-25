@@ -22,11 +22,10 @@ import java.security.Principal;
 @Secured({"ROLE_USER"})
 public class ContactsRestController {
 	private final ContactsService contactsService;
-	private final ContactsDtoAssembler contactsDtoAssembler;
+	private final ContactsDtoAssembler contactsDtoAssembler = new ContactsDtoAssembler();
 
-	public ContactsRestController(ContactsService contactsService, ContactsDtoAssembler contactsDtoAssembler) {
+	public ContactsRestController(ContactsService contactsService) {
 		this.contactsService = contactsService;
-		this.contactsDtoAssembler = contactsDtoAssembler;
 	}
 
 	/**

@@ -3,6 +3,7 @@ package market.dto;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  *
@@ -98,5 +99,27 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 
 	public void setPayed(boolean payed) {
 		this.payed = payed;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		OrderDTO orderDTO = (OrderDTO) o;
+		return orderId == orderDTO.orderId &&
+			billNumber == orderDTO.billNumber &&
+			Double.compare(orderDTO.productsCost, productsCost) == 0 &&
+			deliveryCost == orderDTO.deliveryCost &&
+			deliveryIncluded == orderDTO.deliveryIncluded &&
+			Double.compare(orderDTO.totalCost, totalCost) == 0 &&
+			payed == orderDTO.payed &&
+			executed == orderDTO.executed &&
+			Objects.equals(user, orderDTO.user) &&
+			Objects.equals(dateCreated, orderDTO.dateCreated);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(user, orderId, billNumber, dateCreated, productsCost, deliveryCost, deliveryIncluded, totalCost, payed, executed);
 	}
 }

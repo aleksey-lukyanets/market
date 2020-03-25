@@ -56,8 +56,8 @@ public class DistilleryServiceImpl implements DistilleryService {
 	}
 
 	@Override
-	public void update(Distillery changedDistillery, String regionName) {
-		Optional<Distillery> originalDistillery = distilleryDAO.findById(changedDistillery.getId());
+	public void update(long distilleryId, Distillery changedDistillery, String regionName) {
+		Optional<Distillery> originalDistillery = distilleryDAO.findById(distilleryId);
 		if (originalDistillery.isPresent())
 			saveInternal(changedDistillery, regionName);
 	}

@@ -4,14 +4,9 @@ import market.domain.Contacts;
 import market.dto.ContactsDTO;
 import market.rest.CartRestController;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-/**
- *
- */
-@Component
 public class ContactsDtoAssembler extends RepresentationModelAssemblerSupport<Contacts, ContactsDTO> {
 
 	public ContactsDtoAssembler() {

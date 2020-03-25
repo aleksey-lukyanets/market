@@ -2,6 +2,8 @@ package market.dto;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import java.util.Objects;
+
 public class RegionDTO extends RepresentationModel<RegionDTO> {
 
 	private Long id;
@@ -48,5 +50,22 @@ public class RegionDTO extends RepresentationModel<RegionDTO> {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		RegionDTO regionDTO = (RegionDTO) o;
+		return Objects.equals(id, regionDTO.id) &&
+			Objects.equals(name, regionDTO.name) &&
+			Objects.equals(subtitle, regionDTO.subtitle) &&
+			Objects.equals(description, regionDTO.description) &&
+			Objects.equals(color, regionDTO.color);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, subtitle, description, color);
 	}
 }

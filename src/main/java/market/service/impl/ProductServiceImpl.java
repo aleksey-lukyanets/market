@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Optional<Product> findOne(long productId) {
+	public Optional<Product> findById(long productId) {
 		return productDAO.findById(productId);
 	}
 
@@ -89,8 +89,8 @@ public class ProductServiceImpl implements ProductService {
 
 	@Transactional
 	@Override
-	public void update(Product product, String distilleryTitle) throws UnknownEntityException {
-		Product original = getProduct(product.getId());
+	public void update(long productId, Product product, String distilleryTitle) throws UnknownEntityException {
+		Product original = getProduct(productId);
 		product.setId(original.getId());
 		saveInternal(product, distilleryTitle, original.isAvailable()); // keep original availability
 	}
@@ -109,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
 		for (Map.Entry<Boolean, List<Long>> e : productIdsByAvailability.entrySet()) {
 			Boolean targetAvailability = e.getKey();
 			List<Product> productsToUpdate = e.getValue().stream()
-				.map(this::findOne)
+				.map(this::findById)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.filter(product -> product.isAvailable() != targetAvailability)

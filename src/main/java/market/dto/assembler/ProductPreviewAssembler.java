@@ -4,12 +4,7 @@ import market.domain.Product;
 import market.dto.ProductPreviewDTO;
 import market.rest.ProductsRestController;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.stereotype.Component;
 
-/**
- *
- */
-@Component
 public class ProductPreviewAssembler extends RepresentationModelAssemblerSupport<Product, ProductPreviewDTO> {
 
 	public ProductPreviewAssembler() {

@@ -23,15 +23,15 @@
 		<div class="col-sm-4">
 			<div class="radio">
 				<label for="useExisting">
-					<input type="radio" id="useExisting" name="infoOption"
-						   value="useExisting" checked="checked">
+					<input type="radio" id="useExisting" name="changeContacts"
+						value="useExisting" checked="checked">
 					имеющиеся
 				</label>
 			</div>
 			<div class="radio">
-				<label for="useNew">
-					<input type="radio" id="useNew" name="infoOption"
-						   value="useNew">
+				<label for="changeRequested">
+					<input type="radio" id="changeRequested" name="changeContacts"
+						value="changeRequested">
 					обновлённые
 				</label>
 			</div>
@@ -82,8 +82,8 @@
 </sf:form>
 
 <script type="text/javascript">
-    $('#detailsForm').delegate('input[name=infoOption]:checked', 'change', function () {
-        var value = $('input[name=infoOption]:checked', '#detailsForm').val();
+    $('#detailsForm').delegate('input[name=changeContacts]:checked', 'change', function () {
+        var value = $('input[name=changeContacts]:checked', '#detailsForm').val();
         if (value === "useExisting") {
             $('#phone').prop("disabled", true);
             $('#address').prop("disabled", true);

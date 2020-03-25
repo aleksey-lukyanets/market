@@ -6,6 +6,7 @@ import market.dto.assembler.ProductDtoAssembler;
 import market.service.ProductService;
 import market.sorting.ISorter;
 import market.sorting.SortingValuesDTO;
+import market.sorting.StorageSorting;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
@@ -26,15 +27,11 @@ public class StorageController {
 	private static final String STORAGE_BASE = "admin/storage";
 
 	private final ProductService productService;
-	private final ISorter<ProductDTO> storageSorting;
-	private final ProductDtoAssembler productAssembler;
+	private final ISorter<ProductDTO> storageSorting = new StorageSorting();
+	private final ProductDtoAssembler productAssembler = new ProductDtoAssembler();
 
-	public StorageController(ProductService productService, ISorter<ProductDTO> storageSorting,
-		ProductDtoAssembler productAssembler)
-	{
+	public StorageController(ProductService productService) {
 		this.productService = productService;
-		this.storageSorting = storageSorting;
-		this.productAssembler = productAssembler;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)

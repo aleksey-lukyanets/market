@@ -7,13 +7,14 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
 
 /**
  * Адаптер товара.
  */
 public class ProductDTO extends RepresentationModel<ProductDTO> {
 
-	private long productId;
+	private Long productId;
 
 	private String distillery;
 
@@ -38,11 +39,11 @@ public class ProductDTO extends RepresentationModel<ProductDTO> {
 	private String description;
 	private boolean available;
 
-	public long getProductId() {
+	public Long getProductId() {
 		return productId;
 	}
 
-	public void setProductId(long productId) {
+	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
 
@@ -108,5 +109,26 @@ public class ProductDTO extends RepresentationModel<ProductDTO> {
 
 	public void setAvailable(boolean available) {
 		this.available = available;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ProductDTO that = (ProductDTO) o;
+		return available == that.available &&
+			Objects.equals(productId, that.productId) &&
+			Objects.equals(distillery, that.distillery) &&
+			Objects.equals(name, that.name) &&
+			Objects.equals(price, that.price) &&
+			Objects.equals(age, that.age) &&
+			Objects.equals(volume, that.volume) &&
+			Objects.equals(alcohol, that.alcohol) &&
+			Objects.equals(description, that.description);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(productId, distillery, name, price, age, volume, alcohol, description, available);
 	}
 }

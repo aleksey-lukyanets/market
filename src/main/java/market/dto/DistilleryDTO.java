@@ -2,6 +2,8 @@ package market.dto;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import java.util.Objects;
+
 public class DistilleryDTO extends RepresentationModel<DistilleryDTO> {
 
 	private Long id;
@@ -39,5 +41,21 @@ public class DistilleryDTO extends RepresentationModel<DistilleryDTO> {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DistilleryDTO that = (DistilleryDTO) o;
+		return Objects.equals(id, that.id) &&
+			Objects.equals(title, that.title) &&
+			Objects.equals(region, that.region) &&
+			Objects.equals(description, that.description);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, title, region, description);
 	}
 }

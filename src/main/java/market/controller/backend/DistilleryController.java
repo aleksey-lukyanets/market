@@ -26,26 +26,22 @@ import static java.util.stream.Collectors.toList;
 public class DistilleryController {
 	private static final String DISTILLERIES_BASE = "admin/distilleries";
 	private static final String DISTILLERIES_NEW = DISTILLERIES_BASE + "/new";
-	private static final String DISTILLERIES_EDIT = DISTILLERIES_BASE+ "/edit";
+	private static final String DISTILLERIES_EDIT = DISTILLERIES_BASE + "/edit";
 
 	private final DistilleryService distilleryService;
 	private final RegionService regionService;
-	private final RegionDtoAssembler regionDTOAssembler;
-	private final DistilleryDtoAssembler distilleryDTOAssembler;
+	private final RegionDtoAssembler regionDtoAssembler = new RegionDtoAssembler();
+	private final DistilleryDtoAssembler distilleryDtoAssembler = new DistilleryDtoAssembler();
 
-	public DistilleryController(DistilleryService distilleryService, RegionService regionService,
-		RegionDtoAssembler regionDTOAssembler, DistilleryDtoAssembler distilleryDTOAssembler)
-	{
+	public DistilleryController(DistilleryService distilleryService, RegionService regionService) {
 		this.distilleryService = distilleryService;
 		this.regionService = regionService;
-		this.regionDTOAssembler = regionDTOAssembler;
-		this.distilleryDTOAssembler = distilleryDTOAssembler;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String distillery(Model model) {
+	public String allDistilleries(Model model) {
 		List<DistilleryDTO> distilleriesDto = distilleryService.findAll().stream()
-			.map(distilleryDTOAssembler::toModel)
+			.map(distilleryDtoAssembler::toModel)
 			.collect(toList());
 		model.addAttribute("distilleries", distilleriesDto);
 		return DISTILLERIES_BASE;
@@ -56,22 +52,21 @@ public class DistilleryController {
 	@RequestMapping(method = RequestMethod.GET, value = "/new")
 	public String newDistillery(Model model) {
 		List<RegionDTO> regionsDto = regionService.findAll().stream()
-			.map(regionDTOAssembler::toModel)
+			.map(regionDtoAssembler::toModel)
 			.collect(toList());
 		model.addAttribute("regions", regionsDto);
 		model.addAttribute("distillery", new Distillery());
 		return DISTILLERIES_NEW;
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST, value = "/new")
 	public String postDistillery(
-		@Valid DistilleryDTO distilleryDto,
-		BindingResult bindingResult
+		@Valid DistilleryDTO distilleryDto, BindingResult bindingResult
 	) {
 		if (bindingResult.hasErrors())
 			return DISTILLERIES_NEW;
 
-		Distillery newDistillery = distilleryDTOAssembler.toDomain(distilleryDto, 0);
+		Distillery newDistillery = distilleryDtoAssembler.toDomain(distilleryDto);
 		distilleryService.create(newDistillery, distilleryDto.getRegion());
 		return "redirect:/" + DISTILLERIES_BASE;
 	}
@@ -80,40 +75,36 @@ public class DistilleryController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{distilleryId}/edit")
 	public String editDistillery(
-		@PathVariable long distilleryId,
-		Model model
+		@PathVariable long distilleryId, Model model
 	) {
 		List<RegionDTO> regionsDto = regionService.findAll().stream()
-			.map(regionDTOAssembler::toModel)
+			.map(regionDtoAssembler::toModel)
 			.collect(toList());
 		model.addAttribute("regions", regionsDto);
 
 		Distillery distillery = distilleryService.findById(distilleryId);
-		model.addAttribute("distillery", distilleryDTOAssembler.toModel(distillery));
+		model.addAttribute("distillery", distilleryDtoAssembler.toModel(distillery));
 
 		return DISTILLERIES_EDIT;
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/{distilleryId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/{distilleryId}/edit")
 	public String putDistillery(
 		@PathVariable long distilleryId,
-		@Valid DistilleryDTO distilleryDto,
-		BindingResult bindingResult
+		@Valid DistilleryDTO distilleryDto, BindingResult bindingResult
 	) {
 		if (bindingResult.hasErrors())
 			return DISTILLERIES_EDIT;
 
-		Distillery changedDistillery = distilleryDTOAssembler.toDomain(distilleryDto, distilleryId);
-		distilleryService.update(changedDistillery, distilleryDto.getRegion());
+		Distillery changedDistillery = distilleryDtoAssembler.toDomain(distilleryDto);
+		distilleryService.update(distilleryId, changedDistillery, distilleryDto.getRegion());
 		return "redirect:/" + DISTILLERIES_BASE;
 	}
 
 	//------------------------------------------------------ Removing distillery
 
 	@RequestMapping(method = RequestMethod.POST, value = "/{distilleryId}/delete")
-	public String deleteDistillery(
-		@PathVariable long distilleryId
-	) {
+	public String deleteDistillery(@PathVariable long distilleryId) {
 		distilleryService.delete(distilleryId);
 		return "redirect:/" + DISTILLERIES_BASE;
 	}

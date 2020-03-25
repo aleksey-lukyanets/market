@@ -25,14 +25,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 	private final ServletContext servletContext;
 	private final UserAccountService userAccountService;
-	private final CartDtoAssembler cartDtoAssembler;
+	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler();
 
-	public CustomAuthenticationSuccessHandler(ServletContext servletContext, UserAccountService userAccountService,
-		CartDtoAssembler cartDtoAssembler)
-	{
+	public CustomAuthenticationSuccessHandler(ServletContext servletContext, UserAccountService userAccountService) {
 		this.servletContext = servletContext;
 		this.userAccountService = userAccountService;
-		this.cartDtoAssembler = cartDtoAssembler;
 	}
 
 	@Override

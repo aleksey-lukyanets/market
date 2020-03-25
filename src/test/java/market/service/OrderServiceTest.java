@@ -1,11 +1,11 @@
 package market.service;
 
+import market.FixturesFactory;
 import market.dao.OrderDAO;
 import market.domain.*;
 import market.exception.EmptyCartException;
 import market.exception.UnknownEntityException;
 import market.service.impl.OrderServiceImpl;
-import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -58,10 +58,10 @@ public class OrderServiceTest {
 		Region region = FixturesFactory.region().build();
 		Distillery distillery = FixturesFactory.distillery(region).build();
 		product = FixturesFactory.product(distillery).build();
-		cart = new Cart();
-		cart.setId(userAccount.getId());
-		cart.setUserAccount(userAccount);
-
+		cart = new Cart.Builder()
+			.setId(userAccount.getId())
+			.setUserAccount(userAccount)
+			.build();
 		orderService = new OrderServiceImpl(orderDAO, userAccountService, cartService);
 	}
 

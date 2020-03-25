@@ -8,7 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductBackendSorting extends AbstractSorter {
 
-	public ProductBackendSorting() {
+	private int defaultPageSize;
+
+	public ProductBackendSorting(int defaultPageSize) {
+		this.defaultPageSize = defaultPageSize;
 		sortFieldOptions.put("price", "по цене");
 		sortFieldOptions.put("distillery.title", "по винокурне");
 		sortFieldOptions.put("age", "по возрасту");
@@ -16,6 +19,6 @@ public class ProductBackendSorting extends AbstractSorter {
 
 	@Override
 	public int getDefaultPageSize() {
-		return 20;
+		return defaultPageSize;
 	}
 }

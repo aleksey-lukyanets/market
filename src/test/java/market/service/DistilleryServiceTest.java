@@ -1,10 +1,10 @@
 package market.service;
 
+import market.FixturesFactory;
 import market.dao.DistilleryDAO;
 import market.domain.Distillery;
 import market.domain.Region;
 import market.service.impl.DistilleryServiceImpl;
-import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -110,7 +110,7 @@ public class DistilleryServiceTest {
 		when(distilleryDAO.findById(distillery.getId()))
 			.thenReturn(Optional.of(distillery));
 
-		distilleryService.update(changedDistillery, distillery.getRegion().getName());
+		distilleryService.update(distillery.getId(), changedDistillery, distillery.getRegion().getName());
 
 		verify(distilleryDAO).save(distilleryCaptor.capture());
 		assertThat(distilleryCaptor.getValue(), equalTo(changedDistillery));

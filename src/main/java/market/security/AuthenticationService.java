@@ -15,15 +15,17 @@ public class AuthenticationService {
 		this.authenticationManager = authenticationManager;
 	}
 
-	public void authenticate(UserAccount userAccount) {
+	public boolean authenticate(UserAccount userAccount) {
 		String login = userAccount.getEmail();
 		String password = userAccount.getPassword();
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(login, password);
 		try {
 			Authentication auth = authenticationManager.authenticate(token);
 			SecurityContextHolder.getContext().setAuthentication(auth);
+			return true;
 		} catch (BadCredentialsException ex) {
 			// todo
+			return false;
 		}
 	}
 }

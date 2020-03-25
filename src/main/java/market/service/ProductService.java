@@ -47,7 +47,7 @@ public interface ProductService {
 	/**
 	 * @return product with the specified id
 	 */
-	Optional<Product> findOne(long productId);
+	Optional<Product> findById(long productId);
 
 	/**
 	 * Creates new product.
@@ -59,7 +59,7 @@ public interface ProductService {
 	 *
 	 * @throws UnknownEntityException if product does not exist
 	 */
-	void update(Product product, String distilleryTitle) throws UnknownEntityException;
+	void update(long productId, Product product, String distilleryTitle) throws UnknownEntityException;
 
 	/**
 	 * Updates availability of the specified product.

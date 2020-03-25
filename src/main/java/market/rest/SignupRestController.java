@@ -19,13 +19,11 @@ import javax.validation.Valid;
 public class SignupRestController {
 
 	private final UserAccountService userAccountService;
-	private final UserAccountDtoAssembler userAccountDtoAssembler;
 	private final AuthenticationService authenticationService;
+	private final UserAccountDtoAssembler userAccountDtoAssembler = new UserAccountDtoAssembler();
 
-	public SignupRestController(UserAccountService userAccountService, UserAccountDtoAssembler userAccountDtoAssembler,
-		AuthenticationService authenticationService) {
+	public SignupRestController(UserAccountService userAccountService, AuthenticationService authenticationService) {
 		this.userAccountService = userAccountService;
-		this.userAccountDtoAssembler = userAccountDtoAssembler;
 		this.authenticationService = authenticationService;
 	}
 

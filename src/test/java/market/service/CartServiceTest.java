@@ -1,10 +1,10 @@
 package market.service;
 
+import market.FixturesFactory;
 import market.dao.CartDAO;
 import market.domain.*;
 import market.exception.UnknownEntityException;
 import market.service.impl.CartServiceImpl;
-import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,10 +39,9 @@ public class CartServiceTest {
 	@BeforeEach
 	public void setUp() {
 		UserAccount.Builder accountBuilder = FixturesFactory.account(cart);
-
-		cart = new Cart();
-		cart.setId(accountBuilder.getId());
-
+		cart = new Cart.Builder()
+			.setId(accountBuilder.getId())
+			.build();
 		Region region = FixturesFactory.region().build();
 		Distillery distillery = FixturesFactory.distillery(region).build();
 		product = FixturesFactory.product(distillery).build();
@@ -140,7 +139,7 @@ public class CartServiceTest {
 			.thenReturn(cart);
 		when(cartDAO.findById(userAccount.getId()))
 			.thenReturn(Optional.of(cart));
-		when(productService.findOne(product.getId()))
+		when(productService.findById(product.getId()))
 			.thenReturn(Optional.of(product));
 		int quantity = 3;
 		cart.update(product, quantity);
@@ -163,7 +162,7 @@ public class CartServiceTest {
 			.thenReturn(userAccount);
 		when(cartDAO.findById(userAccount.getId()))
 			.thenReturn(Optional.of(cart));
-		when(productService.findOne(product.getId()))
+		when(productService.findById(product.getId()))
 			.thenReturn(Optional.of(product));
 		product.setAvailable(false);
 		CartItem cartItem = new CartItem(cart, product, 3);
@@ -180,7 +179,7 @@ public class CartServiceTest {
 			.thenReturn(userAccount);
 		when(cartDAO.findById(userAccount.getId()))
 			.thenReturn(Optional.of(cart));
-		when(productService.findOne(product.getId()))
+		when(productService.findById(product.getId()))
 			.thenReturn(Optional.empty());
 		CartItem cartItem = new CartItem(cart, product, 3);
 

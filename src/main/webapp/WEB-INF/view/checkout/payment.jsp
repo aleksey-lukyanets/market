@@ -74,8 +74,8 @@
 					<c:when test="${cart.deliveryIncluded}">
 						<p>доставка курьером</p>
 						<p>${userName}<br>
-								${contacts.phone}<br>
-								${contacts.address}<br>
+								${userContacts.phone}<br>
+								${userContacts.address}<br>
 							г. Санкт-Петербург</p>
 					</c:when>
 					<c:otherwise>

@@ -9,11 +9,11 @@ import market.dto.ProductDTO;
 import market.dto.assembler.CartDtoAssembler;
 import market.dto.assembler.ProductDtoAssembler;
 import market.exception.UnknownEntityException;
+import market.properties.MarketProperties;
 import market.service.CartService;
 import market.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,19 +38,14 @@ public class CartController {
 
 	private final CartService cartService;
 	private final ProductService productService;
-	private final CartDtoAssembler cartDtoAssembler;
-	private final ProductDtoAssembler productDtoAssembler;
+	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler();
+	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
+	private final MarketProperties marketProperties;
 
-	@Value("${deliveryCost}")
-	private int deliveryCost;
-
-	public CartController(CartService cartService, ProductService productService, CartDtoAssembler cartDtoAssembler,
-		ProductDtoAssembler productDtoAssembler)
-	{
+	public CartController(CartService cartService, ProductService productService, MarketProperties marketProperties) {
 		this.cartService = cartService;
 		this.productService = productService;
-		this.cartDtoAssembler = cartDtoAssembler;
-		this.productDtoAssembler = productDtoAssembler;
+		this.marketProperties = marketProperties;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -61,23 +56,26 @@ public class CartController {
 		if (isAuthorized(principal)) {
 			Cart cart = cartService.getCartOrCreate(principal.getName());
 			request.getSession().setAttribute("cart", cartDtoAssembler.toModel(cart));
-			Map<Long, ProductDTO> productsById = cart.getCartItems().stream()
-				.map(CartItem::getProduct)
-				.map(productDtoAssembler::toModel)
-				.collect(toMap(ProductDTO::getProductId, p -> p));
-			model.addAttribute("productsById", productsById);
+			model.addAttribute("productsById", collectProductsMap(cart));
 		} else {
 			Map<Long, ProductDTO> productsById = cartDto.getCartItems().stream()
 				.map(CartItemDTO::getProductId)
-				.map(productService::findOne)
+				.map(productService::findById)
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.map(productDtoAssembler::toModel)
 				.collect(toMap(ProductDTO::getProductId, p -> p));
 			model.addAttribute("productsById", productsById);
 		}
-		model.addAttribute("deliveryCost", deliveryCost);
+		model.addAttribute("deliveryCost", marketProperties.getDeliveryCost());
 		return CART_BASE;
+	}
+
+	private Map<Long, ProductDTO> collectProductsMap(Cart cart) {
+		return cart.getCartItems().stream()
+			.map(CartItem::getProduct)
+			.map(productDtoAssembler::toModel)
+			.collect(toMap(ProductDTO::getProductId, p -> p));
 	}
 
 	@RequestMapping(value = "/clear", method = RequestMethod.POST)
@@ -91,21 +89,29 @@ public class CartController {
 		} else {
 			Cart cart = cartDtoAssembler.toDomain(cartDto, productService);
 			cart.clear();
-			model.addAttribute("cart", cartDtoAssembler.toModel(cart));
+			model.addAttribute("cart", cartDtoAssembler.toAnonymousResource(cart));
 		}
 		return "redirect:/" + CART_BASE;
 	}
 
 	//--------------------------------------------- Adding item to cart
 
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(method = RequestMethod.POST)
 	public String updateCartByForm(
 		Principal principal,
 		@Valid @ModelAttribute("cartItem") CartItemDTO cartItemDto,
-		BindingResult bindingResult, Model model
+		BindingResult bindingResult, Model model,
+		@ModelAttribute(value = "cart") CartDTO cartDto
 	) {
 		if (bindingResult.hasErrors())
 			return CART_BASE;
+
+		if (!isAuthorized(principal)) {
+			CartDTO handledCartDto = updateGuestCart(cartDto, cartItemDto);
+			model.addAttribute("cart", handledCartDto);
+			model.addAttribute("deliveryCost", marketProperties.getDeliveryCost());
+			return CART_BASE;
+		}
 
 		try {
 			Cart updatedCart = updateCart(principal, cartItemDto);
@@ -115,6 +121,19 @@ public class CartController {
 			return CART_BASE;
 		}
 		return "redirect:/" + CART_BASE;
+	}
+
+	private CartDTO updateGuestCart(CartDTO cartDto, CartItemDTO newCartItem) {
+		Optional<Product> productOptional = productService.findById(newCartItem.getProductId());
+		if (productOptional.isPresent()) {
+			Product product = productOptional.get();
+			if (product.isAvailable()) {
+				Cart cart = cartDtoAssembler.toDomain(cartDto, productService);
+				cart.update(product, newCartItem.getQuantity());
+				return cartDtoAssembler.toModel(cart);
+			}
+		}
+		return cartDto;
 	}
 
 	/**
@@ -135,20 +154,11 @@ public class CartController {
 			return cartDto;
 
 		if (!isAuthorized(principal)) {
-			Optional<Product> productOptional = productService.findOne(cartItemDto.getProductId());
-			if (productOptional.isPresent()) {
-				Product product = productOptional.get();
-				if (product.isAvailable()) {
-					Cart cart = cartDtoAssembler.toDomain(cartDto, productService);
-					cart.update(product, cartItemDto.getQuantity());
-					CartDTO updatedCartDto = cartDtoAssembler.toModel(cart);
-					model.addAttribute("cart", updatedCartDto);
-					return updatedCartDto;
-				} else {
-					return cartDto;
-				}
-			}
+			CartDTO handledCartDto = updateGuestCart(cartDto, cartItemDto);
+			model.addAttribute("cart", handledCartDto);
+			return handledCartDto;
 		}
+
 		try {
 			Cart updatedCart = updateCart(principal, cartItemDto);
 			return cartDtoAssembler.toModel(updatedCart);
@@ -181,10 +191,12 @@ public class CartController {
 		boolean included = Boolean.parseBoolean(delivery);
 		if (isAuthorized(principal)) {
 			String login = principal.getName();
-			cartService.setDelivery(login, included);
+			Cart updatedCart = cartService.setDelivery(login, included);
+			return cartDtoAssembler.toModel(updatedCart);
+		} else {
+			cartDto.setDeliveryIncluded(included);
+			return cartDto;
 		}
-		cartDto.setDeliveryIncluded(included);
-		return cartDto;
 	}
 
 	private boolean isAuthorized(Principal principal) {

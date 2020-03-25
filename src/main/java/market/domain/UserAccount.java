@@ -3,6 +3,7 @@ package market.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -105,6 +106,26 @@ public class UserAccount implements Serializable {
 		this.roles = roles;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		UserAccount account = (UserAccount) o;
+		return active == account.active &&
+			Objects.equals(id, account.id) &&
+			Objects.equals(email, account.email) &&
+			Objects.equals(password, account.password) &&
+			Objects.equals(name, account.name) &&
+			Objects.equals(contacts, account.contacts) &&
+			Objects.equals(cart, account.cart) &&
+			Objects.equals(roles, account.roles);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, email, password, name, active, contacts, cart, roles);
+	}
+
 	public static class Builder {
 		private Long id;
 		private String email;
@@ -114,6 +135,20 @@ public class UserAccount implements Serializable {
 		private Contacts contacts;
 		private Cart cart;
 		private Set<Role> roles = new HashSet<>();
+
+		public Builder() {
+		}
+
+		public Builder(UserAccount account) {
+			this.id = account.id;
+			this.email = account.email;
+			this.password = account.password;
+			this.name = account.name;
+			this.active = account.active;
+			this.contacts = account.contacts;
+			this.cart = account.cart;
+			this.roles = account.roles;
+		}
 
 		public UserAccount build() {
 			UserAccount account = new UserAccount();

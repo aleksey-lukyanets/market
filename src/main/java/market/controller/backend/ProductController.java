@@ -7,9 +7,11 @@ import market.dto.ProductDTO;
 import market.dto.assembler.DistilleryDtoAssembler;
 import market.dto.assembler.ProductDtoAssembler;
 import market.exception.UnknownEntityException;
+import market.properties.PaginationProperties;
 import market.service.DistilleryService;
 import market.service.ProductService;
 import market.sorting.ISorter;
+import market.sorting.ProductBackendSorting;
 import market.sorting.SortingValuesDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,18 +45,15 @@ public class ProductController {
 	private final ProductService productService;
 	private final DistilleryService distilleryService;
 	private final ISorter<ProductDTO> productBackendSorting;
-	private final ProductDtoAssembler productAssembler;
-	private final DistilleryDtoAssembler distilleryDTOAssembler;
+	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
+	private final DistilleryDtoAssembler distilleryDtoAssembler = new DistilleryDtoAssembler();
 
 	public ProductController(ProductService productService, DistilleryService distilleryService,
-		ISorter<ProductDTO> productBackendSorting, ProductDtoAssembler productAssembler,
-		DistilleryDtoAssembler distilleryDTOAssembler)
+		PaginationProperties paginationProperties)
 	{
 		this.productService = productService;
 		this.distilleryService = distilleryService;
-		this.productBackendSorting = productBackendSorting;
-		this.productAssembler = productAssembler;
-		this.distilleryDTOAssembler = distilleryDTOAssembler;
+		productBackendSorting = new ProductBackendSorting(paginationProperties.getBackendProduct());
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -72,10 +71,10 @@ public class ProductController {
 			pagedProducts = productService.findByDistillery(distillery, request);
 			model.addAttribute("currentDistilleryTitle", distillery.getTitle());
 		}
-		productBackendSorting.prepareModel(model, pagedProducts.map(productAssembler::toModel));
+		productBackendSorting.prepareModel(model, pagedProducts.map(productDtoAssembler::toModel));
 
 		List<DistilleryDTO> distilleriesDto = distilleryService.findAll().stream()
-			.map(distilleryDTOAssembler::toModel)
+			.map(distilleryDtoAssembler::toModel)
 			.collect(toList());
 		model.addAttribute("distilleries", distilleriesDto);
 		return PRODUCTS_BASE;
@@ -86,22 +85,21 @@ public class ProductController {
 	@RequestMapping(method = RequestMethod.GET, value = "/new")
 	public String newProduct(Model model) {
 		List<DistilleryDTO> distilleriesDto = distilleryService.findAll().stream()
-			.map(distilleryDTOAssembler::toModel)
+			.map(distilleryDtoAssembler::toModel)
 			.collect(toList());
 		model.addAttribute("distilleries", distilleriesDto);
-		model.addAttribute("product", productAssembler.toModel(new Product()));
+		model.addAttribute("product", productDtoAssembler.toModel(new Product()));
 		return PRODUCTS_NEW;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/new")
 	public String postProduct(
-		@Valid ProductDTO product,
-		BindingResult bindingResult
+		@Valid ProductDTO product, BindingResult bindingResult
 	) {
 		if (bindingResult.hasErrors())
 			return "redirect:/" + PRODUCTS_NEW;
 
-		Product newProduct = productAssembler.dtoDomain(product, 0);
+		Product newProduct = productDtoAssembler.dtoDomain(product);
 		productService.create(newProduct, product.getDistillery());
 		return "redirect:/" + PRODUCTS_BASE;
 	}
@@ -110,33 +108,31 @@ public class ProductController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{productId}/edit")
 	public String editProduct(
-		@PathVariable long productId,
-		Model model
+		@PathVariable long productId, Model model
 	) {
-		Optional<Product> productOptional = productService.findOne(productId);
+		Optional<Product> productOptional = productService.findById(productId);
 		if (!productOptional.isPresent())
 			return "redirect:/" + PRODUCTS_BASE;
 
 		List<DistilleryDTO> distilleriesDto = distilleryService.findAll().stream()
-			.map(distilleryDTOAssembler::toModel)
+			.map(distilleryDtoAssembler::toModel)
 			.collect(toList());
 		model.addAttribute("distilleries", distilleriesDto);
-		model.addAttribute("product", productAssembler.toModel(productOptional.get()));
+		model.addAttribute("product", productDtoAssembler.toModel(productOptional.get()));
 		return PRODUCTS_EDIT;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/{productId}/edit")
 	public String putProduct(
 		@PathVariable long productId,
-		@Valid ProductDTO product,
-		BindingResult bindingResult
+		@Valid ProductDTO product, BindingResult bindingResult
 	) {
 		if (bindingResult.hasErrors())
 			return "redirect:/" + PRODUCTS_EDIT;
 
-		Product changedProduct = productAssembler.dtoDomain(product, productId);
+		Product changedProduct = productDtoAssembler.dtoDomain(product);
 		try {
-			productService.update(changedProduct, product.getDistillery());
+			productService.update(productId, changedProduct, product.getDistillery());
 			return "redirect:/" + PRODUCTS_BASE;
 		} catch (UnknownEntityException e) {
 			log.warn(e.getMessage());
