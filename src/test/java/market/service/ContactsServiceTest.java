@@ -4,6 +4,7 @@ import market.dao.ContactsDAO;
 import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.service.impl.ContactsServiceImpl;
+import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +21,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ContactsServiceTest {
-	private static final long ACCOUNT_ID = 50L;
-	private static final String ACCOUNT_EMAIL = "email@domain.com";
-	private static final String CONTACTS_PHONE = "some_phone";
-	private static final String CONTACTS_ADDRESS = "some_address";
 
 	@Mock
 	private ContactsDAO contactsDAO;
@@ -35,33 +32,28 @@ public class ContactsServiceTest {
 
 	private ContactsService contactsService;
 	private Contacts contacts;
+	private UserAccount userAccount;
 
 	@BeforeEach
 	public void setUp() {
-		contacts = new Contacts.Builder()
-			.setPhone(CONTACTS_PHONE)
-			.setAddress(CONTACTS_ADDRESS)
-			.build();
-		UserAccount userAccount = new UserAccount.Builder()
-			.setId(ACCOUNT_ID)
-			.setEmail(ACCOUNT_EMAIL)
-			.setPassword("password")
-			.setName("Name")
-			.setActive(true)
+		contacts = FixturesFactory.contacts().build();
+		userAccount = FixturesFactory.account()
 			.setContacts(contacts)
 			.build();
 		contacts.setUserAccount(userAccount);
 
-		when(userAccountService.findByEmail(ACCOUNT_EMAIL)).thenReturn(userAccount);
+		when(userAccountService.findByEmail(userAccount.getEmail()))
+			.thenReturn(userAccount);
 
 		contactsService = new ContactsServiceImpl(contactsDAO, userAccountService);
 	}
 
 	@Test
 	public void getContacts() {
-		when(contactsDAO.findByUserAccount(any(UserAccount.class))).thenReturn(contacts);
+		when(contactsDAO.findByUserAccount(any(UserAccount.class)))
+			.thenReturn(contacts);
 
-		Contacts retrievedContacts = contactsService.getContacts(ACCOUNT_EMAIL);
+		Contacts retrievedContacts = contactsService.getContacts(userAccount.getEmail());
 
 		verify(contactsDAO).findByUserAccount(any(UserAccount.class));
 		assertThat(retrievedContacts, equalTo(contacts));
@@ -69,14 +61,14 @@ public class ContactsServiceTest {
 
 	@Test
 	public void updateUserContacts() {
-		Contacts changedContacts = new Contacts.Builder()
-			.setUserAccount(contacts.getUserAccount())
-			.setPhone(CONTACTS_PHONE + "_changed")
-			.setAddress(CONTACTS_ADDRESS + "_changed")
+		Contacts changedContacts = new Contacts.Builder(contacts)
+			.setPhone(contacts.getPhone() + "_changed")
+			.setAddress(contacts.getAddress() + "_changed")
 			.build();
-		when(contactsDAO.findByUserAccount(any(UserAccount.class))).thenReturn(contacts);
+		when(contactsDAO.findByUserAccount(any(UserAccount.class)))
+			.thenReturn(contacts);
 
-		contactsService.updateUserContacts(changedContacts, ACCOUNT_EMAIL);
+		contactsService.updateUserContacts(changedContacts, userAccount.getEmail());
 
 		verify(contactsDAO).save(contactsCaptor.capture());
 		assertThat(contactsCaptor.getValue(), equalTo(changedContacts));

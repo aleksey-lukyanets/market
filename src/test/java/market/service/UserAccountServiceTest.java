@@ -4,6 +4,7 @@ import market.dao.UserAccountDAO;
 import market.domain.UserAccount;
 import market.exception.EmailExistsException;
 import market.service.impl.UserAccountServiceImpl;
+import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +20,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserAccountServiceTest {
-	private static final long ACCOUNT_ID = 50L;
-	private static final String ACCOUNT_EMAIL = "email@domain.com";
 
 	@Mock
 	private UserAccountDAO userAccountDAO;
@@ -33,19 +32,14 @@ public class UserAccountServiceTest {
 
 	@BeforeEach
 	public void setUp() {
-		userAccount = new UserAccount.Builder()
-			.setId(ACCOUNT_ID)
-			.setEmail(ACCOUNT_EMAIL)
-			.setPassword("password")
-			.setName("Name")
-			.setActive(true)
-			.build();
+		userAccount = FixturesFactory.account().build();
 		userAccountService = new UserAccountServiceImpl(userAccountDAO);
 	}
 
 	@Test
 	public void findByEmail() {
-		when(userAccountDAO.findByEmail(userAccount.getEmail())).thenReturn(userAccount);
+		when(userAccountDAO.findByEmail(userAccount.getEmail()))
+			.thenReturn(userAccount);
 
 		UserAccount retrieved = userAccountService.findByEmail(userAccount.getEmail());
 
@@ -54,7 +48,8 @@ public class UserAccountServiceTest {
 
 	@Test
 	public void create() throws EmailExistsException {
-		when(userAccountDAO.findByEmail(userAccount.getEmail())).thenReturn(null);
+		when(userAccountDAO.findByEmail(userAccount.getEmail()))
+			.thenReturn(null);
 
 		userAccountService.create(userAccount);
 

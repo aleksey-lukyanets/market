@@ -1,5 +1,6 @@
 package market.domain;
 
+import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
