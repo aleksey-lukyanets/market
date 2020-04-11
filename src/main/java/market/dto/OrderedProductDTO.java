@@ -2,6 +2,8 @@ package market.dto;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import java.util.Objects;
+
 public class OrderedProductDTO extends RepresentationModel<OrderedProductDTO> {
 	private long orderId;
 	private int quantity;
@@ -29,5 +31,20 @@ public class OrderedProductDTO extends RepresentationModel<OrderedProductDTO> {
 
 	public void setProductId(long productId) {
 		this.productId = productId;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		OrderedProductDTO that = (OrderedProductDTO) o;
+		return orderId == that.orderId &&
+			quantity == that.quantity &&
+			productId == that.productId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(orderId, quantity, productId);
 	}
 }

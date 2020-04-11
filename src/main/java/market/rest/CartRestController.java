@@ -10,9 +10,9 @@ import market.dto.assembler.CartDtoAssembler;
 import market.dto.assembler.OrderDtoAssembler;
 import market.exception.EmptyCartException;
 import market.exception.UnknownEntityException;
+import market.properties.MarketProperties;
 import market.service.CartService;
 import market.service.OrderService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,19 +30,14 @@ import java.security.Principal;
 public class CartRestController {
 	private final CartService cartService;
 	private final OrderService orderService;
-	private final CartDtoAssembler cartDtoAssembler;
-	private final OrderDtoAssembler orderDtoAssembler;
+	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler();
+	private final OrderDtoAssembler orderDtoAssembler = new OrderDtoAssembler();
+	private final MarketProperties marketProperties;
 
-	@Value("${deliveryCost}")
-	private int deliveryCost;
-
-	public CartRestController(CartService cartService, OrderService orderService,
-		CartDtoAssembler cartDtoAssembler, OrderDtoAssembler orderDtoAssembler)
-	{
+	public CartRestController(CartService cartService, OrderService orderService, MarketProperties marketProperties) {
 		this.cartService = cartService;
 		this.orderService = orderService;
-		this.cartDtoAssembler = cartDtoAssembler;
-		this.orderDtoAssembler = orderDtoAssembler;
+		this.marketProperties = marketProperties;
 	}
 
 	/**
@@ -117,7 +112,7 @@ public class CartRestController {
 	@ResponseBody
 	public ResponseEntity<OrderDTO> payByCard(Principal principal, @Valid @RequestBody CreditCardDTO card) throws EmptyCartException {
 		String login = principal.getName();
-		Order order = orderService.createUserOrder(login, deliveryCost, card.getNumber());
+		Order order = orderService.createUserOrder(login, marketProperties.getDeliveryCost(), card.getNumber());
 		OrderDTO dto = orderDtoAssembler.toModel(order);
 
 		HttpHeaders headers = new HttpHeaders();

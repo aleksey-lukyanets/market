@@ -1,6 +1,7 @@
-package market.util;
+package market;
 
 import market.domain.*;
+import market.properties.PaginationProperties;
 
 import java.util.Date;
 
@@ -8,10 +9,10 @@ public class FixturesFactory {
 	private static final String DISTILLERY_TITLE = "distillery_title";
 	private static final String DISTILLERY_DESCRIPTION = "distillery_description";
 
-	private static final String REGION_NAME = "region_name";
-	private static final String REGION_SUBTITLE = "region_subtitle";
-	private static final String REGION_DESCRIPTION = "region_description";
-	private static final String REGION_COLOR = "region_color";
+	private static final String REGION_NAME = "region name";
+	private static final String REGION_SUBTITLE = "region subtitle";
+	private static final String REGION_DESCRIPTION = "region description";
+	private static final String REGION_COLOR = "#ffffff";
 
 	private static final double PRODUCT_PRICE = 100.0;
 	private static final String PRODUCT_NAME = "product_name";
@@ -26,14 +27,21 @@ public class FixturesFactory {
 	private static final String ACCOUNT_NAME = "Name";
 	private static final boolean ACCOUNT_ACTIVE = true;
 
-	private static final String CONTACTS_PHONE = "some_phone";
+	private static final String CONTACTS_PHONE = "+97211234567";
 	private static final String CONTACTS_ADDRESS = "some_address";
+
+	private static final int ORDERED_PRODUCT_QUANTITY = 3;
+
+	private static final String BILL_CARD_NUMBER = "1111222233334444";
+
+	private static final int PAGINATION_BACKEND = 3;
 
 	private static long regionId = 123L;
 	private static long distilleryId = 234L;
 	private static long productId = 10L;
 	private static long accountId = 50L;
 	private static long orderId = 3000L;
+	private static int billId = 400;
 
 	public static Region.Builder region() {
 		return new Region.Builder()
@@ -90,5 +98,29 @@ public class FixturesFactory {
 			.setId(++orderId)
 			.setUserAccount(userAccount)
 			.setDateCreated(new Date());
+	}
+
+	public static OrderedProduct.Builder orderedProduct(Order order, Product product) {
+		return new OrderedProduct.Builder()
+			.setProduct(product)
+			.setOrder(order)
+			.setQuantity(ORDERED_PRODUCT_QUANTITY);
+	}
+
+	public static Bill.Builder bill(Order order) {
+		return new Bill.Builder()
+			.setOrder(order)
+			.setNumber(++billId)
+			.setTotalCost(order.getProductsCost() + order.getDeliveryCost())
+			.setPayed(true)
+			.setDateCreated(new Date())
+			.setCcNumber(BILL_CARD_NUMBER);
+	}
+
+	public static PaginationProperties paginationProperties() {
+		return new PaginationProperties.Builder()
+			.setBackendProduct(PAGINATION_BACKEND)
+			.setBackendOrder(PAGINATION_BACKEND)
+			.build();
 	}
 }

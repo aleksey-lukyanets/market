@@ -1,9 +1,9 @@
 package market.service;
 
+import market.FixturesFactory;
 import market.dao.RegionDAO;
 import market.domain.Region;
 import market.service.impl.RegionServiceImpl;
-import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

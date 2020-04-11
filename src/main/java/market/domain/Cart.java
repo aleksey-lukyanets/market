@@ -5,10 +5,7 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Cart of the {@link UserAccount}.
@@ -51,21 +48,26 @@ public class Cart implements Serializable {
 		return cartItems.isEmpty();
 	}
 
-	public void update(Product product, int newQuantity) {
+	public CartItem update(Product product, int newQuantity) {
 		if (product == null)
-			return;
+			return null;
 
+		CartItem updatedItem = null;
 		if (newQuantity > 0) {
 			CartItem existingItem = findItem(product.getId());
 			if (existingItem == null) {
-				cartItems.add(new CartItem(this, product, newQuantity));
+				CartItem newItem = new CartItem(this, product, newQuantity);
+				cartItems.add(newItem);
+				updatedItem = newItem;
 			} else {
 				existingItem.setQuantity(newQuantity);
+				updatedItem = existingItem;
 			}
 		} else {
 			removeItem(product.getId());
 		}
 		itemsCost = calculateItemsCost();
+		return updatedItem;
 	}
 
 	private void removeItem(long productId) {
@@ -113,7 +115,7 @@ public class Cart implements Serializable {
 	}
 
 	public List<CartItem> getCartItems() {
-		return cartItems;
+		return Collections.unmodifiableList(cartItems);
 	}
 
 	public void setCartItems(List<CartItem> cartItems) {
@@ -144,12 +146,65 @@ public class Cart implements Serializable {
 		Cart cart = (Cart) o;
 		return deliveryIncluded == cart.deliveryIncluded &&
 			Objects.equals(id, cart.id) &&
-			Objects.equals(userAccount, cart.userAccount) &&
 			Objects.equals(cartItems, cart.cartItems);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, userAccount, cartItems, deliveryIncluded);
+		return Objects.hash(id, cartItems, deliveryIncluded);
+	}
+
+	public static class Builder {
+		private long id;
+		private UserAccount userAccount;
+		private List<CartItem> cartItems = new ArrayList<>(0);
+		private boolean deliveryIncluded = true;
+		private double itemsCost;
+
+		public Builder() {
+		}
+
+		public Builder(Cart cart) {
+			id = cart.id;
+			userAccount = cart.userAccount;
+			cartItems = cart.cartItems;
+			deliveryIncluded = cart.deliveryIncluded;
+			itemsCost = cart.itemsCost;
+		}
+
+		public Cart build() {
+			Cart cart = new Cart();
+			cart.id = id;
+			cart.userAccount = userAccount;
+			cart.cartItems = cartItems;
+			cart.deliveryIncluded = deliveryIncluded;
+			cart.itemsCost = itemsCost;
+			return cart;
+		}
+
+		public Builder setId(long id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder setUserAccount(UserAccount userAccount) {
+			this.userAccount = userAccount;
+			return this;
+		}
+
+		public Builder setCartItems(List<CartItem> cartItems) {
+			this.cartItems = cartItems;
+			return this;
+		}
+
+		public Builder setDeliveryIncluded(boolean deliveryIncluded) {
+			this.deliveryIncluded = deliveryIncluded;
+			return this;
+		}
+
+		public Builder setItemsCost(double itemsCost) {
+			this.itemsCost = itemsCost;
+			return this;
+		}
 	}
 }

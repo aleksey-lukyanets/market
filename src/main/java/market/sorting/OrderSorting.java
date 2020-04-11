@@ -11,11 +11,14 @@ import java.util.Map;
  */
 @Component
 public class OrderSorting extends AbstractSorter {
+	private final int defaultPageSize;
 
 	private final Map<String, String> executedOptions = new LinkedHashMap<>();
 	private final Map<String, String> createdOptions = new LinkedHashMap<>();
 
-	public OrderSorting() {
+	public OrderSorting(int defaultPageSize) {
+		this.defaultPageSize = defaultPageSize;
+
 		sortFieldOptions.put("dateCreated", "по дате оформления");
 		sortFieldOptions.put("bill.totalCost", "по сумме");
 		sortFieldOptions.put("userAccount.name", "по имени покупателя");
@@ -31,7 +34,7 @@ public class OrderSorting extends AbstractSorter {
 
 	@Override
 	public int getDefaultPageSize() {
-		return 10;
+		return defaultPageSize;
 	}
 
 	@Override

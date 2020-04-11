@@ -2,15 +2,7 @@ package market.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -26,7 +18,7 @@ public class Product implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", insertable = false, updatable = false, nullable = false)
-	private long id;
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "distillery_id", nullable = false)
@@ -61,11 +53,11 @@ public class Product implements Serializable {
 	@Column(name = "available", nullable = false)
 	private boolean available = true;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -155,7 +147,7 @@ public class Product implements Serializable {
 	}
 
 	public static class Builder {
-		private long id;
+		private Long id;
 		private Distillery distillery;
 		private String name;
 		private Double price;
@@ -194,7 +186,7 @@ public class Product implements Serializable {
 			return product;
 		}
 
-		public Builder setId(long id) {
+		public Builder setId(Long id) {
 			this.id = id;
 			return this;
 		}

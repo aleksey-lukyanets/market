@@ -1,10 +1,10 @@
 package market.service;
 
+import market.FixturesFactory;
 import market.dao.ContactsDAO;
 import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.service.impl.ContactsServiceImpl;
-import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ContactsServiceTest {

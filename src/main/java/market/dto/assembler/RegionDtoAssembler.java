@@ -4,9 +4,9 @@ import market.controller.backend.RegionController;
 import market.domain.Region;
 import market.dto.RegionDTO;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.stereotype.Component;
 
-@Component
+import java.util.List;
+
 public class RegionDtoAssembler extends RepresentationModelAssemblerSupport<Region, RegionDTO> {
 
 	public RegionDtoAssembler() {
@@ -15,13 +15,17 @@ public class RegionDtoAssembler extends RepresentationModelAssemblerSupport<Regi
 
 	@Override
 	public RegionDTO toModel(Region region) {
-		RegionDTO dto = createModelWithId(region.getId(), region);
+		RegionDTO dto = instantiateModel(region);
 		dto.setId(region.getId());
 		dto.setName(region.getName());
 		dto.setSubtitle(region.getSubtitle());
 		dto.setColor(region.getColor());
 		dto.setDescription(region.getDescription());
 		return dto;
+	}
+
+	public RegionDTO[] toDtoArray(List<Region> items) {
+		return toCollectionModel(items).getContent().toArray(new RegionDTO[items.size()]);
 	}
 
 	public Region toDomain(RegionDTO dto) {

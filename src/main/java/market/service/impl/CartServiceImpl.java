@@ -65,7 +65,7 @@ public class CartServiceImpl implements CartService {
 		Cart cart = getCartOrCreate(userEmail);
 		boolean updated = false;
 		for (CartItem item : itemsToAdd) {
-			Optional<Product> product = productService.findOne(item.getProduct().getId());
+			Optional<Product> product = productService.findById(item.getProduct().getId());
 			if (product.isPresent() && product.get().isAvailable()) {
 				cart.update(product.get(), item.getQuantity());
 				updated = true;

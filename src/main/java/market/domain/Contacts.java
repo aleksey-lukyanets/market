@@ -3,13 +3,7 @@ package market.domain;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -96,7 +90,6 @@ public class Contacts implements Serializable {
 		if (o == null || getClass() != o.getClass()) return false;
 		Contacts contacts = (Contacts) o;
 		return Objects.equals(id, contacts.id) &&
-			Objects.equals(userAccount, contacts.userAccount) &&
 			Objects.equals(phone, contacts.phone) &&
 			Objects.equals(address, contacts.address) &&
 			Objects.equals(cityAndRegion, contacts.cityAndRegion);
@@ -104,7 +97,7 @@ public class Contacts implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, userAccount, phone, address, cityAndRegion);
+		return Objects.hash(id, phone, address, cityAndRegion);
 	}
 
 	public static class Builder {

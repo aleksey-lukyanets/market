@@ -4,6 +4,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Адаптер корзины.
@@ -75,5 +76,24 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 
 	public void setItemsCount(int itemsCount) {
 		this.itemsCount = itemsCount;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CartDTO cartDTO = (CartDTO) o;
+		return itemsCount == cartDTO.itemsCount &&
+			Double.compare(cartDTO.productsCost, productsCost) == 0 &&
+			deliveryCost == cartDTO.deliveryCost &&
+			deliveryIncluded == cartDTO.deliveryIncluded &&
+			Double.compare(cartDTO.totalCost, totalCost) == 0 &&
+			Objects.equals(user, cartDTO.user) &&
+			Objects.equals(cartItems, cartDTO.cartItems);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(user, cartItems, itemsCount, productsCost, deliveryCost, deliveryIncluded, totalCost);
 	}
 }

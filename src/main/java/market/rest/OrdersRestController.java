@@ -27,11 +27,10 @@ import static java.util.stream.Collectors.toList;
 @ExposesResourceFor(OrderDTO.class)
 public class OrdersRestController {
 	private final OrderService orderService;
-	private final OrderDtoAssembler orderDtoAssembler;
+	private final OrderDtoAssembler orderDtoAssembler = new OrderDtoAssembler();
 
-	public OrdersRestController(OrderService orderService, OrderDtoAssembler orderDtoAssembler) {
+	public OrdersRestController(OrderService orderService) {
 		this.orderService = orderService;
-		this.orderDtoAssembler = orderDtoAssembler;
 	}
 
 	/**

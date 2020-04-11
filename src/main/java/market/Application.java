@@ -11,8 +11,13 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-@Import({DataConfig.class, SecurityConfig.class, ServletConfig.class})
-@ComponentScan(basePackages = {"market.service"})
+@Import({DataConfig.class, SecurityConfig.class, ServletConfig.class, PropertiesConfig.class})
+@ComponentScan(basePackages = {
+	"market.service",
+	"market.controller.frontend",
+	"market.controller.backend",
+	"market.rest"
+})
 @PropertySource("classpath:/market.properties")
 public class Application {
 

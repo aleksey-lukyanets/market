@@ -1,10 +1,10 @@
 package market.service;
 
+import market.FixturesFactory;
 import market.dao.UserAccountDAO;
 import market.domain.UserAccount;
 import market.exception.EmailExistsException;
 import market.service.impl.UserAccountServiceImpl;
-import market.util.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

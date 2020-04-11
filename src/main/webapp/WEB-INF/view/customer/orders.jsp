@@ -22,7 +22,7 @@
 							</h4>
 						</td>
 						<td align="right" valign="bottom">
-							номер счёта: <c:out value="${order.bill.number}"/>
+							номер счёта: <c:out value="${order.billNumber}"/>
 						</td>
 					</tr>
 				</table>
@@ -39,7 +39,7 @@
 					</tr>
 					</thead>
 
-					<c:forEach var="orderedProduct" items="${orderedProductsByOrderId[order.id]}">
+					<c:forEach var="orderedProduct" items="${orderedProductsByOrderId[order.orderId]}">
 						<c:set var="product" value="${productsByOrderId[orderedProduct.productId]}"/>
 						<tr>
 							<td><c:out value="${product.distillery} ${product.name}"/></td>

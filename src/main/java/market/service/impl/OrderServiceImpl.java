@@ -1,12 +1,7 @@
 package market.service.impl;
 
 import market.dao.OrderDAO;
-import market.domain.Bill;
-import market.domain.Cart;
-import market.domain.CartItem;
-import market.domain.Order;
-import market.domain.OrderedProduct;
-import market.domain.UserAccount;
+import market.domain.*;
 import market.exception.EmptyCartException;
 import market.exception.UnknownEntityException;
 import market.service.CartService;
@@ -17,11 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -137,10 +128,10 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	private OrderedProduct createOrderedProduct(Order order, CartItem item) {
-		OrderedProduct orderedProduct = new OrderedProduct();
-		orderedProduct.setProduct(item.getProduct());
-		orderedProduct.setOrder(order);
-		orderedProduct.setQuantity(item.getQuantity());
-		return orderedProduct;
+		return new OrderedProduct.Builder()
+			.setProduct(item.getProduct())
+			.setOrder(order)
+			.setQuantity(item.getQuantity())
+			.build();
 	}
 }

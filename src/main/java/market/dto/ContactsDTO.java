@@ -5,6 +5,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 /**
  * Контактные данные пользователя.
@@ -52,5 +53,20 @@ public class ContactsDTO extends RepresentationModel<ContactsDTO> {
 
 	public void setCityAndRegion(String cityAndRegion) {
 		this.cityAndRegion = cityAndRegion;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ContactsDTO that = (ContactsDTO) o;
+		return Objects.equals(phone, that.phone) &&
+			Objects.equals(address, that.address) &&
+			Objects.equals(cityAndRegion, that.cityAndRegion);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(phone, address, cityAndRegion);
 	}
 }

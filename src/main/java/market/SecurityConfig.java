@@ -1,6 +1,5 @@
 package market;
 
-import market.dto.assembler.CartDtoAssembler;
 import market.security.AuthenticationService;
 import market.security.CustomAuthenticationSuccessHandler;
 import market.security.UserDetailsServiceImpl;
@@ -61,9 +60,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public AuthenticationSuccessHandler customAuthenticationSuccessHandler(ServletContext servletContext,
-		UserAccountService userAccountService, CartDtoAssembler cartDtoAssembler)
+		UserAccountService userAccountService)
 	{
-		return new CustomAuthenticationSuccessHandler(servletContext, userAccountService, cartDtoAssembler);
+		return new CustomAuthenticationSuccessHandler(servletContext, userAccountService);
 	}
 
 	@Bean

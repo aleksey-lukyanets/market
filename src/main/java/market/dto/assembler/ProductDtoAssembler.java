@@ -4,15 +4,14 @@ import market.domain.Product;
 import market.dto.ProductDTO;
 import market.rest.CartRestController;
 import market.rest.ProductsRestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-/**
- *
- */
-@Component
 public class ProductDtoAssembler extends RepresentationModelAssemblerSupport<Product, ProductDTO> {
 
 	public ProductDtoAssembler() {
@@ -21,7 +20,7 @@ public class ProductDtoAssembler extends RepresentationModelAssemblerSupport<Pro
 
 	@Override
 	public ProductDTO toModel(Product product) {
-		ProductDTO dto = createModelWithId(product.getId(), product);
+		ProductDTO dto = instantiateModel(product);
 		dto.setProductId(product.getId());
 		dto.setDistillery(product.getDistillery() == null ? null : product.getDistillery().getTitle());
 		dto.setName(product.getName());
@@ -36,9 +35,13 @@ public class ProductDtoAssembler extends RepresentationModelAssemblerSupport<Pro
 		return dto;
 	}
 
-	public Product dtoDomain(ProductDTO dto, long productId) {
+	public PageImpl<ProductDTO> toModel(Page<Product> page) {
+		List<ProductDTO> dtoList = page.map(this::toModel).toList();
+		return new PageImpl<>(dtoList, page.getPageable(), page.getTotalElements());
+	}
+
+	public Product dtoDomain(ProductDTO dto) {
 		return new Product.Builder()
-			.setId(productId)
 			.setName(dto.getName())
 			.setAge(dto.getAge())
 			.setAlcohol(dto.getAlcohol())

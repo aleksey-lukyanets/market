@@ -5,6 +5,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 /**
  * Адаптер данных пользователя.
@@ -86,4 +87,20 @@ public class UserDTO extends RepresentationModel<UserDTO> {
 		this.address = address;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		UserDTO userDTO = (UserDTO) o;
+		return Objects.equals(email, userDTO.email) &&
+			Objects.equals(password, userDTO.password) &&
+			Objects.equals(name, userDTO.name) &&
+			Objects.equals(phone, userDTO.phone) &&
+			Objects.equals(address, userDTO.address);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(email, password, name, phone, address);
+	}
 }

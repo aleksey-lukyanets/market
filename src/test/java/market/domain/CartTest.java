@@ -1,6 +1,6 @@
 package market.domain;
 
-import market.util.FixturesFactory;
+import market.FixturesFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +19,9 @@ public class CartTest {
 	@BeforeEach
 	public void setUp() {
 		cart = new Cart();
-		product = new Product.Builder()
-			.setId(PRODUCT_ID)
-			.setPrice(100.0)
-			.build();
+		Region region = FixturesFactory.region().build();
+		Distillery distillery = FixturesFactory.distillery(region).build();
+		product = FixturesFactory.product(distillery).build();
 	}
 
 	@Test

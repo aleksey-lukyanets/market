@@ -35,7 +35,7 @@ public interface DistilleryService {
 	/**
 	 * Updates existing distillery.
 	 */
-	void update(Distillery changedDistillery, String regionTitle);
+	void update(long distilleryId, Distillery changedDistillery, String regionTitle);
 
 	/**
 	 * Removes distillery.
