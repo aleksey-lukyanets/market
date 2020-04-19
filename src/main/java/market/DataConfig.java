@@ -1,6 +1,7 @@
 package market;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
+@EntityScan(basePackages="market.domain")
 @EnableTransactionManagement
 public class DataConfig {
 
@@ -27,9 +29,11 @@ public class DataConfig {
 		return new DataSourceProperties();
 	}
 
-	@Bean
+	@Bean // with Spring Boot this is actually not necessary but leaving it to note things explicitly
+	@Primary
 	@ConfigurationProperties("spring.datasource.configuration")
-	public HikariDataSource dataSource(DataSourceProperties properties) {
+	public HikariDataSource dataSource() {
+		DataSourceProperties properties = dataSourceProperties();
 		return properties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
 	}
 

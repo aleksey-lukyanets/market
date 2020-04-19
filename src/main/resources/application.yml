@@ -1,0 +1,37 @@
+spring:
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        hbm2ddl.auto: none
+
+server:
+  servlet:
+    context-parameters:
+      imagesPath: /resources/img/
+      regionImagePath: /resources/img/regions/
+      productImagePath: /resources/img/products/
+
+---
+
+spring:
+  profiles: default
+  datasource:
+    url: jdbc:h2:mem:market;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+---
+
+spring:
+  profiles: prod
+  datasource:
+    url: jdbc:postgresql://localhost:5432/market
+    driverClassName: org.postgresql.Driver
+    username: market
+    password: market
