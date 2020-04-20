@@ -8,10 +8,9 @@
 
 <br>
 
-<s:url value="/admin/regions" var="post_path"/>
 <sf:form id="regionForm" class="form-horizontal"
 		 modelAttribute="region"
-		 action="${post_path}" method="post">
+		 action="/admin/regions/new" method="post">
 
 	<tiles:insertAttribute name="form-fields"/>
 

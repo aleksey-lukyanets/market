@@ -58,10 +58,10 @@
 				</td>
 				<td>
 					<c:if test="${! order.executed}">
-						<s:url value="/admin/orders/{orderId}" var="put_executed_url">
+						<s:url value="/admin/orders/{orderId}" var="post_executed_url">
 							<s:param name="orderId" value="${order.id}"/>
 						</s:url>
-						<sf:form method="put" action="${put_executed_url}">
+						<sf:form method="post" action="${post_executed_url}">
 							<input type="hidden" name="executed" value="true">
 							<button type="submit" class="btn btn-success btn-xs">
 								<span class="glyphicon glyphicon-ok"></span>&nbsp;

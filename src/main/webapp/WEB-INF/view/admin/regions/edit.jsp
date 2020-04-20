@@ -8,7 +8,7 @@
 
 <br>
 
-<s:url value="/admin/regions/{regionId}" var="edit_action">
+<s:url value="/admin/regions/{regionId}/edit" var="edit_action">
 	<s:param name="regionId" value="${region.id}"/>
 </s:url>
 <sf:form id="regionForm" class="form-horizontal"
