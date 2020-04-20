@@ -71,6 +71,7 @@ public class OrdersControllerTest {
 		product = FixturesFactory.product(distillery).build();
 
 		UserAccount userAccount = FixturesFactory.account().build();
+		userAccount.setContacts(FixturesFactory.contacts().build());
 		order = FixturesFactory.order(userAccount).build();
 		totalOrders = Collections.singletonList(order);
 

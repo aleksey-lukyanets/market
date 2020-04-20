@@ -39,7 +39,7 @@
 					</tr>
 					</thead>
 
-					<c:forEach var="orderedProduct" items="${orderedProductsByOrderId[order.orderId]}">
+					<c:forEach var="orderedProduct" items="${orderedProductsByOrderId[order.id]}">
 						<c:set var="product" value="${productsByOrderId[orderedProduct.productId]}"/>
 						<tr>
 							<td><c:out value="${product.distillery} ${product.name}"/></td>

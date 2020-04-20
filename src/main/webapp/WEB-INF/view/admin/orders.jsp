@@ -26,13 +26,14 @@
 		</thead>
 
 		<c:forEach var="order" items="${page.content}" varStatus="iter">
+			<c:set var="bill" value="${billsByOrderId[order.id]}"/>
 			<tr>
 				<td>
 					<a data-toggle="collapse" data-parent="#accordion" href="#collapse<c:out value="${iter.index}"/>">
 							<c:out value="${order.id}"/>
 					</a>
 				</td>
-				<td><c:out value="${order.userAccount.name}"/></td>
+				<td><c:out value="${order.userAccount}"/></td>
 				<td>
 					<fmt:formatDate value="${order.dateCreated}" pattern="dd.MM.yyyy, HH:mm"/>
 				</td>
@@ -43,10 +44,10 @@
 					</c:choose>
 				</td>
 
-				<td>#${order.bill.number}</td>
+				<td>#${bill.number}</td>
 				<td>
 					<c:choose>
-						<c:when test="${order.bill.payed}">оплачен</c:when>
+						<c:when test="${bill.payed}">оплачен</c:when>
 						<c:otherwise>ожидает&nbsp;оплаты</c:otherwise>
 					</c:choose>
 				</td>
@@ -78,16 +79,16 @@
 							<div style="position: relative; float: left; max-width: 170px;">
 								<div class="panel panel-default">
 									<div class="panel-heading"><b>Покупатель</b></div>
+									<c:set var="contacts" value="${contactsByAccount[order.userAccount]}"/>
 									<ul class="list-group">
 										<li class="list-group-item">
-											<c:out value="${order.userAccount.name}"/><br>
-											<c:out value="${order.userAccount.contacts.phone}"/><br>
-											<c:out value="${order.userAccount.email}"/>
+											<c:out value="${order.userAccount}"/><br>
+											<c:out value="${contacts.phone}"/>
 										</li>
 										<c:if test="${order.deliveryIncluded}">
 											<li class="list-group-item">
 												адрес доставки:<br>
-												<c:out value="${order.userAccount.contacts.address}"/>
+												<c:out value="${contacts.address}"/>
 											</li>
 										</c:if>
 									</ul>
@@ -102,7 +103,7 @@
 											<table>
 												<tr>
 													<td align="right" style="padding-right: 7px;">номер:</td>
-													<td><c:out value="${order.bill.number}"/></td>
+													<td><c:out value="${bill.number}"/></td>
 												</tr>
 												<tr>
 													<td align="right" style="padding-right: 7px;">от:</td>
@@ -110,15 +111,15 @@
 												</tr>
 												<tr>
 													<td align="right" style="padding-right: 7px;">на сумму:</td>
-													<td><c:out value="${order.bill.totalCost}"/> руб.</td>
+													<td><c:out value="${bill.totalCost}"/> руб.</td>
 												</tr>
 											</table>
 										</li>
 										<li class="list-group-item">
 											<c:choose>
-												<c:when test="${order.bill.payed}">
+												<c:when test="${bill.payed}">
 													оплачен картой:<br>
-													<c:out value="${order.bill.ccNumber}"/>
+													<c:out value="${bill.ccNumber}"/>
 												</c:when>
 												<c:otherwise>ожидает&nbsp;оплаты</c:otherwise>
 											</c:choose>
@@ -155,12 +156,12 @@
 											</tr>
 											<tr>
 												<td colspan="3" align="right">доставка по Петербургу:</td>
-												<td><c:out value="${order.deliveryСost}"/> руб.</td>
+												<td><c:out value="${order.deliveryCost}"/> руб.</td>
 											</tr>
 										</c:if>
 										<tr>
 											<td colspan="3" align="right">итог:</td>
-											<td><c:out value="${order.productsCost + order.deliveryСost}"/> руб.</td>
+											<td><c:out value="${order.productsCost + order.deliveryCost}"/> руб.</td>
 										</tr>
 									</table>
 								</div>

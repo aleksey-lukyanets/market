@@ -5,13 +5,10 @@ import org.springframework.hateoas.RepresentationModel;
 import java.util.Date;
 import java.util.Objects;
 
-/**
- *
- */
 public class OrderDTO extends RepresentationModel<OrderDTO> {
 
-	private String user;
-	private long orderId;
+	private String userAccount;
+	private long id;
 	private int billNumber;
 	private Date dateCreated;
 	private double productsCost;
@@ -21,12 +18,12 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 	private boolean payed;
 	private boolean executed;
 
-	public String getUser() {
-		return user;
+	public String getUserAccount() {
+		return userAccount;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setUserAccount(String userAccount) {
+		this.userAccount = userAccount;
 	}
 
 	public int getBillNumber() {
@@ -85,12 +82,12 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 		this.executed = executed;
 	}
 
-	public long getOrderId() {
-		return orderId;
+	public long getId() {
+		return id;
 	}
 
-	public void setOrderId(long orderId) {
-		this.orderId = orderId;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public boolean isPayed() {
@@ -106,7 +103,7 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		OrderDTO orderDTO = (OrderDTO) o;
-		return orderId == orderDTO.orderId &&
+		return id == orderDTO.id &&
 			billNumber == orderDTO.billNumber &&
 			Double.compare(orderDTO.productsCost, productsCost) == 0 &&
 			deliveryCost == orderDTO.deliveryCost &&
@@ -114,12 +111,12 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 			Double.compare(orderDTO.totalCost, totalCost) == 0 &&
 			payed == orderDTO.payed &&
 			executed == orderDTO.executed &&
-			Objects.equals(user, orderDTO.user) &&
+			Objects.equals(userAccount, orderDTO.userAccount) &&
 			Objects.equals(dateCreated, orderDTO.dateCreated);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(user, orderId, billNumber, dateCreated, productsCost, deliveryCost, deliveryIncluded, totalCost, payed, executed);
+		return Objects.hash(userAccount, id, billNumber, dateCreated, productsCost, deliveryCost, deliveryIncluded, totalCost, payed, executed);
 	}
 }

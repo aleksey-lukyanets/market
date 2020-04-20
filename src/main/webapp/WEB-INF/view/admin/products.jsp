@@ -32,11 +32,11 @@
 		<c:forEach var="product" items="${page.content}">
 			<c:set var="shortDesc" value="${fn:substring(product.description, 0, 60)}"/>
 			<tr>
-				<td>${product.id}</td>
+				<td>${product.productId}</td>
 				<td>${product.distillery}</td>
 				<td>${product.name}</td>
 				<td>${product.age}</td>
-				<td>${product.distillery.region.name}</td>
+				<td>${regionByDistillery[product.distillery]}</td>
 
 				<td>${product.volume}</td>
 				<td>${product.alcohol}</td>
@@ -47,10 +47,10 @@
 				</td>
 				<td>
 					<s:url value="products/{productId}/edit" var="edit_product_url">
-						<s:param name="productId" value="${product.id}"/>
+						<s:param name="productId" value="${product.productId}"/>
 					</s:url>
 					<s:url value="products/{productId}/delete" var="delete_product_url">
-						<s:param name="productId" value="${product.id}"/>
+						<s:param name="productId" value="${product.productId}"/>
 					</s:url>
 					<sf:form action="${delete_product_url}" method="post">
 						<div class="pull-right">

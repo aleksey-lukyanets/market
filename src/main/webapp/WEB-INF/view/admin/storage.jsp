@@ -27,18 +27,18 @@
 
 		<c:forEach var="product" items="${page.content}" varStatus="status">
 			<tr>
-				<td>${product.id}</td>
+				<td>${product.productId}</td>
 				<td>${product.distillery} ${storedUnit.product.name}</td>
 				<td>${product.volume}</td>
 				<td>${product.alcohol}</td>
 
 				<td>${product.price}</td>
 				<td>
-					<input type="hidden" id="productsIds" name="productsIds" value="${product.id}"/>
+					<input type="hidden" id="productsIds" name="productsIds" value="${product.productId}"/>
 					<input type="checkbox"
 						   name="availableProductsIds"
 						   <c:if test="${product.available}">checked</c:if>
-						   value="${product.id}"/>
+						   value="${product.productId}"/>
 				</td>
 			</tr>
 		</c:forEach>

@@ -2,12 +2,9 @@ package market.controller.backend;
 
 import market.domain.Order;
 import market.domain.OrderedProduct;
-import market.dto.OrderDTO;
-import market.dto.OrderedProductDTO;
-import market.dto.ProductDTO;
-import market.dto.assembler.OrderDtoAssembler;
-import market.dto.assembler.OrderedProductDtoAssembler;
-import market.dto.assembler.ProductDtoAssembler;
+import market.domain.UserAccount;
+import market.dto.*;
+import market.dto.assembler.*;
 import market.properties.PaginationProperties;
 import market.service.OrderService;
 import market.sorting.ISorter;
@@ -28,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Controller
 @RequestMapping("/admin/orders")
@@ -40,6 +38,8 @@ public class OrdersController {
 	private final OrderDtoAssembler orderDtoAssembler = new OrderDtoAssembler();
 	private final OrderedProductDtoAssembler orderedProductDTOAssembler = new OrderedProductDtoAssembler();
 	private final ProductDtoAssembler productDTOAssembler = new ProductDtoAssembler();
+	private final ContactsDtoAssembler contactsDTOAssembler = new ContactsDtoAssembler();
+	private final BillDtoAssembler billDTOAssembler = new BillDtoAssembler();
 
 	public OrdersController(OrderService orderService, PaginationProperties paginationProperties) {
 		this.orderService = orderService;
@@ -77,6 +77,15 @@ public class OrdersController {
 			productsByOrderId.put(order.getId(), productsDto);
 		}
 		model.addAttribute("productsByOrderId", productsByOrderId);
+
+		Map<String, ContactsDTO> contactsByAccount = orders.stream()
+			.map(Order::getUserAccount)
+			.collect(toMap(UserAccount::getEmail, a -> contactsDTOAssembler.toModel(a.getContacts())));
+		model.addAttribute("contactsByAccount", contactsByAccount);
+
+		Map<Long, BillDTO> billsByOrderId = orders.stream()
+			.collect(toMap(Order::getId, o -> billDTOAssembler.toModel(o.getBill())));
+		model.addAttribute("billsByOrderId", billsByOrderId);
 
 		model.addAttribute("currentExecuted", executed);
 		model.addAttribute("currentCreated", created);
