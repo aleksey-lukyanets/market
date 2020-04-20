@@ -18,8 +18,8 @@ public class OrderDtoAssembler extends RepresentationModelAssemblerSupport<Order
 	@Override
 	public OrderDTO toModel(Order order) {
 		OrderDTO dto = createModelWithId(order.getId(), order);
-		dto.setOrderId(order.getId());
-		dto.setUser(order.getUserAccount().getEmail());
+		dto.setId(order.getId());
+		dto.setUserAccount(order.getUserAccount().getEmail());
 		dto.setBillNumber(order.getBill().getNumber());
 		dto.setProductsCost(order.getProductsCost());
 		dto.setDateCreated(order.getDateCreated());

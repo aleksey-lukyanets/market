@@ -25,7 +25,7 @@
 			<tr>
 				<td>${distillery.id}</td>
 				<td>${distillery.title}</td>
-				<td>${distillery.region.name}</td>
+				<td>${distillery.region}</td>
 				<td>
 						${shortDesc}
 					<c:if test="${fn:length(distillery.description) >= 100}">...</c:if>
