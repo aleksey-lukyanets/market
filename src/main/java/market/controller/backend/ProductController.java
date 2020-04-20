@@ -28,9 +28,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Controller
 @RequestMapping("/admin/products")
@@ -73,10 +75,16 @@ public class ProductController {
 		}
 		productBackendSorting.prepareModel(model, pagedProducts.map(productDtoAssembler::toModel));
 
-		List<DistilleryDTO> distilleriesDto = distilleryService.findAll().stream()
+		List<Distillery> distilleries = distilleryService.findAll();
+		List<DistilleryDTO> distilleriesDto = distilleries.stream()
 			.map(distilleryDtoAssembler::toModel)
 			.collect(toList());
 		model.addAttribute("distilleries", distilleriesDto);
+
+		Map<String, String> regionByDistillery = distilleries.stream()
+			.collect(toMap(Distillery::getTitle, d -> d.getRegion().getName()));
+		model.addAttribute("regionByDistillery", regionByDistillery);
+
 		return PRODUCTS_BASE;
 	}
 
