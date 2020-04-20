@@ -8,7 +8,7 @@
 
 <br>
 
-<s:url value="/admin/distilleries/{distilleryId}" var="edit_action">
+<s:url value="/admin/distilleries/{distilleryId}/edit" var="edit_action">
 	<s:param name="distilleryId" value="${distillery.id}"/>
 </s:url>
 <sf:form id="distilleryForm" class="form-horizontal"
