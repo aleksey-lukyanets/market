@@ -95,7 +95,7 @@ public class CustomerControllerTest {
 		mockMvc.perform(get("/customer/new"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("customer/new"))
-			.andExpect(model().attribute("userDTO", notNullValue()));
+			.andExpect(model().attribute("userAccount", notNullValue()));
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class CustomerControllerTest {
 
 		given(userAccountService.create(accountCaptor.capture()))
 			.willReturn(account);
-		given(authenticationService.authenticate(account))
+		given(authenticationService.authenticate(account.getEmail(), account.getPassword()))
 			.willReturn(true);
 		given(cartService.addAllToCart(account.getEmail(), Collections.emptyList()))
 			.willReturn(cart);
