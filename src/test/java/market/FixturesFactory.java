@@ -1,7 +1,6 @@
 package market;
 
 import market.domain.*;
-import market.properties.PaginationProperties;
 
 import java.util.Date;
 
@@ -115,12 +114,5 @@ public class FixturesFactory {
 			.setPayed(true)
 			.setDateCreated(new Date())
 			.setCcNumber(BILL_CARD_NUMBER);
-	}
-
-	public static PaginationProperties paginationProperties() {
-		return new PaginationProperties.Builder()
-			.setBackendProduct(PAGINATION_BACKEND)
-			.setBackendOrder(PAGINATION_BACKEND)
-			.build();
 	}
 }

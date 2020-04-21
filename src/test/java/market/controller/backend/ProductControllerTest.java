@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -43,6 +44,9 @@ public class ProductControllerTest {
 	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
 	private final DistilleryDtoAssembler distilleryDtoAssembler = new DistilleryDtoAssembler();
 
+	@Autowired
+	private PaginationProperties properties;
+
 	@MockBean
 	private ProductService productService;
 	@MockBean
@@ -56,7 +60,6 @@ public class ProductControllerTest {
 	private ArgumentCaptor<Long> longCaptor;
 
 	private MockMvc mockMvc;
-	private PaginationProperties properties;
 
 	private Distillery distillery;
 	private List<Distillery> totalDistilleries;
@@ -65,7 +68,6 @@ public class ProductControllerTest {
 
 	@BeforeEach
 	public void beforeEach() {
-		properties = FixturesFactory.paginationProperties();
 		ProductController controller = new ProductController(productService, distilleryService, properties);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
 			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))

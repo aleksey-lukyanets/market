@@ -1,13 +1,12 @@
 package market.properties;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PaginationProperties {
-	private int backendProduct;
-	private int backendOrder;
-
-	public PaginationProperties() {
-	}
+	private final int backendProduct;
+	private final int backendOrder;
 
 	public PaginationProperties(
 		@Value("${pagination.backend.product}") int backendProduct,

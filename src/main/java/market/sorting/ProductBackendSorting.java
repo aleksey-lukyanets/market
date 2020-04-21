@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductBackendSorting extends AbstractSorter {
 
-	private int defaultPageSize;
+	private final int defaultPageSize;
 
 	public ProductBackendSorting(int defaultPageSize) {
 		this.defaultPageSize = defaultPageSize;
