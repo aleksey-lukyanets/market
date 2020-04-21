@@ -41,7 +41,7 @@ public class SignupRestController {
 	public UserDTO postNewUser(@Valid @RequestBody UserDTO user) throws EmailExistsException {
 		UserAccount userData = userAccountDtoAssembler.toDomain(user);
 		UserAccount newAccount = userAccountService.create(userData);
-		authenticationService.authenticate(newAccount);
+		authenticationService.authenticate(newAccount.getEmail(), user.getPassword());
 		return userAccountDtoAssembler.toModel(newAccount);
 	}
 }

@@ -8,8 +8,6 @@ INSERT INTO cart (id, total_items, products_cost, delivery_included) VALUES (4, 
 INSERT INTO cart_item (cart_id, product_id, quantity) VALUES (4, 5, 1);
 
 INSERT INTO contacts (phone, address, id, city_region) VALUES ('+7 123 456 78 90', 'Riesstrasse 18', 4, '13');
-INSERT INTO contacts (phone, address, id, city_region) VALUES ('+7 123 456 78 90', 'Riesstrasse 18', 5, '13');
-INSERT INTO contacts (phone, address, id, city_region) VALUES ('+7 123 456 78 90', 'Riesstrasse 18', 6, '13');
 INSERT INTO contacts (phone, address, id, city_region) VALUES ('+79211234567', 'sdf', 7, '13');
 
 INSERT INTO customer_order (id, user_account_id, date_created, executed, products_cost, delivery_included, delivery_cost) VALUES (1, 4, '2019-12-27', false, 8127, true, 400);

@@ -1,6 +1,5 @@
 package market.security;
 
-import market.domain.UserAccount;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,14 +14,11 @@ public class AuthenticationService {
 		this.authenticationManager = authenticationManager;
 	}
 
-	public boolean authenticate(UserAccount userAccount) {
-		String login = userAccount.getEmail();
-		String password = userAccount.getPassword();
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(login, password);
+	public boolean authenticate(String login, String password) {
 		try {
-			Authentication auth = authenticationManager.authenticate(token);
+			Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
 			SecurityContextHolder.getContext().setAuthentication(auth);
-			return true;
+			return auth.isAuthenticated();
 		} catch (BadCredentialsException ex) {
 			// todo
 			return false;

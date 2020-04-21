@@ -102,17 +102,17 @@ public class CustomerController {
 
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
 	public String getRegistrationPage(Model model) {
-		model.addAttribute("userDTO", new UserDTO());
+		model.addAttribute("userAccount", new UserDTO());
 		return CUSTOMER_NEW;
 	}
 
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public String postRegistrationForm(
 		Model model,
-		@Valid UserDTO user,
-		@ModelAttribute(value = "cart") CartDTO cartDto,
-		BindingResult bindingResult
+		@Valid UserDTO user, BindingResult bindingResult,
+		@ModelAttribute(value = "cart") CartDTO cartDto
 	) {
+		model.addAttribute("userAccount", user); // place user data back to redirect him back to pre-filled registration form
 		if (bindingResult.hasErrors())
 			return CUSTOMER_NEW;
 
@@ -124,11 +124,11 @@ public class CustomerController {
 			bindingResult.addError(e.getFieldError());
 			return CUSTOMER_NEW;
 		}
-		boolean authenticated = authenticationService.authenticate(newAccount);
+		boolean authenticated = authenticationService.authenticate(account.getEmail(), user.getPassword());
 		if (!authenticated)
 			return CUSTOMER_NEW;
 
-		model.addAttribute("userAccount", userAccountDtoAssembler.toModel(newAccount));
+		model.addAttribute("userAccount", userAccountDtoAssembler.toModel(newAccount)); // now add the authorized data
 
 		Cart unauthorisedCart = cartDtoAssembler.toDomain(cartDto, productService);
 		Cart updatedCart = cartService.addAllToCart(newAccount.getEmail(), unauthorisedCart.getCartItems());

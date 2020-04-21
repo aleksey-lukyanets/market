@@ -70,7 +70,7 @@
 									<a href="<c:url value="customer/orders" />">история заказов</a>
 								</li>
 								<li>
-									<a href="<c:url value="${pageContext.request.contextPath}/j_spring_security_logout" />">выйти</a>
+									<a href="<c:url value="${pageContext.request.contextPath}/logout" />">выйти</a>
 								</li>
 							</ul>
 							</security:authorize>
