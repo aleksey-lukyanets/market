@@ -35,15 +35,14 @@
 		<div class="col-sm-9 col-xs-9 product-unit">
 			<div class="pull-right price-block">
 				<div class="product-price product-label">${product.price} руб.</div>
-				<form method="put" id="quantity-form" action="<c:url value="/cart"/>">
+				<form method="post" id="quantity-form" action="<c:url value="/cart"/>">
 					<input type="hidden" name="productId" value="${product.productId}">
 					<input type="hidden" name="quantity" value="1">
 					<c:choose>
 						<c:when test="${product.available}">
 							<c:set var="insideCart" value="false"/>
 							<c:forEach var="cartItem" items="${cart.cartItems}" varStatus="iter">
-								<c:set var="cartProduct" value="${cartItem.product}"/>
-								<c:if test="${cartProduct.id == product.productId}">
+								<c:if test="${cartItem.productId == product.productId}">
 									<c:set var="insideCart" value="true"/>
 								</c:if>
 							</c:forEach>
@@ -105,7 +104,6 @@
 	</div>
 </div>
 
-<script src="${pageContext.request.contextPath}/resources/js/form2json.js" type="text/javascript"></script>
 <script>
     $('button.quantity-button').click(function () {
         var $this = $(this);
@@ -129,4 +127,19 @@
             }
         });
     });
+    $.fn.serializeObject = function() {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
 </script>

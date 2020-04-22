@@ -226,19 +226,14 @@
 	</div>
 </div>
 
-<script src="${pageContext.request.contextPath}/resources/js/form2json.js" type="text/javascript"></script>
 <script>
     $('body').delegate('input[name=included]:checked', 'change', function () {
         var $this = $(this);
         var form = $this.parents('form:first');
         var valueToSet = $(this).val();
-        var jsonData = JSON.stringify(form.serializeObject());
         $.ajax({
             type: form.attr('method'),
             url: form.attr('action') + "/" + valueToSet,
-            /*dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            data: jsonData,*/
             success: function (data) {
                 var deliveryIncluded = data["deliveryIncluded"];
                 if (deliveryIncluded) {
