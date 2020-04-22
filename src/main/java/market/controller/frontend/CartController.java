@@ -98,9 +98,8 @@ public class CartController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String updateCartByForm(
-		Principal principal,
-		@Valid @ModelAttribute("cartItem") CartItemDTO cartItemDto,
-		BindingResult bindingResult, Model model,
+		Model model, Principal principal,
+		@Valid @ModelAttribute("cartItem") CartItemDTO cartItemDto, BindingResult bindingResult,
 		@ModelAttribute(value = "cart") CartDTO cartDto
 	) {
 		if (bindingResult.hasErrors())
@@ -130,7 +129,7 @@ public class CartController {
 			if (product.isAvailable()) {
 				Cart cart = cartDtoAssembler.toDomain(cartDto, productService);
 				cart.update(product, newCartItem.getQuantity());
-				return cartDtoAssembler.toModel(cart);
+				return cartDtoAssembler.toAnonymousResource(cart);
 			}
 		}
 		return cartDto;

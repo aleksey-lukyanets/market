@@ -28,7 +28,7 @@
 		<c:forEach var="product" items="${page.content}" varStatus="status">
 			<tr>
 				<td>${product.productId}</td>
-				<td>${product.distillery} ${storedUnit.product.name}</td>
+				<td>${product.distillery} ${product.name}</td>
 				<td>${product.volume}</td>
 				<td>${product.alcohol}</td>
 
