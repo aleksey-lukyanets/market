@@ -1,5 +1,6 @@
 package market.controller.frontend;
 
+import com.sun.security.auth.UserPrincipal;
 import market.FixturesFactory;
 import market.domain.*;
 import market.dto.assembler.OrderDtoAssembler;
@@ -20,7 +21,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import sun.security.acl.PrincipalImpl;
 
 import java.security.Principal;
 import java.util.Collections;
@@ -75,7 +75,7 @@ public class CustomerControllerTest {
 		account = FixturesFactory.account()
 			.setContacts(contacts)
 			.build();
-		principal = new PrincipalImpl(account.getEmail());
+		principal = new UserPrincipal(account.getEmail());
 		Region region = FixturesFactory.region().build();
 		Distillery distillery = FixturesFactory.distillery(region).build();
 		product = FixturesFactory.product(distillery).build();
