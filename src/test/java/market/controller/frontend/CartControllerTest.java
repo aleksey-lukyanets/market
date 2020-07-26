@@ -1,6 +1,7 @@
 package market.controller.frontend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.security.auth.UserPrincipal;
 import market.FixturesFactory;
 import market.domain.*;
 import market.dto.CartDTO;
@@ -14,13 +15,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import sun.security.acl.PrincipalImpl;
 
 import java.security.Principal;
 
@@ -69,7 +70,7 @@ public class CartControllerTest {
 		Distillery distillery = FixturesFactory.distillery(region).build();
 		product = FixturesFactory.product(distillery).build();
 
-		principal = new PrincipalImpl(account.getEmail());
+		principal = new UserPrincipal(account.getEmail());
 	}
 
 	@Test
