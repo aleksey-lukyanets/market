@@ -33,7 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
+		http.headers()
+				.frameOptions().disable().and()
+			.authorizeRequests()
 				.antMatchers("/**").permitAll()
 				.antMatchers("/rest/**").permitAll()
 				.antMatchers("/admin/**").access("hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN')").and()
