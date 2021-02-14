@@ -13,24 +13,36 @@ import market.exception.UnknownEntityException;
 import market.properties.MarketProperties;
 import market.service.CartService;
 import market.service.OrderService;
+import org.springframework.hateoas.server.ExposesResourceFor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.security.Principal;
 
-@Controller
-@RequestMapping(value = "/rest/cart")
+@RestController
+@RequestMapping(value = "rest/customer/cart")
+@ExposesResourceFor(CartDTO.class)
 @Secured({"ROLE_USER"})
 public class CartRestController {
+	public static final String DELIVERY = "/delivery";
+	public static final String PAY = "/pay";
+
 	private final CartService cartService;
 	private final OrderService orderService;
-	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler();
+	private final CartDtoAssembler cartDtoAssembler;
 	private final OrderDtoAssembler orderDtoAssembler = new OrderDtoAssembler();
 	private final MarketProperties marketProperties;
 
@@ -38,18 +50,17 @@ public class CartRestController {
 		this.cartService = cartService;
 		this.orderService = orderService;
 		this.marketProperties = marketProperties;
+		cartDtoAssembler = new CartDtoAssembler(this.marketProperties);
 	}
 
 	/**
 	 * Viewing the cart.
 	 */
-	@RequestMapping(
-		method = RequestMethod.GET,
-		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
+	@GetMapping
 	public CartDTO getCart(Principal principal) {
-		Cart cart = cartService.getCartOrCreate(principal.getName());
-		return cartDtoAssembler.toAnonymousResource(cart);
+		String login = principal.getName();
+		Cart cart = cartService.getCartOrCreate(login);
+		return cartDtoAssembler.toModel(cart);
 	}
 
 	/**
@@ -58,15 +69,11 @@ public class CartRestController {
 	 * @return updated cart
 	 * @throws UnknownEntityException if the specified product does not exist
 	 */
-	@RequestMapping(
-		method = RequestMethod.PUT,
-		consumes = MediaUtf8.APPLICATION_JSON_UTF8_VALUE,
-		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public CartDTO addItem(Principal principal, @RequestBody CartItemDTO item) throws UnknownEntityException {
+	@PutMapping
+	public CartDTO addItem(Principal principal, @RequestBody @Valid CartItemDTO item) {
 		String login = principal.getName();
 		Cart cart = cartService.addToCart(login, item.getProductId(), item.getQuantity());
-		return cartDtoAssembler.toAnonymousResource(cart);
+		return cartDtoAssembler.toModel(cart);
 	}
 
 	/**
@@ -74,13 +81,11 @@ public class CartRestController {
 	 *
 	 * @return cleared cart
 	 */
-	@RequestMapping(
-		method = RequestMethod.DELETE,
-		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
+	@DeleteMapping
 	public CartDTO clearCart(Principal principal) {
-		Cart cart = cartService.clearCart(principal.getName());
-		return cartDtoAssembler.toAnonymousResource(cart);
+		String login = principal.getName();
+		Cart cart = cartService.clearCart(login);
+		return cartDtoAssembler.toModel(cart);
 	}
 
 	/**
@@ -88,15 +93,11 @@ public class CartRestController {
 	 *
 	 * @return updated cart
 	 */
-	@RequestMapping(value = "/delivery/{delivery}",
-		method = RequestMethod.PUT,
-		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public CartDTO setDelivery(Principal principal, @PathVariable String delivery) {
+	@PutMapping(value = DELIVERY)
+	public CartDTO setDelivery(Principal principal, @RequestParam(name = "included") boolean included) {
 		String login = principal.getName();
-		boolean included = Boolean.parseBoolean(delivery);
 		Cart cart = cartService.setDelivery(login, included);
-		return cartDtoAssembler.toAnonymousResource(cart);
+		return cartDtoAssembler.toModel(cart);
 	}
 
 	/**
@@ -105,14 +106,11 @@ public class CartRestController {
 	 * @return created order
 	 * @throws EmptyCartException if the cart is empty
 	 */
-	@RequestMapping(value = "/payment",
-		method = RequestMethod.POST,
-		consumes = MediaUtf8.APPLICATION_JSON_UTF8_VALUE,
-		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public ResponseEntity<OrderDTO> payByCard(Principal principal, @Valid @RequestBody CreditCardDTO card) throws EmptyCartException {
+	@PostMapping(value = PAY)
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<OrderDTO> payByCard(Principal principal, @RequestBody @Valid CreditCardDTO card) {
 		String login = principal.getName();
-		Order order = orderService.createUserOrder(login, marketProperties.getDeliveryCost(), card.getNumber());
+		Order order = orderService.createUserOrder(login, marketProperties.getDeliveryCost(), card.getCcNumber());
 		OrderDTO dto = orderDtoAssembler.toModel(order);
 
 		HttpHeaders headers = new HttpHeaders();

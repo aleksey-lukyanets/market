@@ -42,7 +42,7 @@ public interface ProductService {
 	 * @return product with the specified id
 	 * @throws UnknownEntityException if product does not exist
 	 */
-	Product getProduct(long productId) throws UnknownEntityException;
+	Product getProduct(long productId);
 
 	/**
 	 * @return product with the specified id
@@ -59,7 +59,7 @@ public interface ProductService {
 	 *
 	 * @throws UnknownEntityException if product does not exist
 	 */
-	void update(long productId, Product product, String distilleryTitle) throws UnknownEntityException;
+	void update(long productId, Product product, String distilleryTitle);
 
 	/**
 	 * Updates availability of the specified product.

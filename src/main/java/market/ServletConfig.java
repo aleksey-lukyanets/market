@@ -1,18 +1,19 @@
 package market;
 
-import market.interceptors.RestUserCheckInterceptor;
 import market.interceptors.SessionCartInterceptor;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
+
+import java.util.Locale;
 
 @Configuration
 public class ServletConfig implements WebMvcConfigurer {
@@ -25,9 +26,6 @@ public class ServletConfig implements WebMvcConfigurer {
 		registry.addInterceptor(new SessionCartInterceptor())
 			.addPathPatterns("/**")
 			.excludePathPatterns("/admin/**");
-		registry.addInterceptor(new RestUserCheckInterceptor())
-			.addPathPatterns("/rest/cart**")
-			.addPathPatterns("/rest/customer**");
 	}
 
 	@Bean
@@ -48,10 +46,9 @@ public class ServletConfig implements WebMvcConfigurer {
 	}
 
 	@Bean
-	public MessageSource messageSource() {
-		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-		messageSource.setBasename("classpath:/conf/messages.properties");
-		messageSource.setUseCodeAsDefaultMessage(true);
-		return messageSource;
+	public LocaleResolver localeResolver() {
+		AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
+		localeResolver.setDefaultLocale(Locale.US);
+		return localeResolver;
 	}
 }

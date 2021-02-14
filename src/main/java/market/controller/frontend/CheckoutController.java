@@ -1,6 +1,10 @@
 package market.controller.frontend;
 
-import market.domain.*;
+import market.domain.Cart;
+import market.domain.CartItem;
+import market.domain.Contacts;
+import market.domain.Order;
+import market.domain.UserAccount;
 import market.dto.ContactsDTO;
 import market.dto.CreditCardDTO;
 import market.dto.ProductDTO;
@@ -129,7 +133,7 @@ public class CheckoutController {
 
 		String login = principal.getName();
 		try {
-			Order order = orderService.createUserOrder(login, marketProperties.getDeliveryCost(), creditCard.getNumber());
+			Order order = orderService.createUserOrder(login, marketProperties.getDeliveryCost(), creditCard.getCcNumber());
 			model.addAttribute("createdOrder", orderDtoAssembler.toModel(order));
 			return "redirect:/" + CHECKOUT_CONFIRMATION;
 		} catch (EmptyCartException ex) {

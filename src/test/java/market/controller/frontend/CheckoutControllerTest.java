@@ -2,7 +2,14 @@ package market.controller.frontend;
 
 import com.sun.security.auth.UserPrincipal;
 import market.FixturesFactory;
-import market.domain.*;
+import market.domain.Bill;
+import market.domain.Cart;
+import market.domain.Contacts;
+import market.domain.Distillery;
+import market.domain.Order;
+import market.domain.Product;
+import market.domain.Region;
+import market.domain.UserAccount;
 import market.dto.assembler.ContactsDtoAssembler;
 import market.dto.assembler.OrderDtoAssembler;
 import market.dto.assembler.ProductDtoAssembler;
@@ -25,13 +32,20 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.security.Principal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @WebMvcTest(controllers = CheckoutController.class)
 public class CheckoutControllerTest {
@@ -178,7 +192,7 @@ public class CheckoutControllerTest {
 			.andExpect(model().attribute("userName", equalTo(account.getName())))
 			.andExpect(model().attribute("userContacts", equalTo(contactsDtoAssembler.toModel(account.getContacts()))))
 			.andExpect(model().attribute("deliveryCost", equalTo(marketProperties.getDeliveryCost())))
-			.andExpect(model().attribute("creditCard", hasProperty("number", is(emptyOrNullString()))))
+			.andExpect(model().attribute("creditCard", hasProperty("ccNumber", is(emptyOrNullString()))))
 			.andExpect(model().attribute("productsById", hasEntry(product.getId(), productDtoAssembler.toModel(product))));
 	}
 
@@ -190,7 +204,7 @@ public class CheckoutControllerTest {
 		mockMvc.perform(
 			post("/checkout/payment")
 				.principal(principal)
-				.param("number", order.getBill().getCcNumber()))
+				.param("ccNumber", order.getBill().getCcNumber()))
 			.andExpect(status().is3xxRedirection())
 			.andExpect(redirectedUrl("/checkout/confirmation"))
 			.andExpect(model().hasNoErrors())

@@ -12,6 +12,6 @@ public interface ContactsService {
 	/**
 	 * Updates contacts of the specified user.
 	 */
-	void updateUserContacts(Contacts changedContacts, String userLogin);
+	Contacts updateUserContacts(Contacts changedContacts, String userLogin);
 
 }

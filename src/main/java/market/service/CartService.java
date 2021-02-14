@@ -2,7 +2,6 @@ package market.service;
 
 import market.domain.Cart;
 import market.domain.CartItem;
-import market.exception.UnknownEntityException;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ public interface CartService {
 	 * Adds new item into the specified user cart and saves cart.
 	 * @return updated cart
 	 */
-	Cart addToCart(String userEmail, long productId, int quantity) throws UnknownEntityException;
+	Cart addToCart(String userEmail, long productId, int quantity);
 
 	/**
 	 * Adds all the listed items into the specified user cart and saves cart.

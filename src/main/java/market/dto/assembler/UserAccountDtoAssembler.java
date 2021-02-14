@@ -4,6 +4,8 @@ import market.domain.Contacts;
 import market.domain.UserAccount;
 import market.dto.UserDTO;
 import market.rest.CartRestController;
+import market.rest.ContactsRestController;
+import market.rest.CustomerRestController;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -11,18 +13,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class UserAccountDtoAssembler extends RepresentationModelAssemblerSupport<UserAccount, UserDTO> {
 
 	public UserAccountDtoAssembler() {
-		super(CartRestController.class, UserDTO.class);
+		super(CustomerRestController.class, UserDTO.class);
 	}
 
 	@Override
 	public UserDTO toModel(UserAccount userAccount) {
-		UserDTO dto = createModelWithId(userAccount.getId(), userAccount);
+		UserDTO dto = instantiateModel(userAccount);
 		dto.setEmail(userAccount.getEmail());
-		dto.setPassword("hidden");
+		dto.setPassword(UserDTO.HIDDEN_PASSWORD);
 		dto.setName(userAccount.getName());
 		dto.setPhone(userAccount.getContacts().getPhone());
 		dto.setAddress(userAccount.getContacts().getAddress());
 		dto.add(linkTo(CartRestController.class).withRel("Shopping cart"));
+		dto.add(linkTo(ContactsRestController.class).withRel("Manage contacts"));
 		return dto;
 	}
 

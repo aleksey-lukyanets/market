@@ -2,9 +2,14 @@ package market.service;
 
 import market.FixturesFactory;
 import market.dao.OrderDAO;
-import market.domain.*;
-import market.exception.EmptyCartException;
-import market.exception.UnknownEntityException;
+import market.domain.Bill;
+import market.domain.Cart;
+import market.domain.Distillery;
+import market.domain.Order;
+import market.domain.OrderedProduct;
+import market.domain.Product;
+import market.domain.Region;
+import market.domain.UserAccount;
 import market.service.impl.OrderServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +23,20 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceTest {
@@ -78,17 +91,18 @@ public class OrderServiceTest {
 	}
 
 	@Test
-	public void getUserOrder() throws UnknownEntityException {
+	public void getUserOrder() {
 		when(orderDAO.findById(order.getId()))
 			.thenReturn(Optional.of(order));
 
-		Order retrieved = orderService.getUserOrder(userAccount.getEmail(), order.getId());
+		Optional<Order> retrieved = orderService.getUserOrder(userAccount.getEmail(), order.getId());
 
-		assertThat(retrieved, equalTo(order));
+		assertThat(retrieved.isPresent(), is(true));
+		assertThat(retrieved.get(), equalTo(order));
 	}
 
 	@Test
-	public void createUserOrder() throws EmptyCartException {
+	public void createUserOrder() {
 		int quantity = 3;
 		cart.update(product, quantity);
 		int deliveryCost = 300;

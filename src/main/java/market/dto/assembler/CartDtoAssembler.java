@@ -5,8 +5,10 @@ import market.domain.CartItem;
 import market.domain.Product;
 import market.dto.CartDTO;
 import market.dto.CartItemDTO;
+import market.properties.MarketProperties;
 import market.rest.CartRestController;
 import market.rest.ContactsRestController;
+import market.rest.ProductsRestController;
 import market.service.ProductService;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
@@ -18,8 +20,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class CartDtoAssembler extends RepresentationModelAssemblerSupport<Cart, CartDTO> {
 
-	public CartDtoAssembler() {
+	private final MarketProperties marketProperties;
+
+	public CartDtoAssembler(MarketProperties marketProperties) {
 		super(CartRestController.class, CartDTO.class);
+		this.marketProperties = marketProperties;
 	}
 
 	@Override
@@ -27,16 +32,19 @@ public class CartDtoAssembler extends RepresentationModelAssemblerSupport<Cart, 
 		CartDTO dto = toAnonymousResource(cart);
 		dto.setUser(cart.getUserAccount().getEmail());
 		dto.add(linkTo(ContactsRestController.class).withRel("Customer contacts"));
-		dto.add(linkTo(CartRestController.class).slash("payment").withRel("Payment"));
+		dto.add(linkTo(CartRestController.class).slash(CartRestController.PAY).withRel("Proceed to payment"));
 		return dto;
 	}
 
 	public CartDTO toAnonymousResource(Cart cart) {
+		int deliveryCost = marketProperties.getDeliveryCost();
+
 		CartDTO dto = instantiateModel(cart);
 		dto.setDeliveryIncluded(cart.isDeliveryIncluded());
 		dto.setProductsCost(cart.getItemsCost());
-		dto.setTotalCost(cart.getItemsCost());
-		dto.setItemsCount(cart.getItemsCount());
+		dto.setDeliveryCost(deliveryCost);
+		dto.setTotalCost(cart.getItemsCost() + deliveryCost);
+		dto.setTotalItems(cart.getItemsCount());
 
 		List<CartItemDTO> cartItemsDto = cart.getCartItems().stream()
 			.map(this::toCartItemDto)
@@ -47,9 +55,12 @@ public class CartDtoAssembler extends RepresentationModelAssemblerSupport<Cart, 
 	}
 
 	public CartItemDTO toCartItemDto(CartItem cartItem) {
+		Long productId = cartItem.getProduct().getId();
+
 		CartItemDTO dto = new CartItemDTO();
-		dto.setProductId(cartItem.getProduct().getId());
+		dto.setProductId(productId);
 		dto.setQuantity(cartItem.getQuantity());
+		dto.add(linkTo(ProductsRestController.class).slash(productId).withRel("View product"));
 		return dto;
 	}
 

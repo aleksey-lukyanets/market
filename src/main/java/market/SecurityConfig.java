@@ -1,5 +1,6 @@
 package market;
 
+import market.properties.MarketProperties;
 import market.security.AuthenticationService;
 import market.security.CustomAuthenticationSuccessHandler;
 import market.security.UserDetailsServiceImpl;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,7 +26,7 @@ import javax.servlet.ServletContext;
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = {"market.security"})
-//@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -36,9 +38,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.headers()
 				.frameOptions().disable().and()
 			.authorizeRequests()
-				.antMatchers("/**").permitAll()
-				.antMatchers("/rest/**").permitAll()
-				.antMatchers("/admin/**").access("hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN')").and()
+				.antMatchers("/admin/**").access("hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN')")
+				.antMatchers("/rest/customer**").access("hasRole('ROLE_USER')").and()
+			.httpBasic().and()
 			.anonymous()
 				.authorities("ROLE_ANONYMOUS").and()
 			.formLogin()
@@ -53,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.logout()
 				.logoutUrl("/logout")
 				.logoutSuccessUrl("/")
-				.invalidateHttpSession(true)
+				.invalidateHttpSession(true).clearAuthentication(true)
 				.deleteCookies("JSESSIONID").and()
 			.sessionManagement().maximumSessions(25).and().and()
 			.csrf().disable()
@@ -62,9 +64,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public AuthenticationSuccessHandler customAuthenticationSuccessHandler(ServletContext servletContext,
-		UserAccountService userAccountService)
+	    UserAccountService userAccountService, MarketProperties marketProperties)
 	{
-		return new CustomAuthenticationSuccessHandler(servletContext, userAccountService);
+		return new CustomAuthenticationSuccessHandler(servletContext, userAccountService, marketProperties);
 	}
 
 	@Bean

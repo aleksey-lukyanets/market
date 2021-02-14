@@ -5,7 +5,6 @@ import market.domain.Cart;
 import market.domain.CartItem;
 import market.domain.Product;
 import market.domain.UserAccount;
-import market.exception.UnknownEntityException;
 import market.service.CartService;
 import market.service.ProductService;
 import market.service.UserAccountService;
@@ -48,7 +47,7 @@ public class CartServiceImpl implements CartService {
 
 	@Transactional
 	@Override
-	public Cart addToCart(String userEmail, long productId, int quantity) throws UnknownEntityException {
+	public Cart addToCart(String userEmail, long productId, int quantity) {
 		Cart cart = getCartOrCreate(userEmail);
 		Product product = productService.getProduct(productId);
 		if (product.isAvailable()) {

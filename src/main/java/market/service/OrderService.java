@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderService {
 
@@ -19,7 +20,7 @@ public interface OrderService {
 	 * @return order of the specified user and id
 	 * @throws UnknownEntityException if the requested order does not exist
 	 */
-	Order getUserOrder(String userLogin, long orderId) throws UnknownEntityException;
+	Optional<Order> getUserOrder(String userLogin, long orderId);
 
 	/**
 	 * @return orders filtered according to the passed parameters
@@ -32,7 +33,7 @@ public interface OrderService {
 	 * @return newly created order
 	 * @throws EmptyCartException if the specified user cart is empty
 	 */
-	Order createUserOrder(String userLogin, int deliveryCost, String cardNumber) throws EmptyCartException;
+	Order createUserOrder(String userLogin, int deliveryCost, String cardNumber);
 
 	/**
 	 * Updates a state of the order with the specified id

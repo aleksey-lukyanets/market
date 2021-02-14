@@ -8,6 +8,7 @@ import org.springframework.hateoas.RepresentationModel;
 public class ProductPreviewDTO extends RepresentationModel<ProductPreviewDTO> {
 
 	private long productId;
+	private String region;
 	private String distillery;
 	private String name;
 	private Double price;
@@ -18,6 +19,14 @@ public class ProductPreviewDTO extends RepresentationModel<ProductPreviewDTO> {
 
 	public void setProductId(long productId) {
 		this.productId = productId;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
 	}
 
 	public String getDistillery() {
@@ -42,5 +51,16 @@ public class ProductPreviewDTO extends RepresentationModel<ProductPreviewDTO> {
 
 	public void setPrice(Double price) {
 		this.price = price;
+	}
+
+	@Override
+	public String toString() {
+		return "ProductPreviewDTO{" +
+			"productId=" + productId +
+			", region='" + region + '\'' +
+			", distillery='" + distillery + '\'' +
+			", name='" + name + '\'' +
+			", price=" + price +
+			'}';
 	}
 }

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootConfiguration
 @EnableAutoConfiguration
-@Import({DataConfig.class, SecurityConfig.class, ServletConfig.class})
+@Import({DataConfig.class, SecurityConfig.class, ServletConfig.class, RestConfig.class})
 @ComponentScan(basePackages = {
 	"market.properties",
 	"market.service",

@@ -15,6 +15,6 @@ public interface UserAccountService {
 	 * @return newly created account
 	 * @throws EmailExistsException if some account is already associated with the specified email
 	 */
-	UserAccount create(UserAccount userAccount) throws EmailExistsException;
+	UserAccount create(UserAccount userAccount);
 
 }

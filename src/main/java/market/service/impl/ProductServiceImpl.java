@@ -70,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Product getProduct(long productId) throws UnknownEntityException {
+	public Product getProduct(long productId) {
 		return productDAO.findById(productId)
 			.orElseThrow(() -> new UnknownEntityException(Product.class, productId));
 	}
@@ -89,7 +89,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Transactional
 	@Override
-	public void update(long productId, Product product, String distilleryTitle) throws UnknownEntityException {
+	public void update(long productId, Product product, String distilleryTitle) {
 		Product original = getProduct(productId);
 		product.setId(original.getId());
 		saveInternal(product, distilleryTitle, original.isAvailable()); // keep original availability

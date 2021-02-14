@@ -12,15 +12,12 @@ import java.util.Objects;
 public class CartDTO extends RepresentationModel<CartDTO> {
 
 	private String user;
-	private List<CartItemDTO> cartItems = Collections.emptyList();
-	private int itemsCount;
+	private int totalItems;
 	private double productsCost;
 	private int deliveryCost;
 	private boolean deliveryIncluded;
 	private double totalCost;
-
-	public CartDTO() {
-	}
+	private List<CartItemDTO> cartItems = Collections.emptyList();
 
 	public String getUser() {
 		return user;
@@ -70,12 +67,12 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 		this.deliveryCost = deliveryCost;
 	}
 
-	public int getItemsCount() {
-		return itemsCount;
+	public int getTotalItems() {
+		return totalItems;
 	}
 
-	public void setItemsCount(int itemsCount) {
-		this.itemsCount = itemsCount;
+	public void setTotalItems(int totalItems) {
+		this.totalItems = totalItems;
 	}
 
 	@Override
@@ -83,7 +80,7 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		CartDTO cartDTO = (CartDTO) o;
-		return itemsCount == cartDTO.itemsCount &&
+		return totalItems == cartDTO.totalItems &&
 			Double.compare(cartDTO.productsCost, productsCost) == 0 &&
 			deliveryCost == cartDTO.deliveryCost &&
 			deliveryIncluded == cartDTO.deliveryIncluded &&
@@ -94,6 +91,19 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(user, cartItems, itemsCount, productsCost, deliveryCost, deliveryIncluded, totalCost);
+		return Objects.hash(user, cartItems, totalItems, productsCost, deliveryCost, deliveryIncluded, totalCost);
+	}
+
+	@Override
+	public String toString() {
+		return "CartDTO{" +
+			"user='" + user + '\'' +
+			", totalItems=" + totalItems +
+			", productsCost=" + productsCost +
+			", deliveryCost=" + deliveryCost +
+			", deliveryIncluded=" + deliveryIncluded +
+			", totalCost=" + totalCost +
+			", cartItems=" + cartItems +
+			'}';
 	}
 }

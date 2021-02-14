@@ -3,7 +3,12 @@ package market.controller.frontend;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.security.auth.UserPrincipal;
 import market.FixturesFactory;
-import market.domain.*;
+import market.domain.Cart;
+import market.domain.CartItem;
+import market.domain.Distillery;
+import market.domain.Product;
+import market.domain.Region;
+import market.domain.UserAccount;
 import market.dto.CartDTO;
 import market.dto.assembler.CartDtoAssembler;
 import market.interceptors.SessionCartInterceptor;
@@ -15,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -26,17 +30,26 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.security.Principal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @WebMvcTest(controllers = CartController.class)
 public class CartControllerTest {
 	private final MarketProperties marketProperties = new MarketProperties(400);
-	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler();
+	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler(marketProperties);
 	private final ObjectMapper mapper = new ObjectMapper();
 
 	@MockBean

@@ -2,7 +2,12 @@ package market.service;
 
 import market.FixturesFactory;
 import market.dao.CartDAO;
-import market.domain.*;
+import market.domain.Cart;
+import market.domain.CartItem;
+import market.domain.Distillery;
+import market.domain.Product;
+import market.domain.Region;
+import market.domain.UserAccount;
 import market.exception.UnknownEntityException;
 import market.service.impl.CartServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +24,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class CartServiceTest {
@@ -80,7 +88,7 @@ public class CartServiceTest {
 	}
 
 	@Test
-	public void addToCart_Normal() throws UnknownEntityException {
+	public void addToCart_Normal() {
 		when(userAccountService.findByEmail(userAccount.getEmail()))
 			.thenReturn(userAccount);
 		when(cartDAO.save(any(Cart.class)))
@@ -104,7 +112,7 @@ public class CartServiceTest {
 	}
 
 	@Test
-	public void addToCart_UnavailableProduct() throws UnknownEntityException {
+	public void addToCart_UnavailableProduct() {
 		when(userAccountService.findByEmail(userAccount.getEmail()))
 			.thenReturn(userAccount);
 		when(cartDAO.findById(userAccount.getId()))
@@ -120,7 +128,7 @@ public class CartServiceTest {
 	}
 
 	@Test
-	public void addToCart_AbsentProduct() throws UnknownEntityException {
+	public void addToCart_AbsentProduct() {
 		when(userAccountService.findByEmail(userAccount.getEmail()))
 			.thenReturn(userAccount);
 		when(cartDAO.findById(userAccount.getId()))

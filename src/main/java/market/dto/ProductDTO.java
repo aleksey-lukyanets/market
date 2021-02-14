@@ -1,17 +1,14 @@
 package market.dto;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Objects;
 
-/**
- * Адаптер товара.
- */
 public class ProductDTO extends RepresentationModel<ProductDTO> {
 
 	private Long productId;
@@ -130,5 +127,20 @@ public class ProductDTO extends RepresentationModel<ProductDTO> {
 	@Override
 	public int hashCode() {
 		return Objects.hash(productId, distillery, name, price, age, volume, alcohol, description, available);
+	}
+
+	@Override
+	public String toString() {
+		return "ProductDTO{" +
+			"productId=" + productId +
+			", distillery='" + distillery + '\'' +
+			", name='" + name + '\'' +
+			", price=" + price +
+			", age=" + age +
+			", volume=" + volume +
+			", alcohol=" + alcohol +
+			", description='" + description + '\'' +
+			", available=" + available +
+			'}';
 	}
 }

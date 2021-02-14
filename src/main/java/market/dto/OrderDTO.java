@@ -119,4 +119,12 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
 	public int hashCode() {
 		return Objects.hash(userAccount, id, billNumber, dateCreated, productsCost, deliveryCost, deliveryIncluded, totalCost, payed, executed);
 	}
+
+	@Override
+	public String toString() {
+		return "OrderDTO{" +
+			"userAccount='" + userAccount + '\'' +
+			", id=" + id +
+			'}';
+	}
 }

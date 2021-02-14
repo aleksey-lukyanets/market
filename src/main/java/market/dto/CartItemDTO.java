@@ -1,7 +1,9 @@
 package market.dto;
 
+import org.springframework.format.annotation.NumberFormat;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 /**
@@ -9,16 +11,13 @@ import java.util.Objects;
  */
 public class CartItemDTO extends RepresentationModel<CartItemDTO> {
 
+	@Positive
+	@NumberFormat
 	private long productId;
+
+	@Positive
+	@NumberFormat
 	private int quantity;
-
-	public CartItemDTO() {
-	}
-
-	public CartItemDTO(long productId, int quantity) {
-		this.productId = productId;
-		this.quantity = quantity;
-	}
 
 	public long getProductId() {
 		return productId;
@@ -48,5 +47,13 @@ public class CartItemDTO extends RepresentationModel<CartItemDTO> {
 	@Override
 	public int hashCode() {
 		return Objects.hash(productId, quantity);
+	}
+
+	@Override
+	public String toString() {
+		return "CartItemDTO{" +
+			"productId=" + productId +
+			", quantity=" + quantity +
+			'}';
 	}
 }
