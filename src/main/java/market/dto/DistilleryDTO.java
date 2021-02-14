@@ -58,4 +58,14 @@ public class DistilleryDTO extends RepresentationModel<DistilleryDTO> {
 	public int hashCode() {
 		return Objects.hash(id, title, region, description);
 	}
+
+	@Override
+	public String toString() {
+		return "DistilleryDTO{" +
+			"id=" + id +
+			", title='" + title + '\'' +
+			", region='" + region + '\'' +
+			", description='" + description + '\'' +
+			'}';
+	}
 }

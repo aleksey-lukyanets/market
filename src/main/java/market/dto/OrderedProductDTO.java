@@ -47,4 +47,13 @@ public class OrderedProductDTO extends RepresentationModel<OrderedProductDTO> {
 	public int hashCode() {
 		return Objects.hash(orderId, quantity, productId);
 	}
+
+	@Override
+	public String toString() {
+		return "OrderedProductDTO{" +
+			"orderId=" + orderId +
+			", quantity=" + quantity +
+			", productId=" + productId +
+			'}';
+	}
 }

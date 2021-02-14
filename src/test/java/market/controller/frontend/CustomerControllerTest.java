@@ -2,11 +2,20 @@ package market.controller.frontend;
 
 import com.sun.security.auth.UserPrincipal;
 import market.FixturesFactory;
-import market.domain.*;
+import market.domain.Bill;
+import market.domain.Cart;
+import market.domain.Contacts;
+import market.domain.Distillery;
+import market.domain.Order;
+import market.domain.OrderedProduct;
+import market.domain.Product;
+import market.domain.Region;
+import market.domain.UserAccount;
 import market.dto.assembler.OrderDtoAssembler;
 import market.dto.assembler.OrderedProductDtoAssembler;
 import market.dto.assembler.ProductDtoAssembler;
 import market.interceptors.SessionCartInterceptor;
+import market.properties.MarketProperties;
 import market.security.AuthenticationService;
 import market.service.CartService;
 import market.service.OrderService;
@@ -27,11 +36,17 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @WebMvcTest(controllers = CustomerController.class)
 public class CustomerControllerTest {
@@ -50,6 +65,7 @@ public class CustomerControllerTest {
 	@Captor
 	private ArgumentCaptor<UserAccount> accountCaptor;
 
+	private final MarketProperties marketProperties = new MarketProperties(400);
 	private final OrderDtoAssembler orderDtoAssembler = new OrderDtoAssembler();
 	private final OrderedProductDtoAssembler orderedProductDtoAssembler = new OrderedProductDtoAssembler();
 	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
@@ -65,7 +81,7 @@ public class CustomerControllerTest {
 
 	@BeforeEach
 	public void beforeEach() {
-		CustomerController controller = new CustomerController(userAccountService, orderService, authenticationService, cartService, productService);
+		CustomerController controller = new CustomerController(userAccountService, orderService, authenticationService, cartService, productService, marketProperties);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
 			.addInterceptors(new SessionCartInterceptor())
 			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))

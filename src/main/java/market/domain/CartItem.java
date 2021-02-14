@@ -1,6 +1,13 @@
 package market.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -45,15 +52,6 @@ public class CartItem implements Serializable {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
-	}
-
-	public Cart getOrder() {
-		return cart;
-	}
-
-	public void setOrder(Cart cart) {
-		this.cart = cart;
-		pk.setCart(cart.getId());
 	}
 
 	public Product getProduct() {

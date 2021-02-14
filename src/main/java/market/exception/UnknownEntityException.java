@@ -6,20 +6,24 @@ package market.exception;
 public class UnknownEntityException extends CustomNotValidException {
 	private static final long serialVersionUID = 4827971686664741607L;
 
-	private final Class<?> clazz;
-	private final long entityId;
+	private final String idField;
+	private final long idValue;
 
-	public UnknownEntityException(Class<?> clazz, long entityId) {
-		super("NotExist", clazz.getSimpleName(), "id");
-		this.clazz = clazz;
-		this.entityId = entityId;
+	public UnknownEntityException(Class<?> clazz, long idValue) {
+		this(clazz, "id", idValue);
 	}
 
-	public String getEntityType() {
-		return clazz.getSimpleName();
+	public UnknownEntityException(Class<?> clazz, String idField, long idValue) {
+		super("NotExist", clazz.getSimpleName(), idField);
+		this.idField = idField;
+		this.idValue = idValue;
 	}
 
-	public long getEntityId() {
-		return entityId;
+	public String getIdField() {
+		return idField;
+	}
+
+	public long getIdValue() {
+		return idValue;
 	}
 }

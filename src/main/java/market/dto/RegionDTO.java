@@ -68,4 +68,15 @@ public class RegionDTO extends RepresentationModel<RegionDTO> {
 	public int hashCode() {
 		return Objects.hash(id, name, subtitle, description, color);
 	}
+
+	@Override
+	public String toString() {
+		return "RegionDTO{" +
+			"id=" + id +
+			", name='" + name + '\'' +
+			", subtitle='" + subtitle + '\'' +
+			", description='" + description + '\'' +
+			", color='" + color + '\'' +
+			'}';
+	}
 }

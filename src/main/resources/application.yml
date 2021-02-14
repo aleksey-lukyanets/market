@@ -8,6 +8,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL9Dialect
         hbm2ddl.auto: none
+  messages:
+    basename: messages
+    fallback-to-system-locale: false
+    use-code-as-default-message: true
 
 server:
   servlet:

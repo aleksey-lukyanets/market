@@ -1,51 +1,43 @@
 package market.dto;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
-/**
- * Адаптер данных пользователя.
- */
 public class UserDTO extends RepresentationModel<UserDTO> {
+	public static final String ALPHANUMERIC = "^[a-zA-Z0-9]+$";
+	public static final String EMAIL_REGEX = "^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]+$";
+	public static final String USER_PHONE_REGEX = "^\\+[1-9][0-9]?[\\s]*\\(?\\d{3}\\)?[-\\s]?\\d{3}[-\\s]?\\d{2}[-\\s]?\\d{2}$";
+	public static final String USER_ADDRESS_REGEX = "^[^#$%^*()']*$";
+
+	public static final String HIDDEN_PASSWORD = "hidden";
 
 	@NotEmpty
 	@Size(max = 50)
-	@Pattern(regexp = "^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]+$")
+	@Pattern(regexp = EMAIL_REGEX)
 	private String email;
 
 	@Size(min = 6, max = 50)
-	@Pattern(regexp = "^[a-zA-Z0-9]+$")
+	@Pattern(regexp = ALPHANUMERIC)
 	private String password;
 
-	@Size(max = 50)
 	@NotEmpty
+	@Size(max = 50)
 	@Pattern(regexp = "^[\\pL '-]+$")
 	private String name;
 
 	@NotEmpty
 	@Size(max = 20)
-	@Pattern(regexp = "^\\+[1-9][0-9]?[\\s]*\\(?\\d{3}\\)?[-\\s]?\\d{3}[-\\s]?\\d{2}[-\\s]?\\d{2}$")
+	@Pattern(regexp = USER_PHONE_REGEX)
 	private String phone;
 
 	@NotEmpty
 	@Size(max = 100)
-	@Pattern(regexp = "^[^#$%^*()']*$")
+	@Pattern(regexp = USER_ADDRESS_REGEX)
 	private String address;
-
-	public UserDTO() {
-	}
-
-	public UserDTO(String email, String password, String name, String phone, String address) {
-		this.email = email;
-		this.password = password;
-		this.name = name;
-		this.phone = phone;
-		this.address = address;
-	}
 
 	public String getEmail() {
 		return email;
@@ -102,5 +94,16 @@ public class UserDTO extends RepresentationModel<UserDTO> {
 	@Override
 	public int hashCode() {
 		return Objects.hash(email, password, name, phone, address);
+	}
+
+	@Override
+	public String toString() {
+		return "UserDTO{" +
+			"email='" + email + '\'' +
+			", password='" + HIDDEN_PASSWORD + '\'' +
+			", name='" + name + '\'' +
+			", phone='" + phone + '\'' +
+			", address='" + address + '\'' +
+			'}';
 	}
 }

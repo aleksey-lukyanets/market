@@ -2,7 +2,6 @@ package market.dto.assembler;
 
 import market.domain.Product;
 import market.dto.ProductDTO;
-import market.rest.CartRestController;
 import market.rest.ProductsRestController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -11,6 +10,7 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 public class ProductDtoAssembler extends RepresentationModelAssemblerSupport<Product, ProductDTO> {
 
@@ -30,8 +30,18 @@ public class ProductDtoAssembler extends RepresentationModelAssemblerSupport<Pro
 		dto.setVolume(product.getVolume());
 		dto.setDescription(product.getDescription());
 		dto.setAvailable(product.isAvailable());
-		dto.add(linkTo(ProductsRestController.class).withRel("products"));
-		dto.add(linkTo(CartRestController.class).withRel("cart"));
+		return dto;
+	}
+
+	public ProductDTO toModelWithSelfLink(Product product) {
+		ProductDTO dto = toModel(product);
+		dto.add(linkTo(methodOn(ProductsRestController.class).getProduct(product.getId())).withRel("self"));
+		return dto;
+	}
+
+	public ProductDTO toModelWithListLink(Product product) {
+		ProductDTO dto = toModel(product);
+		dto.add(linkTo(methodOn(ProductsRestController.class).getProducts()).withRel("All products"));
 		return dto;
 	}
 

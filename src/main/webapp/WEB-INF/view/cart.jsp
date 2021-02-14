@@ -20,10 +20,10 @@
 <h1 class="post-title">Корзина</h1>
 
 <c:choose>
-	<c:when test="${cart.itemsCount > 1}">
-		<p>В вашей корзине находится ${cart.itemsCount} товаров.</p>
+	<c:when test="${cart.totalItems > 1}">
+		<p>В вашей корзине находится ${cart.totalItems} товаров.</p>
 	</c:when>
-	<c:when test="${cart.itemsCount == 1}">
+	<c:when test="${cart.totalItems == 1}">
 		<p>В вашей корзине находится один товар.</p>
 	</c:when>
 	<c:otherwise>
@@ -35,7 +35,7 @@
 
 <div>
 	<div class="col-md-4" align="center">
-		<c:if test="${!empty cart && cart.itemsCount != 0}">
+		<c:if test="${!empty cart && cart.totalItems != 0}">
 			<sf:form method="post" action="${pageContext.request.contextPath}/cart/clear">
 				<button type="submit" class="btn btn-default">
 					очистить корзину
@@ -47,7 +47,7 @@
 		<a href="<c:url value='/'/>" class="btn btn-primary">продолжить покупки</a>
 	</div>
 	<div class="col-md-4" align="center">
-		<c:if test="${!empty cart && cart.itemsCount != 0}">
+		<c:if test="${!empty cart && cart.totalItems != 0}">
 			<security:authorize access="isAuthenticated()">
 				<a id="next-step"
 				   href="<c:url value="${cart.deliveryIncluded ? '/checkout/details' : '/checkout/payment'}" />"
@@ -68,7 +68,7 @@
 <br>
 <br>
 
-<c:if test="${!empty cart && cart.itemsCount != 0}">
+<c:if test="${!empty cart && cart.totalItems != 0}">
 	<div class="table">
 		<table class="table" width="100%">
 			<thead>

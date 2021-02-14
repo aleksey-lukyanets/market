@@ -5,7 +5,7 @@ package market.exception;
  */
 public class EmailExistsException extends CustomNotValidException {
 
-	public EmailExistsException() {
-		super("Exists", "userDTO", "email");
+	public EmailExistsException(Class<?> clazz) {
+		super("Exists", clazz.getSimpleName(), "email");
 	}
 }

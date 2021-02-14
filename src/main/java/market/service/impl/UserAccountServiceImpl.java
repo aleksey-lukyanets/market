@@ -19,15 +19,15 @@ public class UserAccountServiceImpl implements UserAccountService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public UserAccount findByEmail(String email) {
+	public UserAccount findByEmail(String email) { // todo: return optional
 		return userAccountDAO.findByEmail(email);
 	}
 
 	@Transactional
 	@Override
-	public UserAccount create(UserAccount userAccount) throws EmailExistsException {
+	public UserAccount create(UserAccount userAccount) {
 		if (findByEmail(userAccount.getEmail()) != null)
-			throw new EmailExistsException();
+			throw new EmailExistsException(UserAccount.class);
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		String hashedPassword = encoder.encode(userAccount.getPassword());

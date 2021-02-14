@@ -4,6 +4,7 @@ import market.domain.Cart;
 import market.domain.UserAccount;
 import market.dto.CartDTO;
 import market.dto.assembler.CartDtoAssembler;
+import market.properties.MarketProperties;
 import market.service.UserAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +26,14 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 	private final ServletContext servletContext;
 	private final UserAccountService userAccountService;
-	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler();
+	private final CartDtoAssembler cartDtoAssembler;
 
-	public CustomAuthenticationSuccessHandler(ServletContext servletContext, UserAccountService userAccountService) {
+	public CustomAuthenticationSuccessHandler(ServletContext servletContext, UserAccountService userAccountService,
+	    MarketProperties marketProperties)
+	{
 		this.servletContext = servletContext;
 		this.userAccountService = userAccountService;
+		cartDtoAssembler = new CartDtoAssembler(marketProperties);
 	}
 
 	@Override

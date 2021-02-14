@@ -5,7 +5,6 @@ import market.dao.ProductDAO;
 import market.domain.Distillery;
 import market.domain.Product;
 import market.domain.Region;
-import market.exception.UnknownEntityException;
 import market.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -111,7 +114,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
-	public void getProduct() throws UnknownEntityException {
+	public void getProduct() {
 		when(productDAO.findById(product.getId()))
 			.thenReturn(Optional.of(product));
 
@@ -143,7 +146,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
-	public void update() throws UnknownEntityException {
+	public void update() {
 		Product changedProduct = new Product.Builder(product)
 			.setPrice(product.getPrice() + 50)
 			.build();

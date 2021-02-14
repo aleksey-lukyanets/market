@@ -3,7 +3,6 @@ package market.service;
 import market.FixturesFactory;
 import market.dao.UserAccountDAO;
 import market.domain.UserAccount;
-import market.exception.EmailExistsException;
 import market.service.impl.UserAccountServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ public class UserAccountServiceTest {
 	}
 
 	@Test
-	public void create() throws EmailExistsException {
+	public void create() {
 		when(userAccountDAO.findByEmail(userAccount.getEmail()))
 			.thenReturn(null);
 

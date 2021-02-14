@@ -1,9 +1,13 @@
 package market.service.impl;
 
 import market.dao.OrderDAO;
-import market.domain.*;
+import market.domain.Bill;
+import market.domain.Cart;
+import market.domain.CartItem;
+import market.domain.Order;
+import market.domain.OrderedProduct;
+import market.domain.UserAccount;
 import market.exception.EmptyCartException;
-import market.exception.UnknownEntityException;
 import market.service.CartService;
 import market.service.OrderService;
 import market.service.UserAccountService;
@@ -12,7 +16,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -38,12 +47,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public Order getUserOrder(String userLogin, long orderId) throws UnknownEntityException {
+	public Optional<Order> getUserOrder(String userLogin, long orderId) {
 		// todo: add user check
-		Order order = orderDAO.findById(orderId).orElse(null);
-		if ((order == null) || !order.getUserAccount().getEmail().equals(userLogin))
-			throw new UnknownEntityException(Order.class, orderId);
-		return order;
+		return orderDAO.findById(orderId);
 	}
 
 	@Transactional(readOnly = true)
@@ -72,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Transactional
 	@Override
-	public Order createUserOrder(String userLogin, int deliveryCost, String cardNumber) throws EmptyCartException {
+	public Order createUserOrder(String userLogin, int deliveryCost, String cardNumber) {
 		Cart cart = cartService.getCartOrCreate(userLogin);
 		if (cart.isEmpty())
 			throw new EmptyCartException();

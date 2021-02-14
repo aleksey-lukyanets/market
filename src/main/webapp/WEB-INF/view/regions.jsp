@@ -117,10 +117,10 @@
             contentType: "application/json; charset=utf-8",
             data: jsonData,
             success: function (data) {
-                var itemsCount = data["itemsCount"];
+                var totalItems = data["totalItems"];
                 $this.after('<a href="' + url + '" class="btn btn-warning">в корзине</a>');
                 $this.remove();
-                $('#cart-total-items').empty().html('<span class="badge">' + itemsCount + '</span>');
+                $('#cart-total-items').empty().html('<span class="badge">' + totalItems + '</span>');
             },
             error: function () {
                 alert("Что-то пошло не так.\nПопробуйте добавить товар ещё раз.");

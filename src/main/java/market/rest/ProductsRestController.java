@@ -2,29 +2,25 @@ package market.rest;
 
 import market.domain.Product;
 import market.dto.ProductDTO;
-import market.dto.ProductPreviewDTO;
 import market.dto.assembler.ProductDtoAssembler;
-import market.dto.assembler.ProductPreviewAssembler;
 import market.exception.UnknownEntityException;
 import market.service.ProductService;
 import org.springframework.hateoas.server.ExposesResourceFor;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-@Controller
-@RequestMapping(value = "/rest/products")
+@RestController
+@RequestMapping(value = "rest/products")
 @ExposesResourceFor(ProductDTO.class)
 public class ProductsRestController {
 
 	private final ProductService productService;
-	private final ProductPreviewAssembler productPreviewAssembler = new ProductPreviewAssembler();
 	private final ProductDtoAssembler productAssembler = new ProductDtoAssembler();
 
 	public ProductsRestController(ProductService productService) {
@@ -32,16 +28,13 @@ public class ProductsRestController {
 	}
 
 	/**
-	 * All the products.
+	 * All the existing products, sorted by id.
 	 */
-	@RequestMapping(
-		method = RequestMethod.GET,
-		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public Collection<ProductPreviewDTO> getProducts() {
+	@GetMapping
+	public Collection<ProductDTO> getProducts() {
 		return productService.findAll().stream()
 			.sorted(Comparator.comparing(Product::getId))
-			.map(productPreviewAssembler::toModel)
+			.map(productAssembler::toModelWithSelfLink)
 			.collect(Collectors.toList());
 	}
 
@@ -51,13 +44,10 @@ public class ProductsRestController {
 	 * @return product with the specified id
 	 * @throws UnknownEntityException if the product with the specified id doesn't exist
 	 */
-	@RequestMapping(value = "/{id}",
-		method = RequestMethod.GET,
-		produces = MediaUtf8.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public ProductDTO getProduct(@PathVariable long id) throws UnknownEntityException {
-		return productService.findById(id)
-			.map(productAssembler::toModel)
-			.orElseThrow(() -> new UnknownEntityException(Product.class, id));
+	@GetMapping(value = "/{productId}")
+	public ProductDTO getProduct(@PathVariable long productId) {
+		return productService.findById(productId)
+			.map(productAssembler::toModelWithListLink)
+			.orElseThrow(() -> new UnknownEntityException(ProductDTO.class, productId));
 	}
 }

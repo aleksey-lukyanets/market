@@ -18,7 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -38,7 +44,7 @@ public class CartController {
 
 	private final CartService cartService;
 	private final ProductService productService;
-	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler();
+	private final CartDtoAssembler cartDtoAssembler;
 	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
 	private final MarketProperties marketProperties;
 
@@ -46,6 +52,7 @@ public class CartController {
 		this.cartService = cartService;
 		this.productService = productService;
 		this.marketProperties = marketProperties;
+		cartDtoAssembler = new CartDtoAssembler(marketProperties);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -162,12 +169,12 @@ public class CartController {
 			Cart updatedCart = updateCart(principal, cartItemDto);
 			return cartDtoAssembler.toModel(updatedCart);
 		} catch (UnknownEntityException e) {
-			log.error("Can not add item to cart", e);
+			log.error("Cannot add item to cart", e);
 			return cartDto;
 		}
 	}
 
-	private Cart updateCart(Principal principal, CartItemDTO cartItem) throws UnknownEntityException {
+	private Cart updateCart(Principal principal, CartItemDTO cartItem) {
 		String login = principal.getName();
 		return cartService.addToCart(login, cartItem.getProductId(), cartItem.getQuantity());
 	}

@@ -4,9 +4,18 @@ import market.domain.Cart;
 import market.domain.Order;
 import market.domain.OrderedProduct;
 import market.domain.UserAccount;
-import market.dto.*;
-import market.dto.assembler.*;
+import market.dto.CartDTO;
+import market.dto.OrderDTO;
+import market.dto.OrderedProductDTO;
+import market.dto.ProductDTO;
+import market.dto.UserDTO;
+import market.dto.assembler.CartDtoAssembler;
+import market.dto.assembler.OrderDtoAssembler;
+import market.dto.assembler.OrderedProductDtoAssembler;
+import market.dto.assembler.ProductDtoAssembler;
+import market.dto.assembler.UserAccountDtoAssembler;
 import market.exception.EmailExistsException;
+import market.properties.MarketProperties;
 import market.security.AuthenticationService;
 import market.service.CartService;
 import market.service.OrderService;
@@ -47,16 +56,18 @@ public class CustomerController {
 	private final OrderDtoAssembler orderDtoAssembler = new OrderDtoAssembler();
 	private final OrderedProductDtoAssembler orderedProductDtoAssembler = new OrderedProductDtoAssembler();
 	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
-	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler();
+	private final CartDtoAssembler cartDtoAssembler;
 
 	public CustomerController(UserAccountService userAccountService, OrderService orderService,
-		AuthenticationService authenticationService, CartService cartService, ProductService productService)
+	    AuthenticationService authenticationService, CartService cartService, ProductService productService,
+	    MarketProperties marketProperties)
 	{
 		this.userAccountService = userAccountService;
 		this.orderService = orderService;
 		this.authenticationService = authenticationService;
 		this.cartService = cartService;
 		this.productService = productService;
+		cartDtoAssembler = new CartDtoAssembler(marketProperties);
 	}
 
 	@Secured({"ROLE_USER"})

@@ -1,8 +1,8 @@
 package market.dto;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -12,24 +12,15 @@ import java.util.Objects;
  */
 public class ContactsDTO extends RepresentationModel<ContactsDTO> {
 
+	@NotEmpty
 	@Size(max = 20)
-	@Pattern(regexp = "^\\+[1-9][0-9]?[\\s]*\\(?\\d{3}\\)?[-\\s]?\\d{3}[-\\s]?\\d{2}[-\\s]?\\d{2}$")
+	@Pattern(regexp = UserDTO.USER_PHONE_REGEX)
 	private String phone;
 
 	@NotEmpty
 	@Size(max = 100)
-	@Pattern(regexp = "^[^#$%^*()']*$")
+	@Pattern(regexp = UserDTO.USER_ADDRESS_REGEX)
 	private String address;
-
-	private String cityAndRegion;
-
-	public ContactsDTO() {
-	}
-
-	public ContactsDTO(String phone, String address) {
-		this.phone = phone;
-		this.address = address;
-	}
 
 	public String getPhone() {
 		return phone;
@@ -47,26 +38,25 @@ public class ContactsDTO extends RepresentationModel<ContactsDTO> {
 		this.address = address;
 	}
 
-	public String getCityAndRegion() {
-		return cityAndRegion;
-	}
-
-	public void setCityAndRegion(String cityAndRegion) {
-		this.cityAndRegion = cityAndRegion;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ContactsDTO that = (ContactsDTO) o;
 		return Objects.equals(phone, that.phone) &&
-			Objects.equals(address, that.address) &&
-			Objects.equals(cityAndRegion, that.cityAndRegion);
+			Objects.equals(address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(phone, address, cityAndRegion);
+		return Objects.hash(phone, address);
+	}
+
+	@Override
+	public String toString() {
+		return "ContactsDTO{" +
+			"phone='" + phone + '\'' +
+			", address='" + address + '\'' +
+			'}';
 	}
 }

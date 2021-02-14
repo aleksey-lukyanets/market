@@ -15,6 +15,7 @@ public class ProductPreviewAssembler extends RepresentationModelAssemblerSupport
 	public ProductPreviewDTO toModel(Product product) {
 		ProductPreviewDTO dto = createModelWithId(product.getId(), product);
 		dto.setProductId(product.getId());
+		dto.setRegion(product.getDistillery().getRegion().getName());
 		dto.setDistillery(product.getDistillery().getTitle());
 		dto.setName(product.getName());
 		dto.setPrice(product.getPrice());

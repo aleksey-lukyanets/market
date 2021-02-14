@@ -3,6 +3,7 @@ package market.service.impl;
 import market.dao.ContactsDAO;
 import market.domain.Contacts;
 import market.domain.UserAccount;
+import market.exception.CustomNotValidException;
 import market.service.ContactsService;
 import market.service.UserAccountService;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,14 @@ public class ContactsServiceImpl implements ContactsService {
 
 	@Transactional
 	@Override
-	public void updateUserContacts(Contacts changedContacts, String userLogin) {
+	public Contacts updateUserContacts(Contacts changedContacts, String userLogin) {
 		Contacts originalContacts = getContacts(userLogin);
-		if (originalContacts != null) {
-			originalContacts.setPhone(changedContacts.getPhone());
-			originalContacts.setAddress(changedContacts.getAddress());
-			contactsDAO.save(originalContacts);
-		}
+		if (originalContacts == null)
+			throw new CustomNotValidException("NotExist", "userLogin", "userLogin"); // todo: some custom exception
+
+		originalContacts.setPhone(changedContacts.getPhone());
+		originalContacts.setAddress(changedContacts.getAddress());
+		contactsDAO.save(originalContacts);
+		return originalContacts;
 	}
 }

@@ -1,10 +1,14 @@
 package market.controller;
 
-import market.exception.*;
+import market.exception.CustomNotValidException;
+import market.exception.EmailExistsException;
+import market.exception.EmptyCartException;
+import market.exception.UnknownEntityException;
 import market.exception.dto.ValidationErrorDTO;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,14 +17,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 /**
  * Обработчик исключений.
  */
-@ControllerAdvice
+@Controller
+@ControllerAdvice(basePackages = {"market.controller"})
 public class SpringExceptionHandler {
 	private final MessageSource messageSource;
 
@@ -29,15 +33,6 @@ public class SpringExceptionHandler {
 	}
 
 	//-------------------------------------------------- Обработчики исключений
-
-	/**
-	 * Пользователь REST-службы не авторизован.
-	 */
-	@ExceptionHandler(RestNotAuthenticatedException.class)
-	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	public void handleNotAuthenticatedException(RestNotAuthenticatedException ex) {
-		//
-	}
 
 	/**
 	 * Запрос пользователем несуществующих объектов.
@@ -59,8 +54,7 @@ public class SpringExceptionHandler {
 	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
 	@ResponseBody
 	public ValidationErrorDTO handleEmailExistsException(CustomNotValidException ex) {
-		List<FieldError> fieldErrors = Arrays.asList(ex.getFieldError());
-		return processFieldErrors(fieldErrors);
+		return processFieldErrors(ex.getFieldErrors());
 	}
 
 	/**
@@ -75,7 +69,6 @@ public class SpringExceptionHandler {
 	public ValidationErrorDTO processValidationError(MethodArgumentNotValidException ex) {
 		BindingResult result = ex.getBindingResult();
 		List<FieldError> fieldErrors = result.getFieldErrors();
-
 		return processFieldErrors(fieldErrors);
 	}
 

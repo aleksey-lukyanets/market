@@ -5,7 +5,10 @@ import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Cart of the {@link UserAccount}.
@@ -32,16 +35,12 @@ public class Cart implements Serializable {
 	@Column(name = "delivery_included", nullable = false)
 	private boolean deliveryIncluded = true;
 
-	@Transient
-	private double itemsCost;
-
 	public Cart() {
 		this(null);
 	}
 
 	public Cart(UserAccount userAccount) {
 		this.userAccount = userAccount;
-		itemsCost = calculateItemsCost();
 	}
 
 	public boolean isEmpty() {
@@ -66,17 +65,11 @@ public class Cart implements Serializable {
 		} else {
 			removeItem(product.getId());
 		}
-		itemsCost = calculateItemsCost();
 		return updatedItem;
 	}
 
 	private void removeItem(long productId) {
-		Iterator<CartItem> iterator = cartItems.iterator();
-		while (iterator.hasNext()) {
-			CartItem item = iterator.next();
-			if (item.getProduct().getId() == productId)
-				iterator.remove();
-		}
+		cartItems.removeIf(item -> item.getProduct().getId() == productId);
 	}
 
 	private CartItem findItem(long productId) {
@@ -95,7 +88,6 @@ public class Cart implements Serializable {
 
 	public void clear() {
 		cartItems.clear();
-		itemsCost = 0;
 	}
 
 	public long getId() {
@@ -118,11 +110,6 @@ public class Cart implements Serializable {
 		return Collections.unmodifiableList(cartItems);
 	}
 
-	public void setCartItems(List<CartItem> cartItems) {
-		this.cartItems = cartItems;
-		itemsCost = calculateItemsCost();
-	}
-
 	public boolean isDeliveryIncluded() {
 		return deliveryIncluded;
 	}
@@ -136,7 +123,7 @@ public class Cart implements Serializable {
 	}
 
 	public double getItemsCost() {
-		return itemsCost;
+		return calculateItemsCost();
 	}
 
 	@Override
@@ -159,7 +146,6 @@ public class Cart implements Serializable {
 		private UserAccount userAccount;
 		private List<CartItem> cartItems = new ArrayList<>(0);
 		private boolean deliveryIncluded = true;
-		private double itemsCost;
 
 		public Builder() {
 		}
@@ -169,7 +155,6 @@ public class Cart implements Serializable {
 			userAccount = cart.userAccount;
 			cartItems = cart.cartItems;
 			deliveryIncluded = cart.deliveryIncluded;
-			itemsCost = cart.itemsCost;
 		}
 
 		public Cart build() {
@@ -178,7 +163,6 @@ public class Cart implements Serializable {
 			cart.userAccount = userAccount;
 			cart.cartItems = cartItems;
 			cart.deliveryIncluded = deliveryIncluded;
-			cart.itemsCost = itemsCost;
 			return cart;
 		}
 
@@ -192,18 +176,8 @@ public class Cart implements Serializable {
 			return this;
 		}
 
-		public Builder setCartItems(List<CartItem> cartItems) {
-			this.cartItems = cartItems;
-			return this;
-		}
-
 		public Builder setDeliveryIncluded(boolean deliveryIncluded) {
 			this.deliveryIncluded = deliveryIncluded;
-			return this;
-		}
-
-		public Builder setItemsCost(double itemsCost) {
-			this.itemsCost = itemsCost;
 			return this;
 		}
 	}
