@@ -15,8 +15,8 @@ import market.interceptors.SessionCartInterceptor;
 import market.properties.MarketProperties;
 import market.service.CartService;
 import market.service.ProductService;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -149,7 +149,7 @@ public class CartControllerTest {
 			.andExpect(model().attribute("cart", equalTo(emptyCart)));
 	}
 
-	@Ignore // todo: till exceptions handling remastered
+	@Disabled // todo: till exceptions handling remastered
 	@Test
 	public void updateUserCartByAjax() throws Exception {
 		int quantity = 2;
