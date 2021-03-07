@@ -6,8 +6,8 @@ import market.dto.CartDTO;
 import market.dto.assembler.CartDtoAssembler;
 import market.properties.MarketProperties;
 import market.service.UserAccountService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -22,7 +22,7 @@ import java.util.Set;
  * Обработчик успешной аутентификации пользователя.
  */
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-	private static final Logger log = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
+	private static final Logger log = LogManager.getLogger(CustomAuthenticationSuccessHandler.class);
 
 	private final ServletContext servletContext;
 	private final UserAccountService userAccountService;

@@ -2,8 +2,8 @@ package market.rest.exception;
 
 import market.exception.CustomNotValidException;
 import market.exception.UnknownEntityException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class RestExceptionHandler {
 	private static final String ARGUMENT_VALIDATION_CODE = "Error.Validation.Parameter";
 	private static final String NOT_EXIST_CODE = "NotExist";
 
-	private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
+	private static final Logger log = LogManager.getLogger(RestExceptionHandler.class);
 
 	private final MessageSource messageSource;
 

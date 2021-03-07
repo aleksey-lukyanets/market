@@ -49,4 +49,14 @@ public class RestErrorResponse {
 	public List<FieldErrorDTO> getFieldErrors() {
 		return fieldErrors;
 	}
+
+	@Override
+	public String toString() {
+		return "RestErrorResponse{" +
+			"message='" + message + '\'' +
+			", entityName='" + entityName + '\'' +
+			", description='" + description + '\'' +
+			", fieldErrors=" + fieldErrors +
+			'}';
+	}
 }

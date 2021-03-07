@@ -37,7 +37,7 @@
 
 <p>При возникновении ошибки REST-сервис возвращает локализованное сообщение с информацией о произошедщем и причине.</p>
 <p>Обработчик ошибок: <code>RestExceptionHandler</code>, пример сообщения на русском языке:</p>
-<pre style="width: 80%;">{<br/>    "message": "Запрошенный ресурс не существует",<br/>    "description": "uri=/rest/products/100",<br/>    "entityName": "ProductDTO",<br/>    "fieldErrors": {<br/>            "field": "id"<br/>            "message": "Нет экземпляра с таким идентификатором"<br/>         }<br/>    }<br/>}</pre>
+<pre style="width: 80%;">{<br/>    "message": "Запрошенный ресурс не существует",<br/>    "description": "uri=/rest/products/100",<br/>    "entityName": "ProductDTO",<br/>    "fieldErrors": {<br/>            "field": "id"<br/>            "message": "Нет экземпляра с запрошенным идентификатором"<br/>         }<br/>    }<br/>}</pre>
 
 <br>
 <h5>Регистрация покупателя</h5>
