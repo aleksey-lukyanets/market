@@ -8,8 +8,8 @@ import market.domain.UserAccount;
 import market.service.CartService;
 import market.service.ProductService;
 import market.service.UserAccountService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
-	private static final Logger log = LoggerFactory.getLogger(CartServiceImpl.class);
+	private static final Logger log = LogManager.getLogger(CartServiceImpl.class);
 
 	private final CartDAO cartDAO;
 	private final UserAccountService userAccountService;
