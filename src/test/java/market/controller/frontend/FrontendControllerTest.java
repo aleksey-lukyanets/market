@@ -44,7 +44,7 @@ public class FrontendControllerTest {
 		given(regionService.findAll())
 			.willReturn(Collections.singletonList(region));
 
-		mockMvc.perform(get(""))
+		mockMvc.perform(get("http://localhost"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("index"))
 			.andExpect(model().attribute("regions", contains(regionDtoAssembler.toModel(region))))
