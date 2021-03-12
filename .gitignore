@@ -1,0 +1,16 @@
+!.idea
+.idea/*
+!.idea/codeStyles
+*.iml
+.gradle
+build
+classes
+*/out
+.classpath
+.project
+.settings
+*/bin
+*.orig
+.attach_pid*
+java_pid*.hprof
+.DS_Store
