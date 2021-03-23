@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<!--
+    Filtering/sorting products
+-->
+<div th:fragment="products-filter">
+	<div class="pull-right">
+		<div class="btn-group btn-xs">винокурня:</div>
+		<div class="btn-group">
+			<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+				<span th:text="${(param.dist == null || param.dist == 0) ? 'все' : currentDistilleryTitle}"></span>
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right"
+				th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+				<li>
+					<a th:href="@{${urlBuilder.replaceQueryParam('dist', 0).build().toUriString()}}">все</a>
+				</li>
+				<li style="width:auto;" th:each="distillery : ${distilleries}">
+					<a th:href="@{${urlBuilder.replaceQueryParam('dist', distillery.id).replaceQueryParam('page', 1).build().toUriString()}}"
+					   th:text="${distillery.title}"></a>
+				</li>
+			</ul>
+		</div>
+		&nbsp;
+		<div th:replace="~{::common-filter}">common-filter</div>
+	</div>
+</div>
+
+<!--
+    Filtering/sorting orders
+-->
+<div th:fragment="orders-filter">
+	<div class="pull-right">
+		<div style="margin-bottom: 5px;">
+			<div class="btn-group btn-xs">состояние заказа:</div>
+			<div class="btn-group">
+				<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+					<span th:text="${executedOptions.get(currentExecuted)}"></span>
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-right"
+					th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+					<li style="width:auto;" th:each="executed : ${executedOptions}">
+						<a th:href="@{${urlBuilder.replaceQueryParam('executed', executed.key).replaceQueryParam('page', 1).build().toUriString()}}"
+						   th:text="${executed.value}"></a>
+					</li>
+				</ul>
+			</div>
+			&nbsp;
+			<div class="btn-group btn-xs">создан:</div>
+			<div class="btn-group">
+				<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+					<span th:text="${createdOptions.get(currentCreated)}"></span>
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-right"
+					th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+					<li style="width:auto;" th:each="created : ${createdOptions}">
+						<a th:href="@{${urlBuilder.replaceQueryParam('created', created.key).replaceQueryParam('page', 1).build().toUriString()}}"
+						   th:text="${created.value}"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div style="margin-bottom: 20px;">
+			<div th:replace="~{::common-filter}">common-filter</div>
+		</div>
+	</div>
+</div>
+
+<!--
+    Filtering/sorting storage
+-->
+<div th:fragment="storage-filter">
+	<div class="pull-right">
+		<div class="btn-group btn-xs">наличие:</div>
+		<div class="btn-group">
+			<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+				<span th:text="${availableOptions.get(currentlyAvailable)}"></span>
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right"
+				th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+				<li style="width:auto;" th:each="available : ${availableOptions}">
+					<a th:href="@{${urlBuilder.replaceQueryParam('available', available.key).replaceQueryParam('page', 1).build().toUriString()}}"
+					   th:text="${available.value}"></a>
+				</li>
+			</ul>
+		</div>
+		&nbsp;
+		<div th:replace="~{::common-filter}">common-filter</div>
+	</div>
+</div>
+
+<!--
+    Common filtering/sorting
+-->
+<th:block th:fragment="common-filter">
+	<div class="btn-group btn-xs">сортировать:</div>
+	<div class="btn-group">
+		<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+			<span th:text="${sortOptions.get(currentSort)}"></span>
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu dropdown-menu-right"
+			th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+			<li style="width:auto;" th:each="sort : ${sortOptions}">
+				<a th:href="@{${urlBuilder.replaceQueryParam('sort', sort.key).build().toUriString()}}"
+				   th:text="${sort.value}"></a>
+			</li>
+		</ul>
+	</div>
+	&nbsp;
+	<div class="btn-group btn-xs">упорядочить:</div>
+	<div class="btn-group">
+		<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+			<span th:text="${directOptions.get(currentDirection)}"></span>
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu dropdown-menu-right"
+			th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+			<li style="width:auto;" th:each="direct : ${directOptions}">
+				<a th:href="@{${urlBuilder.replaceQueryParam('direct', direct.key).build().toUriString()}}"
+				   th:text="${direct.value}"></a>
+			</li>
+		</ul>
+	</div>
+	&nbsp;
+	<div class="btn-group btn-xs">на странице:</div>
+	<div class="btn-group">
+		<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+			<span th:text="${pageSizeOptions.get(currentPageSize)}"></span>
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu dropdown-menu-right"
+			th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+			<li style="width:auto;" th:each="size : ${pageSizeOptions}">
+				<a th:href="@{${urlBuilder.replaceQueryParam('size', size.key).replaceQueryParam('page', 1).build().toUriString()}}"
+				   th:text="${size.value}"></a>
+			</li>
+		</ul>
+	</div>
+</th:block>
+
+</body>
+</html>

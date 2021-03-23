@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/backend/template :: backend(~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<h1>Управление регионами</h1>
+
+	<br>
+
+	<div>
+		<table class="table table-small-text" width="100%">
+			<thead>
+			<tr>
+				<th>id</th>
+				<th>название</th>
+				<th>подзаголовок</th>
+				<th>описание</th>
+				<th>цвет</th>
+				<th></th>
+			</tr>
+			</thead>
+
+			<tr th:each="region : ${regions}"
+				th:with="desc=${region.description},shortDesc=${desc.length() > 120 ? #strings.substring(desc, 0, 60) : desc}">
+
+				<td th:text="${region.id}"></td>
+				<td th:text="${region.name}"></td>
+				<td th:text="${region.subtitle}"></td>
+				<td style="max-width:200px;">
+					<span th:text="${shortDesc}"></span>
+					<span th:if="${desc.length() >= 120}">...</span>
+				</td>
+				<td th:text="${region.color}"></td>
+				<td width="150">
+					<form method="post" th:action="@{regions/{id}/delete(id=${region.id})}">
+						<div class="btn-group btn-group-xs pull-right">
+							<a class="btn btn-xs btn-default"
+							   th:href="@{regions/{id}/edit(id=${region.id})}">изменить</a>
+							<button class="btn btn-xs btn-default" type="submit">удалить</button>
+						</div>
+					</form>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="6">
+					<a class="btn btn-primary btn-sm" th:href="@{regions/new}">
+						добавить регион
+					</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+</content>
+</body>
+</html>

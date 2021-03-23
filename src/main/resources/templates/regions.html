@@ -1,0 +1,145 @@
+<!--
+    Страница товаров региона.
+-->
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/frontend/template :: frontend(~{::menu}, ~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<menu>
+	<div th:insert="~{_layouts/frontend/menu :: menu}">main menu</div>
+</menu>
+
+<content>
+
+	<h1 class="post-title" th:text="'Регион ' + ${selectedRegion.name}"></h1>
+
+	<div class="region-description">
+		<div class="pull-right region-image">
+			<img class="img-thumbnail"
+				 th:alt="${selectedRegion.name}" th:src="@{'/img/regions/' + ${selectedRegion.name} + '.jpg'}"
+				 width="200"/>
+		</div>
+		<span th:utext="${selectedRegion.description}"></span>
+	</div>
+
+	<div th:include="~{_layouts/frontend/products-filter :: filter}" class="clearfix" style="margin-bottom: 20px;">filter</div>
+
+	<div class="row" th:each="product : ${page.content}">
+		<div class="col-sm-3 col-xs-3 product-unit">
+			<!--<object data="${pageContext.request.contextPath}${initParam.productImagePath}${product.distillery.title}/${product.name}.jpg"
+					type="image/jpg" class="img-responsive">
+				<img src="${pageContext.request.contextPath}${initParam.productImagePath}default-whisky.jpg"
+					 class="img-responsive" alt=""/>
+				</object>-->
+			<img alt=""
+				 class="img-responsive"
+				 th:src="@{'/img/products/' + ${product.distillery} + '/' + ${product.name} + '.jpg'}" width="90%"/>
+		</div>
+		<div class="col-sm-9 col-xs-9 product-unit">
+			<div class="pull-right price-block">
+				<div class="product-price product-label" th:text="${product.price} + '&nbsp;руб.'"></div>
+				<form id="quantity-form" method="post" th:action="@{/cart}" th:object="${cartItem}">
+					<input name="productId" th:value="${product.productId}" type="hidden">
+					<input name="quantity" type="hidden" value="1">
+
+					<div th:if="${product.available}"
+						 th:with="insideCart=${session.cart.containsProductId(product.productId)}">
+						<button class="btn btn-primary quantity-button" th:if="${!insideCart}" type="button">в корзину
+						</button>
+						<a class="btn btn-warning" th:href="@{/cart}" th:if="${insideCart}">в корзине</a>
+					</div>
+					<div th:if="${!product.available}">
+						<button class="btn btn-default" disabled="disabled" type="button">нет на складе</button>
+					</div>
+				</form>
+			</div>
+			<div class="product-item product-label" th:text="${product.distillery} + ' ' + ${product.name}"></div>
+			<i th:text="${product.alcohol} + '% об. / ' + ${product.volume} + ' мл.'"></i>
+			<div class="product-description" th:text="${product.description}"></div>
+		</div>
+	</div>
+
+	<div th:insert="~{_layouts/pagination :: pagination}">pagination</div>
+
+	<div aria-hidden="true" aria-labelledby="detailsModal" class="modal" id="detailsModal" role="dialog" tabindex="-1">
+		<div class="modal-dialog" style="line-height:160%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+					<h4 class="modal-title">Товары региона</h4>
+				</div>
+				<div class="modal-body">
+					<p>Функции:</p>
+					<ol>
+						<li>постраничное отображение товаров одного региона;</li>
+						<li>фильтрация и сортировка товаров;</li>
+						<li>добавление товара в корзину.</li>
+					</ol>
+					<hr/>
+					<p>Детали реализации</p>
+					<ol class="discharged">
+						<li>Постраничная выборка записей с учётом фильтрации и сортировки выполняется средствами Spring Data
+							JPA.
+						</li>
+						<li>Добавление товара в корзину реализовано асинхронным запросом AJAX и выполняется без обновления
+							страницы.
+						</li>
+						<li>Поскольку таблицы <code>product</code> и
+							<code>region</code> связаны друг с другом через таблицу
+							<code>distilleries</code>, для корректной сортировки полного списка продуктов отдельного региона
+							используется JPA-запрос:
+							<pre>@Query(value = "SELECT p FROM Product p WHERE p.distillery IN "<br>        + "(SELECT d FROM Distillery d WHERE d.region = :region)")</pre>
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$('button.quantity-button').click(function () {
+			var $this = $(this);
+			var form = $this.parents('form:first');
+			var url = form.attr('action');
+			var jsonData = JSON.stringify(form.serializeObject());
+			$.ajax({
+				type: "put",
+				url: url,
+				dataType: "json",
+				contentType: "application/json; charset=utf-8",
+				data: jsonData,
+				success: function (data) {
+					var totalItems = data["totalItems"];
+					$this.after('<a href="' + url + '" class="btn btn-warning">в корзине</a>');
+					$this.remove();
+					$('#cart-total-items').empty().html('<span class="badge">' + totalItems + '</span>');
+				},
+				error: function () {
+					alert("Что-то пошло не так.\nПопробуйте добавить товар ещё раз.");
+				}
+			});
+		});
+		$.fn.serializeObject = function() {
+			var o = {};
+			var a = this.serializeArray();
+			$.each(a, function() {
+				if (o[this.name]) {
+					if (!o[this.name].push) {
+						o[this.name] = [o[this.name]];
+					}
+					o[this.name].push(this.value || '');
+				} else {
+					o[this.name] = this.value || '';
+				}
+			});
+			return o;
+		};
+</script>
+
+</content>
+</body>
+</html>

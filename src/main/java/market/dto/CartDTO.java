@@ -19,6 +19,16 @@ public class CartDTO extends RepresentationModel<CartDTO> {
 	private double totalCost;
 	private List<CartItemDTO> cartItems = Collections.emptyList();
 
+	public boolean containsProductId(long targetProductId) {
+		return cartItems.stream()
+			.map(CartItemDTO::getProductId)
+			.anyMatch(id -> id == targetProductId);
+	}
+
+	public boolean isEmpty() {
+		return cartItems.isEmpty();
+	}
+
 	public String getUser() {
 		return user;
 	}

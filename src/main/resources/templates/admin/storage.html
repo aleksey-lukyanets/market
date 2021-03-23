@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/backend/template :: backend(~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<h1>Наличие товаров на складе</h1>
+
+	<br>
+
+	<div th:include="~{_layouts/backend/filters :: storage-filter}" class="clearfix" style="margin-bottom: 20px;">filter</div>
+
+	<form method="post" th:action="@{/admin/storage}">
+		<table class="table table-small-text" width="100%">
+			<thead>
+			<tr>
+				<th>id</th>
+				<th>название</th>
+				<th>объём,&nbsp;мл</th>
+				<th>алк.,&nbsp;%&nbsp;об.</th>
+
+				<th>цена,&nbsp;руб.</th>
+				<th>в&nbsp;наличии</th>
+			</tr>
+			</thead>
+
+			<tr th:each="product : ${page.content}">
+				<td th:text="${product.productId}"></td>
+				<td th:text="${product.distillery + ' ' + product.name}"></td>
+				<td th:text="${product.volume}"></td>
+				<td th:text="${product.alcohol}"></td>
+				<td th:text="${product.price}"></td>
+				<td>
+					<input id="productsIds" name="productsIds" th:value="${product.productId}" type="hidden"/>
+					<input name="availableProductsIds"
+						   th:checked="${product.available}"
+						   th:value="${product.productId}"
+						   type="checkbox"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="6">
+					<button class="btn btn-primary pull-right" type="submit">Сохранить</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+
+	<div th:insert="~{_layouts/pagination :: pagination}">pagination</div>
+
+</content>
+</body>
+</html>

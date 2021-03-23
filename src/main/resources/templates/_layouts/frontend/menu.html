@@ -1,0 +1,30 @@
+<!--
+    Главное меню внешнего интерфейса.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="menu" th:if="${!regions.isEmpty()}">
+	<div class="header-regions">
+		<div class="region-item region-item-title">регионы:</div>
+	</div>
+	<div class="header-regions">
+		<div th:each="region : ${regions}">
+			<div th:if="${region.id == selectedRegion.id}">
+				<div class="region-item region-item-active">
+						<span class="regionText" th:text="${region.name}">
+							region.name
+						</span>
+				</div>
+			</div>
+			<div th:classappend="'region-item scheme-grey border-' + ${region.color}"
+				 th:if="${region.id != selectedRegion.id}">
+				<a class="regionText" th:href="@{'/regions/' + ${region.id}}" th:text="${region.name}">
+					region.name
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

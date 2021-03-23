@@ -7,6 +7,9 @@ import org.springframework.ui.Model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Управляющий сортировкой и разбивкой на страницы.
@@ -23,7 +26,7 @@ import java.util.Map;
 public abstract class AbstractSorter<T> implements ISorter<T> {
 
 	public static Integer FIRST_PAGE = 1;
-	public static Integer PAGE_SIZE_DEFAULT = 3;
+	public static Integer PAGE_SIZE_DEFAULT = 2;
 	public static Sort.Direction DIRECTION_DEFAULT = Sort.Direction.ASC;
 
 	protected final Map<String, String> sortFieldOptions = new LinkedHashMap<>();
@@ -36,9 +39,9 @@ public abstract class AbstractSorter<T> implements ISorter<T> {
 
 	public AbstractSorter() {
 		directionOptions.put(DIRECTION_DEFAULT.toString(), "по возрастанию");
-		directionOptions.put("desc", "по убыванию");
+		directionOptions.put(Sort.Direction.DESC.toString(), "по убыванию");
 
-		pageSizeOptions.put(3, "3");
+		pageSizeOptions.put(2, "2");
 		pageSizeOptions.put(5, "5");
 		pageSizeOptions.put(10, "10");
 		pageSizeOptions.put(20, "20");
@@ -104,6 +107,7 @@ public abstract class AbstractSorter<T> implements ISorter<T> {
 		model.addAttribute("beginIndex", begin);
 		model.addAttribute("endIndex", end);
 		model.addAttribute("currentIndex", current);
+		model.addAttribute("indexesList", IntStream.rangeClosed(begin, end).boxed().collect(toList()));
 		return model;
 	}
 
@@ -119,7 +123,7 @@ public abstract class AbstractSorter<T> implements ISorter<T> {
 		model.addAttribute("directOptions", getDirectionOptions());
 		model.addAttribute("currentPageSize", getPageSize());
 		model.addAttribute("currentSort", getSortBy());
-		model.addAttribute("currentDirection", getSortDirection());
+		model.addAttribute("currentDirection", getSortDirection().toString());
 		return model;
 	}
 

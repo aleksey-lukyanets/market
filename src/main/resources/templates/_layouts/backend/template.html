@@ -1,0 +1,41 @@
+<!--
+    Шаблон страницы панели управления.
+-->
+<!DOCTYPE html>
+<html lang="en"
+	  th:fragment="backend (content)"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<head>
+	<title>Магазин виски &ndash; Панель управления</title>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+	<link href="/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/css/market-styles.css" media="screen" rel="stylesheet" type="text/css">
+	<script src="/js/jquery-1.9.0.min.js" type="text/javascript"></script>
+	<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+
+<body style="text-align: center;">
+<div id="backend-layout">
+	<div class="row">
+		<div class="content-column" id="backend-content">
+
+			<div th:insert="~{_layouts/backend/menu :: menu}">main menu</div>
+
+			<div class="posts">
+				<th:block th:replace="${content}"/>
+			</div>
+
+			<div class="footer">
+				<ul class="list-inline">
+					<li><a class="btn btn-default btn-xs" th:href="@{/inside}">как сделан магазин</a></li>
+					<li><a href="https://github.com/aleksey-lukyanets/market">github</a></li>
+					<li><a href="https://www.linkedin.com/in/aleksey-lukyanets">linkedin</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

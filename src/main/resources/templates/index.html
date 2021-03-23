@@ -1,0 +1,91 @@
+<!--
+    Главная страница магазина.
+-->
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/frontend/template :: frontend(~{::menu}, ~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<head>
+	<title>Page Title</title>
+</head>
+<body>
+
+<menu>
+	<div th:insert="~{_layouts/frontend/menu :: menu}">main menu</div>
+</menu>
+
+<content>
+	<div class="carousel-wrapper" style="margin-top: 20px;">
+		<div class="carousel slide" data-interval="10000" data-ride="carousel" id="carousel-example-generic">
+			<!-- Indicators -->
+			<ol class="carousel-indicators">
+				<li class="active" data-slide-to="0" data-target="#carousel-example-generic"></li>
+				<li data-slide-to="1" data-target="#carousel-example-generic"></li>
+			</ol>
+
+			<!-- Wrapper for slides -->
+			<div class="carousel-inner">
+				<div class="item active">
+					<img th:src="@{img/carousel/Balvenie.jpg}"/>
+					<div class="carousel-caption">
+						<p>Винокурня The Balvenie, Даффтаун, Шотландия</p>
+					</div>
+				</div>
+				<div class="item">
+					<img th:src="@{img/carousel/Laphroaig.jpg}"/>
+					<div class="carousel-caption">
+						<p>Винокурня Laphroaig, остров Айла, Шотландия</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="region-preview-container">
+		<div class="regionBox" th:each="region : ${regions}">
+			<a th:href="@{'/regions/' + ${region.id}}">
+				<span th:classappend="'regionLabel scheme-' + ${region.color}"></span>
+				<span class="regionLabelText">
+					<span class="regionTitle" th:text="${region.name}">region.name</span>
+					<br><span th:text="${region.subtitle}">region.subtitle</span>
+				</span>
+				<img class="regionImage img-responsive" th:src="@{'img/regions/' + ${region.name} + '-preview.jpg'}"/>
+			</a>
+		</div>
+	</div>
+
+	<div aria-hidden="true" aria-labelledby="detailsModal" class="modal" id="detailsModal" role="dialog" tabindex="-1">
+		<div class="modal-dialog" style="line-height:160%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+					<h4 class="modal-title">Добро пожаловать в магазин виски</h4>
+				</div>
+				<div class="modal-body">
+					<p>Вы можете ознакомиться с ассортиментом, сделать заказ, просмотреть перечень уже сделанных заказов, а
+					   затем перейти к <a href="/admin/">панели управления</a> магазином.</p>
+					<p>Приложение разработано на Java с использованием технологий:</p>
+					<ul class="discharged">
+						<li>сервлет: Spring MVC, JavaServer Pages, Arache Tiles;</li>
+						<li>авторизация пользователей: Spring Security;</li>
+						<li>доступ к данным: Hibernate, Spring Data JPA;</li>
+						<li>тесты: Spring Test, JUnit, Hamcrest, JSONPath;</li>
+						<li>веб-интерфейс: jQuery, AJAX, jQuery Validate, Bootstrap Framework;</li>
+						<li>база данных: PostgreSQL;</li>
+						<li>контейнер сервлетов: Apache Tomcat.</li>
+					</ul>
+					<p>Подробнее приложении можно узнать на странице <a th:href="@{/inside}">как сделан
+																							 магазин</a>. Детали реализации каждой из страниц магазина также приведены в заметках, доступных по
+					   кнопке
+						<button class="btn btn-danger btn-xs" type="button">Как работает страница?</button>
+					   .
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</content>
+</body>
+</html>

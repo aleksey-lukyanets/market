@@ -1,0 +1,54 @@
+<!--
+    Главное меню панели управления.
+-->
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+
+<nav class="navbar navbar-default" role="navigation" th:fragment="menu">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button class="navbar-toggle" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse"
+					type="button">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" th:href="@{/admin/}">
+				Панель управления
+			</a>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li><a th:href="@{/admin/storage}">Наличие товаров</a></li>
+				<li><a th:href="@{/admin/orders}">Заказы</a></li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">Витрина <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a th:href="@{/admin/regions}">Регионы</a></li>
+						<li><a th:href="@{/admin/distilleries}">Винокурни</a></li>
+						<li><a th:href="@{/admin/products}">Товары</a></li>
+					</ul>
+				</li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right" sec:authorize="hasRole('ROLE_ADMIN')">
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						<span sec:authentication="principal.username">principal.username</span>
+						<b class="caret"></b>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a th:href="@{/logout}">Выйти</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+</body>
+</html>

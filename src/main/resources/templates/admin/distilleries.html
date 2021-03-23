@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/backend/template :: backend(~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<h1>Управление винокурнями</h1>
+
+	<br>
+
+	<div class="table-responsive">
+		<table class="table table-small-text" width="100%">
+			<thead>
+			<tr>
+				<th>id</th>
+				<th>название</th>
+				<th>регион</th>
+				<th>описание</th>
+				<th width="150"></th>
+			</tr>
+			</thead>
+
+			<tr th:each="distillery : ${distilleries}"
+				th:with="desc=${distillery.description},shortDesc=${desc.length() > 100 ? #strings.substring(desc, 0, 100) : desc}">
+
+				<td th:text="${distillery.id}"></td>
+				<td th:text="${distillery.title}"></td>
+				<td th:text="${distillery.region}"></td>
+				<td>
+					<span th:text="${shortDesc}"></span>
+					<span th:if="${desc.length() >= 100}">...</span>
+				</td>
+				<td>
+					<form method="post" th:action="@{distilleries/{id}/delete(id=${distillery.id})}">
+						<div class="btn-group btn-group-xs pull-right">
+							<a class="btn btn-default"
+							   th:href="@{distilleries/{id}/edit(id=${distillery.id})}">изменить</a>
+							<button class="btn btn-default" type="submit">удалить</button>
+						</div>
+					</form>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="5">
+					<a class="btn btn-primary btn-sm" th:href="@{distilleries/new}">
+						добавить винокурню
+					</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+</content>
+</body>
+</html>

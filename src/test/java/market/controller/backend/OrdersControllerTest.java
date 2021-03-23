@@ -98,7 +98,7 @@ public class OrdersControllerTest {
 			.andExpect(view().name("admin/orders"))
 			.andExpect(model().attribute("page", orderDtoAssembler.toModel(page)))
 			.andExpect(model().attribute("orderedProductsByOrderId", hasEntry(order.getId(), Collections.singletonList(orderedProductDTOAssembler.toModel(orderedProduct)))))
-			.andExpect(model().attribute("productsByOrderId", hasEntry(order.getId(), Collections.singletonList(productDTOAssembler.toModel(product)))))
+			.andExpect(model().attribute("productsById", hasEntry(product.getId(), productDTOAssembler.toModel(product))))
 			.andExpect(model().attribute("currentExecuted", equalTo(executed)))
 			.andExpect(model().attribute("currentCreated", equalTo(created)));
 		assertThat(pageableCaptor.getValue(), equalTo(request));

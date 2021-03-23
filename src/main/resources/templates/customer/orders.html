@@ -1,0 +1,90 @@
+<!--
+    Страница истории заказов.
+-->
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/frontend/template :: frontend(~{}, ~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<h1>История заказов</h1>
+
+	<div class="panel-group" id="accordion">
+		<div class="panel panel-default" th:each="order,iterStat : ${userOrders}">
+			<div class="panel-heading">
+				<table width="100%">
+					<tr>
+						<td valign="bottom">
+							<h4 class="panel-title">
+								<a data-parent="#accordion" data-toggle="collapse"
+								   th:href="@{'#collapse' + ${iterStat.index}}"
+								   th:text="'Заказ от ' + ${order.dateCreated}">
+								</a>
+							</h4>
+						</td>
+						<td align="right" th:text="'номер счёта: ' + ${order.billNumber}" valign="bottom"></td>
+					</tr>
+				</table>
+			</div>
+			<div class="panel-collapse collapse" th:id="'collapse' + ${iterStat.index}">
+				<table class="table">
+
+					<thead>
+					<tr>
+						<th>наименование</th>
+						<th>цена за ед.</th>
+						<th width="70">кол-во</th>
+						<th width="90">цена</th>
+					</tr>
+					</thead>
+
+					<tr th:each="orderedProduct : ${orderedProductsByOrderId[order.id]}"
+						th:with="product=${productsById[orderedProduct.productId]}">
+						<td th:text="${product.distillery + ' ' + product.name}">1</td>
+						<td th:text="${product.price + '&nbsp;руб.'}">2</td>
+						<td th:text="${orderedProduct.quantity}">3</td>
+						<td th:text="${(orderedProduct.quantity * product.price) + '&nbsp;руб.'}">4</td>
+					</tr>
+
+					<tr th:if="${order.deliveryIncluded}">
+						<td align="right" colspan="3">подитог:</td>
+						<td th:text="${order.productsCost + '&nbsp;руб.'}"></td>
+					</tr>
+					<tr th:if="${order.deliveryIncluded}">
+						<td align="right" colspan="3">доставка по Петербургу:</td>
+						<td th:text="${order.deliveryCost + '&nbsp;руб.'}"></td>
+					</tr>
+
+					<tr>
+						<td align="right" colspan="3">итог:</td>
+						<td th:text="${order.productsCost + order.deliveryCost}"> руб.</td>
+					</tr>
+
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div aria-hidden="true" aria-labelledby="detailsModal" class="modal fade bs-modal-sm" id="detailsModal"
+		 role="dialog"
+		 tabindex="-1">
+		<div class="modal-dialog modal-sm" style="line-height:160%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+					<h4 class="modal-title">История заказов</h4>
+				</div>
+				<div class="modal-body">
+					<p>Здесь перечислены все заказы, сделанные покупателем.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</content>
+</body>
+</html>

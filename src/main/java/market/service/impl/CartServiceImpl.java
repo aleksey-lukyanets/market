@@ -34,7 +34,7 @@ public class CartServiceImpl implements CartService {
 	@Transactional(propagation = Propagation.SUPPORTS)
 	@Override
 	public Cart getCartOrCreate(String userEmail) {
-		UserAccount account = userAccountService.findByEmail(userEmail);
+		UserAccount account = userAccountService.findByEmail(userEmail); // todo: check if this user exists
 		Optional<Cart> cartOptional = cartDAO.findById(account.getId());
 		return cartOptional.orElseGet(() -> createCart(account));
 	}

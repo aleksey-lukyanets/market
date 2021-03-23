@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+
+<body th:fragment="region-form">
+
+<script src="@{/resources/js/jquery-validate.min.js}" type="text/javascript"></script>
+
+<div class="form-group">
+	<label class="col-sm-3 control-label" for="name">
+		название
+	</label>
+	<div class="col-sm-6 has-feedback">
+		<input
+				class="form-control" data-describedby="name-desc" data-description="name" data-validate="name"
+				id="name" maxlength="20" name="name"
+				size="19" th:value="*{name}" value="${region.name}"/>
+		<span class="glyphicon form-control-feedback" id="name"></span>
+		<span class="help-block">обязательное поле</span>
+		<div id="name-desc"></div>
+		<errors cssClass="alert alert-danger" element="div" path="name"/>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-sm-3 control-label" for="subtitle">
+		подзаголовок
+	</label>
+	<div class="col-sm-6 has-feedback">
+		<input
+				class="form-control" data-describedby="subtitle-desc" data-description="subtitle"
+				data-validate="subtitle"
+				id="subtitle" maxlength="25" name="subtitle"
+				size="19" th:value="*{subtitle}" value="${region.subtitle}"/>
+		<span class="glyphicon form-control-feedback" id="subtitle"></span>
+		<div id="subtitle-desc"></div>
+		<errors cssClass="alert alert-danger" element="div" path="subtitle"/>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-sm-3 control-label" for="description">
+		описание
+	</label>
+	<div class="col-sm-8">
+		<textarea
+				class="form-control" id="description" maxlength="1000" name="description"
+				rows="10" th:field="*{description}" value="${region.description}"></textarea>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-sm-3 control-label" for="color">
+		цветовая&nbsp;схема
+	</label>
+	<div class="col-sm-6 has-feedback">
+		<input
+				class="form-control" data-describedby="color-desc" data-description="color" data-validate="color"
+				id="color" maxlength="10" name="color"
+				size="19" th:value="*{color}" value="${region.color}"/>
+		<span class="glyphicon form-control-feedback" id="color"></span>
+		<div id="color-desc"></div>
+		<errors cssClass="alert alert-danger" element="div" path="color"/>
+	</div>
+</div>
+
+<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function () {
+        $('#regionForm').validate({
+            onKeyup: true,
+            onChange: true,
+            submitHandler: function (form) {
+                form.submit();
+            },
+            eachValidField: function () {
+                var input = $(this).attr('id');
+                $(this).closest('div.form-group').removeClass('has-error').addClass('has-success');
+                $('span#' + input).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+            },
+            eachInvalidField: function () {
+                var input = $(this).attr('id');
+                $(this).closest('div.form-group').removeClass('has-success').addClass('has-error');
+                $('span#' + input).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            },
+            description: {
+                name: {
+                    pattern: '<div class="alert alert-danger">Специальные символы недопустимы.</div>'
+                },
+                subtitle: {
+                    pattern: '<div class="alert alert-danger">Специальные символы недопустимы.</div>'
+                },
+                color: {
+                    pattern: '<div class="alert alert-danger">Допустимы только цифры, латинские буквы и дефис.</div>'
+                }
+            }
+        });
+        $.validateExtend({
+            name: {
+                required: true,
+                pattern: /^[^#$%^&*()']*$/
+            },
+            subtitle: {
+                pattern: /^[^#$%^*()']*$/
+            },
+            color: {
+                pattern: /^(a-z|A-Z|0-9-)*[^#$%^&*()']*$/
+            }
+        });
+    });
+    //]]>
+</script>
+
+</body>
+</html>

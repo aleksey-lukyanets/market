@@ -4,6 +4,15 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/8c0bd51bdba44e04bd2cbbfd7f643e9f)](https://www.codacy.com/manual/aleksey-lukyanets/market?utm_source=github.com&utm_medium=referral&utm_content=aleksey-lukyanets/market&utm_campaign=Badge_Coverage)
 ![build](https://github.com/aleksey-lukyanets/market/workflows/build/badge.svg)
 
+This project was started in 2014 as a study for Spring and related web technologies,
+partly modernized in 2020-21.
+
+<p>Since around 2014 professionally I am focused on backend development,
+a modernization/maintenance of this project continues as a hobby and is updated occasionally.
+This is not a perfectly finished project, so it may contain bugs, imperfection and some mess.
+
+<p>Nevertheless I hope you may find it useful and interesting. Bug reports are appreciated.
+
 <h2>Technologies</h2>
 
 <ul class="discharged">
@@ -15,8 +24,10 @@
 
 <h2>How to</h2>
 
+<p>Java version: 11
 <p>build: <code>package</code> Maven task
-<p>run: <code>java -jar target/market-0.1.1.war</code>
+<p>main class: <code>src/main/java/market/Application.java</code>
+<p>run: <code>java -jar target/market-0.1.1.jar</code>
 <p>logs: <code>logs/market.log</code>, <code>logs/market.err</code>
 <p>H2 console: <code>localhost:8080/h2-console/</code>
 <p>Swagger UI: <code>localhost:8080/swagger-ui/#/</code>
@@ -49,6 +60,11 @@
     </li>
     <li>Double check of form content: client-side and server-side</li>
 </ol>
+
+<h2>Legacy branches</h2>
+
+<p><code>good-old-2014</code> - status for 2014
+<p><code>jsp-2021</code> - status with web views based on JSP and Apache Tiles
 
 <h2>Links</h2>
 

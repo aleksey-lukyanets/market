@@ -1,0 +1,169 @@
+<!--
+    Страница подтверждения/обновления контактных данных (шаг 1 оформления заказа).
+-->
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/frontend/template :: frontend(~{}, ~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<script th:src="@{/js/jquery-validate.min.js}" type="text/javascript"></script>
+
+	<h1>Уточнение контактных данных</h1>
+
+	<p>На этой странице вы можете изменить адрес доставки и контактный номер телефона.</p>
+
+	<br>
+
+	<form class="form-horizontal" id="detailsForm" method="post" th:object="${userContacts}">
+		<div class="form-group">
+			<label class="col-sm-4 control-label">
+				использовать данные:
+			</label>
+			<div class="col-sm-4">
+				<div class="radio">
+					<label for="useExisting">
+						<input checked="checked" id="useExisting" name="changeContacts"
+							   type="radio" value="useExisting">
+						имеющиеся
+					</label>
+				</div>
+				<div class="radio">
+					<label for="changeRequested">
+						<input id="changeRequested" name="changeContacts" type="radio"
+							   value="changeRequested">
+						обновлённые
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label" for="phone">
+				телефон
+			</label>
+			<div class="col-sm-4 has-feedback">
+				<input class="form-control" data-describedby="phone-desc" data-description="phone"
+					   data-required="false" data-validate="phone" disabled="true"
+					   id="phone"
+					   maxlength="18" name="phone" size="15"
+					   th:value="*{phone}"/>
+				<span class="glyphicon form-control-feedback" id="phone"></span>
+				<div id="phone-desc"></div>
+				<errors cssClass="alert alert-danger" element="div" path="phone"></errors>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label" for="address">
+				адрес&nbsp;доставки
+			</label>
+			<div class="col-sm-6 has-feedback">
+				<input class="form-control" data-describedby="address-desc" data-description="address"
+					   data-required="false" data-validate="address" disabled="true"
+					   id="address"
+					   maxlength="100" name="address" size="15"
+					   th:value="*{address}"/>
+				<span class="glyphicon form-control-feedback" id="address"></span>
+				<div id="address-desc"></div>
+				<errors cssClass="alert alert-danger" element="div" path="address"></errors>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-4">
+				<a class="btn btn-default pull-right" style="margin-right: -25px;" th:href="@{/cart}">
+					вернуться к корзине
+				</a>
+			</div>
+			<div class="col-sm-8">
+				<button class="btn btn-primary" type="submit">
+					перейти к оплате
+				</button>
+			</div>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+    $('#detailsForm').delegate('input[name=changeContacts]:checked', 'change', function () {
+        var value = $('input[name=changeContacts]:checked', '#detailsForm').val();
+        if (value === "useExisting") {
+            $('#phone').prop("disabled", true);
+            $('#address').prop("disabled", true);
+            //$('#cityRegion').prop("disabled", true);
+            $('#phone').prop("data-required", false);
+            $('#address').prop("data-required", false);
+        } else {
+            $('#phone').prop("disabled", false);
+            $('#address').prop("disabled", false);
+            //$('#cityRegion').prop("disabled", false);
+            $('#phone').prop("data-required", true);
+            $('#address').prop("data-required", true);
+        }
+    });
+    $('#detailsForm').validate({
+        onKeyup: true,
+        onChange: true,
+        submitHandler: function (form) {
+            form.submit();
+        },
+        eachValidField: function () {
+            var input = $(this).attr('id');
+            $(this).closest('div.form-group').removeClass('has-error').addClass('has-success');
+            $('span#' + input).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+        },
+        eachInvalidField: function () {
+            var input = $(this).attr('id');
+            $(this).closest('div.form-group').removeClass('has-success').addClass('has-error');
+            $('span#' + input).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+        },
+        description: {
+            phone: {
+                required: '<div class="alert alert-danger">Обязательное поле.</div>',
+                pattern: '<div class="alert alert-danger">Должен состоять из знака +, кода страны, кода региона (1-4 цифр) и номера (6-7 цифр).</div>'
+            },
+            address: {
+                required: '<div class="alert alert-danger">Обязательное поле.</div>',
+                pattern: '<div class="alert alert-danger">Специальные символы недопустимы.</div>'
+            }
+        }
+    });
+    $.validateExtend({
+        phone: {
+            pattern: /^\+[1-9][0-9]?[\s]*\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{2}[-\s]?\d{2}$/
+        },
+        address: {
+            pattern: /^[^#$%^*()']*$/
+        }
+    });
+</script>
+
+	<div aria-hidden="true" aria-labelledby="detailsModal" class="modal" id="detailsModal" role="dialog" tabindex="-1">
+		<div class="modal-dialog" style="line-height:160%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+					<h4 class="modal-title">Уточнение контактных данных</h4>
+				</div>
+				<div class="modal-body">
+					<p>Функции:</p>
+					<ol type="1">
+						<li>проверка корректного вида введённых данных;</li>
+						<li>сохранение новых данных в профиль покупателя.</li>
+					</ol>
+					<hr/>
+					<p>Детали реализации</p>
+					<ol class="discharged list-unstyled" type="1">
+						<li>Проверка данных формы выполняется дважды: на стороне пользователя и на стороне сервера.
+							Подробности в разделе <a th:href="@{/inside#forms}">проверка форм</a>.
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</content>
+</body>
+</html>

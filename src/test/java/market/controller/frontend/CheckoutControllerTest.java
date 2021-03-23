@@ -10,6 +10,8 @@ import market.domain.Order;
 import market.domain.Product;
 import market.domain.Region;
 import market.domain.UserAccount;
+import market.dto.CartDTO;
+import market.dto.assembler.CartDtoAssembler;
 import market.dto.assembler.ContactsDtoAssembler;
 import market.dto.assembler.OrderDtoAssembler;
 import market.dto.assembler.ProductDtoAssembler;
@@ -55,6 +57,7 @@ public class CheckoutControllerTest {
 	private final ContactsDtoAssembler contactsDtoAssembler = new ContactsDtoAssembler();
 	private final UserAccountDtoAssembler accountDtoAssembler = new UserAccountDtoAssembler();
 	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
+	private final CartDtoAssembler cartDtoAssembler = new CartDtoAssembler(marketProperties);
 
 	@MockBean
 	private UserAccountService userAccountService;
@@ -73,6 +76,7 @@ public class CheckoutControllerTest {
 	private UserAccount account;
 	private Principal principal;
 	private Cart cart;
+	private CartDTO emptyCart;
 	private Product product;
 	private Order order;
 
@@ -92,6 +96,7 @@ public class CheckoutControllerTest {
 			.setId(account.getId())
 			.setUserAccount(account)
 			.build();
+		emptyCart = cartDtoAssembler.toModel(cart);
 		Region region = FixturesFactory.region().build();
 		Distillery distillery = FixturesFactory.distillery(region).build();
 		product = FixturesFactory.product(distillery).build();
@@ -198,8 +203,16 @@ public class CheckoutControllerTest {
 
 	@Test
 	public void postPayment() throws Exception {
+		int quantity = 2;
+		cart.update(product, quantity);
+
 		given(orderService.createUserOrder(account.getEmail(), marketProperties.getDeliveryCost(), order.getBill().getCcNumber()))
-			.willReturn(order);
+			.willAnswer(a -> {
+				cart.clear(); // clear the cart, as the real service does
+				return order;
+			});
+		given(cartService.getCartOrCreate(account.getEmail()))
+			.willReturn(cart);
 
 		mockMvc.perform(
 			post("/checkout/payment")
@@ -208,7 +221,8 @@ public class CheckoutControllerTest {
 			.andExpect(status().is3xxRedirection())
 			.andExpect(redirectedUrl("/checkout/confirmation"))
 			.andExpect(model().hasNoErrors())
-			.andExpect(model().attribute("createdOrder", orderDtoAssembler.toModel(order)));
+			.andExpect(model().attribute("createdOrder", orderDtoAssembler.toModel(order)))
+			.andExpect(model().attribute("cart", equalTo(emptyCart))); // expect to obtain already cleared cart
 	}
 
 	@Test
@@ -222,6 +236,6 @@ public class CheckoutControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("checkout/confirmation"))
 			.andExpect(model().attribute("userAccount", equalTo(accountDtoAssembler.toModel(account))))
-			.andExpect(model().attribute("userDetails", equalTo(contactsDtoAssembler.toModel(account.getContacts()))));
+			.andExpect(model().attribute("userContacts", equalTo(contactsDtoAssembler.toModel(account.getContacts()))));
 	}
 }

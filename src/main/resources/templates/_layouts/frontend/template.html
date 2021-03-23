@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"
+	  th:fragment="frontend (menu, content)"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<title>Магазин виски</title>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+	<link href="/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="/css/market-styles.css" media="screen" rel="stylesheet" type="text/css">
+	<script src="/js/jquery-1.9.0.min.js" type="text/javascript"></script>
+	<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+</head>
+<body class="frontend">
+<div id="layout">
+	<div class="row">
+		<div class="col-md-4 col-sm-4 col-xs-12" id="sidebar">
+			<div class="clearfix">
+				<div class="btn-group pull-right" style="padding-right:1.5em;padding-bottom:1em;">
+					&nbsp;<a class="btn btn-danger" id="details">Как работает страница?</a>
+				</div>
+			</div>
+			<div class="header">
+				<div class="brand-title">
+					<a class="brand-title" th:href="@{/}">Магазин виски</a>
+				</div>
+				<div class="brand-tagline">виски с доставкой по Петербургу</div>
+			</div>
+
+			<th:block th:replace="${menu}"/>
+		</div>
+
+		<div class="col-md-8 col-sm-8 col-xs-12" id="content">
+			<div class="content-column" id="frontend-content">
+
+				<div class="headerWidget">
+					<div class="pull-right">
+						<div class="btn-group btn-group-sm">
+							<a class="btn btn-default btn-sm" th:href="@{/cart}">
+								корзина&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-shopping-cart"
+															   style="font-size:13px;"></span>
+
+								<span id="cart-total-items">
+                                    <span class="badge" th:if="${session.cart.totalItems} > 0"
+										  th:text="${session.cart.totalItems}">
+                                        cart.totalItems
+                                    </span>
+                                </span>
+							</a>
+						</div>
+						<div class="btn-group" sec:authorize="hasRole('ROLE_ANONYMOUS')">
+							<a class="btn btn-default btn-sm" th:href="@{/login}">вход</a>
+						</div>
+						<div class="btn-group" sec:authorize="!hasRole('ROLE_ANONYMOUS')">
+							<button class="btn btn-default btn-sm" type="button">
+								<span sec:authentication="principal.username">principal.username</span>
+							</button>
+							<button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" type="button">
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-right" role="menu">
+								<li><a th:href="@{/customer/orders}">история заказов</a></li>
+								<li><a th:href="@{/logout}">выйти</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="posts clearfix">
+					<th:block th:replace="${content}"/>
+				</div>
+
+				<div class="footer">
+					<ul class="list-inline">
+						<li><a class="btn btn-danger btn-xs" th:href="@{/inside}">как сделан магазин</a></li>
+						<li><a class="btn btn-danger btn-xs" th:href="@{/rest-api}">rest api</a></li>
+						<li><a href="https://github.com/aleksey-lukyanets/market">github</a></li>
+						<li><a href="https://www.linkedin.com/in/aleksey-lukyanets">linkedin</a></li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+<script type="text/javascript">
+    $('body').delegate('#details', 'click', function () {
+        $('#detailsModal').modal({show: true});
+    });
+</script>
+</body>
+</html>
