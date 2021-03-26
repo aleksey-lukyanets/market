@@ -53,7 +53,7 @@ public class DistilleryControllerTest {
 	public void beforeEach() {
 		DistilleryController controller = new DistilleryController(distilleryService, regionService);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 		region = FixturesFactory.region().build();
 		distillery = FixturesFactory.distillery(region).build();

@@ -72,7 +72,7 @@ public class ShowcaseControllerTest {
 	public void beforeEach() {
 		ShowcaseController controller = new ShowcaseController(regionService, productService, distilleryService);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 
 		region1 = FixturesFactory.region().build();

@@ -20,7 +20,7 @@ public class BackendControllerTest {
 	public void beforeEach() {
 		BackendController controller = new BackendController();
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 	}
 
