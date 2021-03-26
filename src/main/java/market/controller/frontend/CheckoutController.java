@@ -8,6 +8,7 @@ import market.domain.UserAccount;
 import market.dto.ContactsDTO;
 import market.dto.CreditCardDTO;
 import market.dto.ProductDTO;
+import market.dto.assembler.CartDtoAssembler;
 import market.dto.assembler.ContactsDtoAssembler;
 import market.dto.assembler.OrderDtoAssembler;
 import market.dto.assembler.ProductDtoAssembler;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Map;
@@ -55,6 +57,7 @@ public class CheckoutController {
 	private final ContactsDtoAssembler contactsDtoAssembler = new ContactsDtoAssembler();
 	private final UserAccountDtoAssembler accountDtoAssembler = new UserAccountDtoAssembler();
 	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
+	private final CartDtoAssembler cartDtoAssembler;
 	private final MarketProperties marketProperties;
 
 	public CheckoutController(UserAccountService userAccountService, ContactsService contactsService,
@@ -65,6 +68,7 @@ public class CheckoutController {
 		this.orderService = orderService;
 		this.cartService = cartService;
 		this.marketProperties = marketProperties;
+		cartDtoAssembler = new CartDtoAssembler(marketProperties);
 	}
 
 	//--------------------------------------------- Changing contacts
@@ -125,7 +129,7 @@ public class CheckoutController {
 
 	@RequestMapping(value = "/payment", method = RequestMethod.POST)
 	public String postPayment(
-		Principal principal, Model model,
+		Principal principal, Model model, HttpServletRequest request,
 		@Valid CreditCardDTO creditCard, BindingResult bindingResult
 	) {
 		if (bindingResult.hasErrors())
@@ -135,6 +139,10 @@ public class CheckoutController {
 		try {
 			Order order = orderService.createUserOrder(login, marketProperties.getDeliveryCost(), creditCard.getCcNumber());
 			model.addAttribute("createdOrder", orderDtoAssembler.toModel(order));
+
+			Cart cart = cartService.getCartOrCreate(login);
+			cartDtoAssembler.convertToModelAndUpdateAttributes(cart, "cart", model, request);
+
 			return "redirect:/" + CHECKOUT_CONFIRMATION;
 		} catch (EmptyCartException ex) {
 			bindingResult.addError(ex.getFieldError());
@@ -145,13 +153,13 @@ public class CheckoutController {
 	//---------------------------------- Gratitude
 
 	@RequestMapping(value = "/confirmation", method = RequestMethod.GET)
-	public String getGratitude(Principal principal, Model model ) {
+	public String getGratitude(Principal principal, Model model, HttpServletRequest request) {
 		UserAccount account = userAccountService.findByEmail(principal.getName());
 		if (account == null)
 			return CHECKOUT_DETAILS;
 
 		model.addAttribute("userAccount", accountDtoAssembler.toModel(account));
-		model.addAttribute("userDetails", contactsDtoAssembler.toModel(account.getContacts()));
+		model.addAttribute("userContacts", contactsDtoAssembler.toModel(account.getContacts()));
 		return CHECKOUT_CONFIRMATION;
 	}
 }

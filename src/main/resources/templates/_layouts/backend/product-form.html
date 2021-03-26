@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+
+<body>
+
+<content th:fragment="product-form">
+
+	<script src="@{/resources/js/jquery-validate.min.js}" type="text/javascript"></script>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label" for="distillery">
+			винокурня
+		</label>
+		<div class="col-sm-5">
+			<div class="btn-group">
+				<select class="form-control" id="distillery" name="distillery" th:field="*{distillery}">
+					<option th:each="dist : ${distilleries}" th:text="${dist.title}" th:value="${dist.title}"/>
+				</select>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label" for="name">
+			название товара
+		</label>
+		<div class="col-sm-3 has-feedback">
+			<input th:value="*{name}" value="${product.name}"
+				   class="form-control" data-describedby="name-desc" data-description="name" data-validate="name"
+				   id="name" maxlength="20" name="name" size="19"/>
+			<span class="glyphicon form-control-feedback" id="name"></span>
+			<span class="help-block">обязательное поле</span>
+			<div id="name-desc"></div>
+			<errors cssClass="alert alert-danger" element="div" path="name"/>
+		</div>
+
+		<label class="col-sm-2 control-label" for="age">
+			возраст
+		</label>
+		<div class="col-sm-3 has-feedback">
+			<input
+					class="form-control" data-describedby="age-desc" data-description="age" data-validate="age"
+					id="age" maxlength="10" name="age"
+					size="19" th:value="*{age}" value="${product.age}"/>
+			<span class="glyphicon form-control-feedback" id="age"></span>
+			<span class="help-block">обязательное поле<br>ноль &mdash; возраст не заявлен</span>
+			<div id="age-desc"></div>
+			<errors cssClass="alert alert-danger" element="div" path="age"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label" for="alcohol">
+			сод. алкоголя, % об.
+		</label>
+		<div class="col-sm-3 has-feedback">
+			<input
+					class="form-control" data-describedby="alcohol-desc" data-description="alcohol"
+					data-validate="alcohol"
+					id="alcohol" maxlength="10" name="alcohol" placeholder="40.0"
+					size="19" th:value="*{alcohol}" value="${product.alcohol}"/>
+			<span class="glyphicon form-control-feedback" id="alcohol"></span>
+			<span class="help-block">обязательное поле</span>
+			<div id="alcohol-desc"></div>
+			<errors cssClass="alert alert-danger" element="div" path="alcohol"/>
+		</div>
+
+		<label class="col-sm-2 control-label" for="volume">
+			объём, мл.
+		</label>
+		<div class="col-sm-3 has-feedback">
+			<input
+					class="form-control" data-describedby="volume-desc" data-description="volume" data-validate="volume"
+					id="volume" maxlength="10" name="volume"
+					size="19" th:value="*{volume}" value="${product.volume}"/>
+			<span class="glyphicon form-control-feedback" id="volume"></span>
+			<span class="help-block">обязательное поле</span>
+			<div id="volume-desc"></div>
+			<errors cssClass="alert alert-danger" element="div" path="volume"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label" for="description">
+			описание
+		</label>
+		<div class="col-sm-8">
+		<textarea
+				class="form-control" id="description" maxlength="500" name="description"
+				rows="4" th:field="*{description}" value="${product.description}"></textarea>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-3 control-label" for="price">
+			цена, руб.
+		</label>
+		<div class="col-sm-3 has-feedback">
+			<input
+					class="form-control" data-describedby="price-desc" data-description="price" data-validate="price"
+					id="price" maxlength="10" name="price"
+					size="19" th:value="*{price}" value="${product.price}"/>
+			<span class="glyphicon form-control-feedback" id="price"></span>
+			<span class="help-block">обязательное поле</span>
+			<div id="price-desc"></div>
+			<errors cssClass="alert alert-danger" element="div" path="price"/>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function () {
+        $('#productForm').validate({
+            onKeyup: true,
+            onChange: true,
+            submitHandler: function (form) {
+                form.submit();
+            },
+            eachValidField: function () {
+                var input = $(this).attr('id');
+                $(this).closest('div.form-group').removeClass('has-error').addClass('has-success');
+                $('span#' + input).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+            },
+            eachInvalidField: function () {
+                var input = $(this).attr('id');
+                $(this).closest('div.form-group').removeClass('has-success').addClass('has-error');
+                $('span#' + input).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            },
+            description: {
+                name: {
+                    pattern: '<div class="alert alert-danger">Специальные символы недопустимы.</div>'
+                },
+                age: {
+                    pattern: '<div class="alert alert-danger">Допустимы только цифры.</div>'
+                },
+                volume: {
+                    pattern: '<div class="alert alert-danger">Допустимы только цифры.</div>'
+                },
+                alcohol: {
+                    pattern: '<div class="alert alert-danger">Допустимы только цифры и точка.</div>'
+                },
+                price: {
+                    pattern: '<div class="alert alert-danger">Допустимы только цифры.</div>'
+                }
+            }
+        });
+        $.validateExtend({
+            name: {
+                required: true,
+                pattern: /^[^#$%^&*()']*$/
+            },
+            age: {
+                required: true,
+                pattern: /^[0-9]*$/
+            },
+            volume: {
+                required: true,
+                pattern: /^[0-9]*$/
+            },
+            alcohol: {
+                required: true,
+                pattern: /^(\d*[.])?\d+$/
+            },
+            price: {
+                required: true,
+                pattern: /^[0-9]*$/
+            }
+        });
+    });
+    //]]>
+</script>
+
+</content>
+
+</body>
+</html>

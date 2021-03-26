@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/backend/template :: backend(~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<h1 class="admin" th:text="${billsByOrderId[0]}">Заказы</h1>
+
+	<div th:include="~{_layouts/backend/filters :: orders-filter}" class="clearfix">filter</div>
+
+	<div class="table-responsive">
+		<table class="table table-small-text" width="100%">
+			<thead>
+			<tr>
+				<th>№</th>
+				<th>покупатель</th>
+				<th>дата</th>
+				<th>доставка</th>
+
+				<th>выписан<br>счёт</th>
+				<th>статус<br>оплаты</th>
+				<th>статус&nbsp;заказа</th>
+				<th width="50"></th>
+			</tr>
+			</thead>
+
+			<th:block th:each="order,iterStat : ${page.content}">
+
+				<tr th:with="bill=${billsByOrderId[order.id]}">
+					<td><a th:href="@{'#collapse' + ${iterStat.index}}"
+						   th:text="${order.id}" data-parent="#accordion" data-toggle="collapse"></a></td>
+					<td th:text="${order.userAccount}"></td>
+					<td th:text="${#dates.format(order.dateCreated, 'dd.MM.yyyy, HH:mm')}"></td>
+					<td th:text="${order.deliveryIncluded ? 'включена' : 'самовывоз'}"></td>
+					<td th:text="${'#' + bill.number}"></td>
+					<td th:text="${bill.payed ? 'оплачен' : 'ожидает&nbsp;оплаты'}"></td>
+					<td th:text="${order.executed ? 'исполнен' : 'в&nbsp;исполнении'}"></td>
+					<td th:if="${!order.executed}">
+						<form method="post" th:action="@{/admin/orders/(orderId=${order.id})}">
+							<input name="executed" type="hidden" value="true">
+							<button class="btn btn-success btn-xs" type="submit">
+								<span class="glyphicon glyphicon-ok"></span>&nbsp;
+							</button>
+						</form>
+					</td>
+				</tr>
+
+				<tr class="nopadding" th:each="order,iterStat : ${page.content}"
+					th:with="bill=${billsByOrderId[order.id]}">
+					<td colspan="8">
+						<div class="panel-collapse collapse" th:id="${'collapse' + iterStat.index}">
+							<div class="" style="width: 100%;">
+
+								<div style="position: relative; float: left; max-width: 170px;">
+									<div class="panel panel-default">
+										<div class="panel-heading"><b>Покупатель</b></div>
+										<ul class="list-group"
+											th:with="contacts=${contactsByAccount[order.userAccount]}">
+											<li class="list-group-item"
+												th:text="${order.userAccount + ' ' + contacts.phone}"></li>
+											<li class="list-group-item"
+												th:if="${order.deliveryIncluded}"
+												th:utext="${'адрес доставки:<br>' + contacts.address}"></li>
+										</ul>
+									</div>
+								</div>
+
+								<div style="position: relative; float: left; max-width: 210px; padding-left: 10px;">
+									<div class="panel panel-default">
+										<div class="panel-heading"><b>Счёт</b></div>
+										<ul class="list-group">
+											<li class="list-group-item">
+												<table>
+													<tr>
+														<td align="right" style="padding-right: 7px;">номер:</td>
+														<td th:text="${bill.number}"></td>
+													</tr>
+													<tr>
+														<td align="right" style="padding-right: 7px;">от:</td>
+														<td th:text="${#dates.format(order.dateCreated, 'dd.MM.yyyy, HH:mm')}"></td>
+													</tr>
+													<tr>
+														<td align="right" style="padding-right: 7px;">на сумму:</td>
+														<td th:text="${bill.totalCost + '&nbsp;руб.'}"></td>
+													</tr>
+												</table>
+											</li>
+											<li class="list-group-item"
+												th:utext="${bill.payed ? ('оплачен картой:<br>' + bill.ccNumber) : 'ожидает&nbsp;оплаты'}"></li>
+										</ul>
+									</div>
+								</div>
+
+								<div style="position: relative; float: left; padding-left: 10px;">
+									<div class="panel panel-default">
+										<div class="panel-heading"><b>Позиции заказа</b></div>
+										<table class="table">
+											<thead>
+											<tr>
+												<th width="110">наименование</th>
+												<th>цена за ед.</th>
+												<th>кол-во</th>
+												<th width="70">цена</th>
+											</tr>
+											</thead>
+
+											<th:block th:each="orderedProduct : ${orderedProductsByOrderId[order.id]}">
+												<tr th:with="product=${productsById[orderedProduct.productId]}">
+													<td th:text="${product.distillery + ' ' + product.name}"></td>
+													<td th:text="${product.price + '&nbsp;руб.'}"></td>
+													<td th:text="${orderedProduct.quantity}"></td>
+													<td th:text="${(orderedProduct.quantity * product.price) + '&nbsp;руб.'}"></td>
+												</tr>
+											</th:block>
+
+											<tr th:if="${order.deliveryIncluded}">
+												<td align="right" colspan="3">подитог:</td>
+												<td th:text="${order.productsCost + '&nbsp;руб.'}"></td>
+											</tr>
+											<tr th:if="${order.deliveryIncluded}">
+												<td align="right" colspan="3">доставка по Петербургу:</td>
+												<td th:text="${order.deliveryCost + '&nbsp;руб.'}"></td>
+											</tr>
+
+											<tr>
+												<td align="right" colspan="3">итог:</td>
+												<td th:text="${(order.productsCost + order.deliveryCost) + '&nbsp;руб.'}"></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</td>
+				</tr>
+
+			</th:block>
+
+		</table>
+	</div>
+
+	<div th:insert="~{_layouts/pagination :: pagination}">pagination</div>
+
+	<div aria-hidden="true" aria-labelledby="mySmallModalLabel"
+		 class="modal fade bs-modal-sm" id="userModal" role="dialog" tabindex="-1">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Информация о покупателе</h4>
+				</div>
+				<div class="modal-body">
+					<table>
+						<tr>
+							<td align="right">имя:</td>
+							<td><span id="user-name"></span></td>
+						</tr>
+						<tr>
+							<td align="right">эл. почта:</td>
+							<td><span id="user-email"></span></td>
+						</tr>
+						<tr>
+							<td align="right">телефон:</td>
+							<td><span id="user-phone"></span></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</content>
+</body>
+</html>

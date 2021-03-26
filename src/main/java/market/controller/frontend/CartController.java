@@ -62,7 +62,7 @@ public class CartController {
 	{
 		if (isAuthorized(principal)) {
 			Cart cart = cartService.getCartOrCreate(principal.getName());
-			request.getSession().setAttribute("cart", cartDtoAssembler.toModel(cart));
+			cartDtoAssembler.convertToModelAndUpdateAttributes(cart, "cart", model, request);
 			model.addAttribute("productsById", collectProductsMap(cart));
 		} else {
 			Map<Long, ProductDTO> productsById = cartDto.getCartItems().stream()
@@ -81,18 +81,19 @@ public class CartController {
 	private Map<Long, ProductDTO> collectProductsMap(Cart cart) {
 		return cart.getCartItems().stream()
 			.map(CartItem::getProduct)
+			.distinct()
 			.map(productDtoAssembler::toModel)
 			.collect(toMap(ProductDTO::getProductId, p -> p));
 	}
 
 	@RequestMapping(value = "/clear", method = RequestMethod.POST)
 	public String clearCart(
-		Principal principal, Model model,
+		Principal principal, HttpServletRequest request, Model model,
 		@ModelAttribute(value = "cart") CartDTO cartDto)
 	{
 		if (isAuthorized(principal)) {
 			Cart clearedCart = cartService.clearCart(principal.getName());
-			model.addAttribute("cart", cartDtoAssembler.toModel(clearedCart));
+			cartDtoAssembler.convertToModelAndUpdateAttributes(clearedCart, "cart", model, request);
 		} else {
 			Cart cart = cartDtoAssembler.toDomain(cartDto, productService);
 			cart.clear();
@@ -105,7 +106,7 @@ public class CartController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String updateCartByForm(
-		Model model, Principal principal,
+		Model model, HttpServletRequest request, Principal principal,
 		@Valid @ModelAttribute("cartItem") CartItemDTO cartItemDto, BindingResult bindingResult,
 		@ModelAttribute(value = "cart") CartDTO cartDto
 	) {
@@ -117,16 +118,53 @@ public class CartController {
 			model.addAttribute("cart", handledCartDto);
 			model.addAttribute("deliveryCost", marketProperties.getDeliveryCost());
 			return CART_BASE;
-		}
-
-		try {
-			Cart updatedCart = updateCart(principal, cartItemDto);
-			model.addAttribute("cart", cartDtoAssembler.toModel(updatedCart));
-		} catch (UnknownEntityException ex) {
-			bindingResult.addError(ex.getFieldError());
-			return CART_BASE;
+		} else {
+			try {
+				addToAuthorizedCart(cartItemDto, principal.getName(), request, model);
+			} catch (UnknownEntityException ex) {
+				bindingResult.addError(ex.getFieldError());
+				return CART_BASE;
+			}
 		}
 		return "redirect:/" + CART_BASE;
+	}
+
+	/**
+	 * Adding via AJAX
+	 * @return updated cart
+	 */
+	@RequestMapping(method = RequestMethod.PUT,
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public CartDTO updateCartByAjax(
+		Principal principal, HttpServletRequest request,
+		@Valid @RequestBody CartItemDTO cartItemDto,
+		BindingResult bindingResult, Model model,
+		@ModelAttribute(value = "cart") CartDTO cartDto
+	) {
+		if (bindingResult.hasErrors())
+			return cartDto;
+
+		if (!isAuthorized(principal)) {
+			CartDTO handledCartDto = updateGuestCart(cartDto, cartItemDto);
+			model.addAttribute("cart", handledCartDto);
+			return handledCartDto;
+		} else {
+			try {
+				return addToAuthorizedCart(cartItemDto, principal.getName(), request, model);
+			} catch (UnknownEntityException e) {
+				log.error("Cannot add item to cart", e);
+				return cartDto;
+			}
+		}
+	}
+
+	private CartDTO addToAuthorizedCart(CartItemDTO itemToAdd, String login, HttpServletRequest request, Model model) {
+		long productId = itemToAdd.getProductId();
+		int quantity = itemToAdd.getQuantity();
+		Cart updatedCart = cartService.addToCart(login, productId, quantity);
+		return cartDtoAssembler.convertToModelAndUpdateAttributes(updatedCart, "cart", model, request);
 	}
 
 	private CartDTO updateGuestCart(CartDTO cartDto, CartItemDTO newCartItem) {
@@ -142,43 +180,6 @@ public class CartController {
 		return cartDto;
 	}
 
-	/**
-	 * Adding via AJAX
-	 * @return updated cart
-	 */
-	@RequestMapping(method = RequestMethod.PUT,
-		consumes = MediaType.APPLICATION_JSON_VALUE,
-		produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public CartDTO updateCartByAjax(
-		Principal principal,
-		@Valid @RequestBody CartItemDTO cartItemDto,
-		BindingResult bindingResult, Model model,
-		@ModelAttribute(value = "cart") CartDTO cartDto
-	) {
-		if (bindingResult.hasErrors())
-			return cartDto;
-
-		if (!isAuthorized(principal)) {
-			CartDTO handledCartDto = updateGuestCart(cartDto, cartItemDto);
-			model.addAttribute("cart", handledCartDto);
-			return handledCartDto;
-		}
-
-		try {
-			Cart updatedCart = updateCart(principal, cartItemDto);
-			return cartDtoAssembler.toModel(updatedCart);
-		} catch (UnknownEntityException e) {
-			log.error("Cannot add item to cart", e);
-			return cartDto;
-		}
-	}
-
-	private Cart updateCart(Principal principal, CartItemDTO cartItem) {
-		String login = principal.getName();
-		return cartService.addToCart(login, cartItem.getProductId(), cartItem.getQuantity());
-	}
-
 	//---------------------------------------------- Setting delivery option
 
 	/**
@@ -190,7 +191,7 @@ public class CartController {
 		produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public CartDTO setDelivery(
-		Principal principal,
+		Principal principal, Model model, HttpServletRequest request,
 		@PathVariable String delivery,
 		@ModelAttribute(value = "cart") CartDTO cartDto)
 	{
@@ -198,7 +199,7 @@ public class CartController {
 		if (isAuthorized(principal)) {
 			String login = principal.getName();
 			Cart updatedCart = cartService.setDelivery(login, included);
-			return cartDtoAssembler.toModel(updatedCart);
+			return cartDtoAssembler.convertToModelAndUpdateAttributes(updatedCart, "cart", model, request);
 		} else {
 			cartDto.setDeliveryIncluded(included);
 			return cartDto;

@@ -1,0 +1,21 @@
+<!--
+    Навигация по страницам для многостраничных списков.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<center th:fragment="pagination" th:if="${page.totalPages > 1}">
+	<div class="btn-toolbar" role="toolbar">
+		<ul class="pagination custom-pagination pagination-sm" style="margin-top:0;margin-bottom:0;">
+			<li class=""><span>страницы:</span></li>
+			<li th:each="i : ${indexesList}"
+				th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+				<span class="active" th:if="${i == currentIndex}" th:text="${i}">i</span>
+				<a th:href="@{${urlBuilder.replaceQueryParam('page', i).build().toUriString()}}"
+				   th:if="${i != currentIndex}" th:text="${i}">i</a>
+			</li>
+		</ul>
+	</div>
+</center>
+</body>
+</html>

@@ -29,23 +29,6 @@ public class ServletConfig implements WebMvcConfigurer {
 	}
 
 	@Bean
-	public ViewResolver viewResolver() {
-		return new TilesViewResolver();
-	}
-
-	@Bean
-	public TilesConfigurer tilesConfigurer() {
-		TilesConfigurer tilesConfigurer = new TilesConfigurer();
-		tilesConfigurer.setDefinitions("/WEB-INF/view/**/view.xml");
-		return tilesConfigurer;
-	}
-
-	@Bean
-	public UrlBasedViewResolver urlBasedViewResolver() {
-		return new InternalResourceViewResolver("/WEB-INF/view/", ".jsp");
-	}
-
-	@Bean
 	public LocaleResolver localeResolver() {
 		AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
 		localeResolver.setDefaultLocale(Locale.US);

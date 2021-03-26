@@ -1,0 +1,59 @@
+<!--
+    Опции фильтрации и сортировки товаров.
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="filter">
+	<div class="pull-right">
+		<div class="btn-group">
+			<span class="btn btn-xs btn-default disabled">винокурня</span>
+			<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+				<span th:text="${(param.dist == null || param.dist == 0) ? 'все' : currentDistilleryTitle}"></span>&nbsp;
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right"
+				th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+				<li>
+					<a th:href="@{${urlBuilder.replaceQueryParam('dist', 0).build().toUriString()}}">все</a>
+				</li>
+				<li th:each="newDist : ${distilleries}" style="width:auto;">
+					<a th:href="@{${urlBuilder.replaceQueryParam('dist', newDist.id).replaceQueryParam('page', 1).build().toUriString()}}"
+					   th:text="${newDist.title}"></a>
+				</li>
+			</ul>
+		</div>
+		&nbsp;
+		<div class="btn-group">
+			<span class="btn btn-xs btn-default disabled" th:text="${currentSort}">упорядочить</span>
+			<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+				<span th:text="${sortOptions.get(currentSort)}"></span>&nbsp;
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right"
+				th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+				<li th:each="newSort : ${sortOptions}" style="width:auto;">
+					<a th:href="@{${urlBuilder.replaceQueryParam('sort', newSort.key).build().toUriString()}}"
+					   th:text="${newSort.value}"></a>
+				</li>
+			</ul>
+		</div>
+		&nbsp;
+		<div class="btn-group">
+			<span class="btn btn-xs btn-default disabled">на странице</span>
+			<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+				<span th:text="${pageSizeOptions.get(currentPageSize)}"></span>&nbsp;
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right"
+				th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+				<li th:each="newSize : ${pageSizeOptions}" style="width:auto;">
+					<a th:href="@{${urlBuilder.replaceQueryParam('size', newSize.key).replaceQueryParam('page', 1).build().toUriString()}}"
+					   th:text="${newSize.value}"></a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+</body>
+</html>

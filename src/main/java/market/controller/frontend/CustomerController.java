@@ -30,13 +30,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Controller
 @RequestMapping("/customer")
@@ -91,16 +94,14 @@ public class CustomerController {
 		}
 		model.addAttribute("orderedProductsByOrderId", orderedProductsByOrderId);
 
-		Map<Long, List<ProductDTO>> productsByOrderId = new HashMap<>();
-		for (Order order : orders) {
-			List<ProductDTO> productsDto = order.getOrderedProducts().stream()
-				.map(OrderedProduct::getProduct)
-				.distinct()
-				.map(productDtoAssembler::toModel)
-				.collect(toList());
-			productsByOrderId.put(order.getId(), productsDto);
-		}
-		model.addAttribute("productsByOrderId", productsByOrderId);
+		Map<Long, ProductDTO> productsById = orders.stream()
+			.map(Order::getOrderedProducts)
+			.flatMap(Collection::stream)
+			.map(OrderedProduct::getProduct)
+			.distinct()
+			.map(productDtoAssembler::toModel)
+			.collect(toMap(ProductDTO::getProductId, p -> p));
+		model.addAttribute("productsById", productsById);
 
 		return CUSTOMER_ORDERS;
 	}
@@ -119,7 +120,7 @@ public class CustomerController {
 
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public String postRegistrationForm(
-		Model model,
+		Model model, HttpServletRequest request,
 		@Valid UserDTO user, BindingResult bindingResult,
 		@ModelAttribute(value = "cart") CartDTO cartDto
 	) {
@@ -143,7 +144,7 @@ public class CustomerController {
 
 		Cart unauthorisedCart = cartDtoAssembler.toDomain(cartDto, productService);
 		Cart updatedCart = cartService.addAllToCart(newAccount.getEmail(), unauthorisedCart.getCartItems());
-		model.addAttribute("cart", cartDtoAssembler.toModel(updatedCart));
+		cartDtoAssembler.convertToModelAndUpdateAttributes(updatedCart, "cart", model, request);
 
 		return "redirect:" + ROOT;
 	}

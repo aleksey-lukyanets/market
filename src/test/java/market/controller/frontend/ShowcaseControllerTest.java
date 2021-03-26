@@ -10,6 +10,7 @@ import market.dto.assembler.RegionDtoAssembler;
 import market.service.DistilleryService;
 import market.service.ProductService;
 import market.service.RegionService;
+import market.sorting.AbstractSorter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -99,7 +100,7 @@ public class ShowcaseControllerTest {
 
 	@Test
 	public void getRegionProducts() throws Exception {
-		PageRequest request = PageRequest.of(0, 3, Sort.by(Sort.Direction.ASC, "price"));
+		PageRequest request = PageRequest.of(0, AbstractSorter.PAGE_SIZE_DEFAULT, Sort.by(Sort.Direction.ASC, "price"));
 		Page<Product> page = new PageImpl<>(
 			Arrays.asList(product11, product12, product13),
 			request,
@@ -120,7 +121,7 @@ public class ShowcaseControllerTest {
 
 	@Test
 	public void getRegionProducts_FilteredByDistillery() throws Exception {
-		PageRequest request = PageRequest.of(0, 3, Sort.by(Sort.Direction.ASC, "price"));
+		PageRequest request = PageRequest.of(0, AbstractSorter.PAGE_SIZE_DEFAULT, Sort.by(Sort.Direction.ASC, "price"));
 		Page<Product> page = new PageImpl<>(
 			Arrays.asList(product11, product12, product13),
 			request,

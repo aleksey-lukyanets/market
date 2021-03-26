@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,16 +68,14 @@ public class OrdersController {
 		}
 		model.addAttribute("orderedProductsByOrderId", orderedProductsMap);
 
-		Map<Long, List<ProductDTO>> productsByOrderId = new HashMap<>();
-		for (Order order : orders) {
-			List<ProductDTO> productsDto = order.getOrderedProducts().stream()
-				.map(OrderedProduct::getProduct)
-				.distinct()
-				.map(productDTOAssembler::toModel)
-				.collect(toList());
-			productsByOrderId.put(order.getId(), productsDto);
-		}
-		model.addAttribute("productsByOrderId", productsByOrderId);
+		Map<Long, ProductDTO> productsById = orders.stream()
+			.map(Order::getOrderedProducts)
+			.flatMap(Collection::stream)
+			.map(OrderedProduct::getProduct)
+			.distinct()
+			.map(productDTOAssembler::toModel)
+			.collect(toMap(ProductDTO::getProductId, p -> p));
+		model.addAttribute("productsById", productsById);
 
 		Map<String, ContactsDTO> contactsByAccount = orders.stream()
 			.map(Order::getUserAccount)

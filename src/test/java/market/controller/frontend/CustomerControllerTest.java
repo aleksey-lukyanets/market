@@ -152,7 +152,7 @@ public class CustomerControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("customer/orders"))
 			.andExpect(model().attribute("userOrders", contains(orderDtoAssembler.toDtoArray(orders))))
-			.andExpect(model().attribute("productsByOrderId", hasEntry(order.getId(), Collections.singletonList(productDtoAssembler.toModel(product)))))
+			.andExpect(model().attribute("productsById", hasEntry(product.getId(), productDtoAssembler.toModel(product))))
 			.andExpect(model().attribute("orderedProductsByOrderId", hasEntry(order.getId(), Collections.singletonList(orderedProductDtoAssembler.toModel(orderedProduct)))));
 	}
 }

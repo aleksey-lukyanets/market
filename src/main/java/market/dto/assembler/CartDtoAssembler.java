@@ -11,7 +11,9 @@ import market.rest.ContactsRestController;
 import market.rest.ProductsRestController;
 import market.service.ProductService;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
+import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +36,13 @@ public class CartDtoAssembler extends RepresentationModelAssemblerSupport<Cart, 
 		dto.add(linkTo(ContactsRestController.class).withRel("Customer contacts"));
 		dto.add(linkTo(CartRestController.class).slash(CartRestController.PAY).withRel("Proceed to payment"));
 		return dto;
+	}
+
+	public CartDTO convertToModelAndUpdateAttributes(Cart cart, String attribute, Model model, HttpServletRequest request) {
+		CartDTO cartDTO = toModel(cart);
+		model.addAttribute(attribute, cartDTO);
+		request.getSession().setAttribute(attribute, cartDTO);
+		return cartDTO;
 	}
 
 	public CartDTO toAnonymousResource(Cart cart) {

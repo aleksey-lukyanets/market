@@ -1,0 +1,268 @@
+<!--
+    Страница регистрации нового пользователя.
+-->
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/frontend/template :: frontend(~{}, ~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<script th:src="@{/js/jquery-validate.min.js}" type="text/javascript"></script>
+
+	<h1>Регистрация пользователя</h1>
+
+	<p>Чтобы иметь возможность совершать покупки в магазине, пожалуйста, сообщите следующую информацию:</p>
+
+	<br>
+
+	<form class="form-horizontal" id="signupForm" method="post" th:object="${userAccount}">
+		<div class="form-group">
+			<label class="col-sm-4 control-label" for="name">
+				полное&nbsp;имя
+			</label>
+			<div class="col-sm-6 has-feedback">
+				<input class="form-control" data-describedby="name-desc" data-description="name"
+					   data-validate="name" id="name" maxlength="50"
+					   name="name" placeholder="Иван Петров" size="19"
+					   th:value="*{name}"/>
+				<span class="glyphicon form-control-feedback" id="name"></span>
+				<span class="help-block">обязательное поле</span>
+				<div id="name-desc"></div>
+				<errors cssClass="alert alert-danger" element="div" path="name"></errors>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label" for="email">
+				электронная&nbsp;почта
+			</label>
+			<div class="col-sm-6 has-feedback">
+				<input
+						class="form-control"
+						data-describedby="email-desc"
+						data-description="email"
+						data-validate="email"
+						id="email"
+						maxlength="50"
+						name="email"
+						placeholder="petrov@some.domain"
+						size="19"
+						th:value="*{email}"/>
+				<span class="glyphicon form-control-feedback" id="email"></span>
+				<span class="help-block">обязательное поле</span>
+				<div id="email-desc"></div>
+				<errors cssClass="alert alert-danger" element="div" path="email"></errors>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label" for="password">
+				пароль
+			</label>
+			<div class="col-sm-6 has-feedback">
+				<input
+						class="form-control"
+						data-conditional="password"
+						data-describedby="password-desc"
+						data-description="password"
+						data-validate="password"
+						id="password"
+						maxlength="50"
+						name="password"
+						placeholder="••••••"
+						size="19"
+						th:value="*{password}"
+						type="password"></input>
+				<span class="glyphicon form-control-feedback" id="password"></span>
+				<span class="help-block">обязательное поле</span>
+				<div id="password-desc"></div>
+				<errors cssClass="alert alert-danger" element="div" path="password"></errors>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label" for="confirm">
+				подтверждение
+			</label>
+			<div class="col-sm-6 has-feedback">
+				<input class="form-control"
+					   data-conditional="confirm"
+					   data-describedby="confirm-desc"
+					   data-description="confirm"
+					   data-validate="confirm"
+					   id="confirm"
+					   maxlength="50"
+					   name="confirm"
+					   placeholder="••••••"
+					   size="19"
+					   type="password"/>
+				<span class="glyphicon form-control-feedback" id="confirm"></span>
+				<span class="help-block">обязательное поле</span>
+				<div id="confirm-desc"></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label" for="phone">
+				номер&nbsp;телефона
+			</label>
+			<div class="col-sm-6 has-feedback">
+				<input
+						class="form-control"
+						data-describedby="phone-desc"
+						data-description="phone"
+						data-validate="phone"
+						id="phone"
+						maxlength="20"
+						name="phone"
+						placeholder="+7 (123) 456 78 90"
+						size="15"
+						th:value="*{phone}"/>
+				<span class="glyphicon form-control-feedback" id="phone"></span>
+				<span class="help-block">обязательное поле</span>
+				<div id="phone-desc"></div>
+				<errors cssClass="alert alert-danger" element="div" path="phone"></errors>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-4 control-label" for="address">
+				адрес&nbsp;доставки
+			</label>
+			<div class="col-sm-6 has-feedback">
+				<input
+						class="form-control"
+						data-describedby="address-desc"
+						data-description="address"
+						data-validate="address"
+						id="address"
+						maxlength="100"
+						name="address"
+						size="15"
+						th:value="*{address}"/>
+				<span class="glyphicon form-control-feedback" id="address"></span>
+				<span class="help-block">обязательное поле</span>
+				<div id="address-desc"></div>
+				<errors cssClass="alert alert-danger" element="div" path="address"></errors>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-4 col-sm-8">
+				<button class="btn btn-success" type="submit">Зарегистрироваться</button>
+			</div>
+		</div>
+	</form>
+
+	<script type="text/javascript">
+    $('#signupForm').validate({
+        onKeyup: true,
+        onChange: true,
+        submitHandler: function (form) {
+            form.submit();
+        },
+        eachValidField: function () {
+            var input = $(this).attr('id');
+            $(this).closest('div.form-group').removeClass('has-error').addClass('has-success');
+            $('span#' + input).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+        },
+        eachInvalidField: function () {
+            var input = $(this).attr('id');
+            $(this).closest('div.form-group').removeClass('has-success').addClass('has-error');
+            $('span#' + input).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+        },
+        conditional: {
+            email: function () {
+                return ($(this).val().length >= 6);
+            },
+            password: function () {
+                return ($(this).val().length >= 6);
+            },
+            confirm: function () {
+                return ($(this).val() === $('#password').val());
+            }
+        },
+        description: {
+            name: {
+                pattern: '<div class="alert alert-danger">Специальные символы недопустимы.</div>'
+            },
+            email: {
+                conditional: '<div class="alert alert-danger">Длина должна составлять не менее 6 символов.</div>',
+                pattern: '<div class="alert alert-danger">Значение поля должно иметь формат адреса электронной почты.</div>'
+            },
+            password: {
+                conditional: '<div class="alert alert-danger">Длина должна составлять от 6 до 50 символов.</div>',
+                pattern: '<div class="alert alert-danger">Пароль должен состоять из цифр и латинских букв.</div>'
+            },
+            confirm: {
+                conditional: '<div class="alert alert-danger">Не совпадает с паролем.</div>',
+                pattern: '<div class="alert alert-danger">Пароль должен состоять из цифр и латинских букв.</div>'
+            },
+            phone: {
+                pattern: '<div class="alert alert-danger">Должен состоять из знака +, кода страны, кода региона (1-4 цифр) и номера (6-7 цифр).</div>'
+            },
+            address: {
+                pattern: '<div class="alert alert-danger">Специальные символы недопустимы.</div>'
+            }
+        }
+    });
+    $.validateExtend({
+        name: {
+            required: true,
+            pattern: /^[^#$%^*()']*$/
+        },
+        email: {
+            required: true,
+            pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]+$/
+        },
+        password: {
+            required: true,
+            pattern: /^[a-zA-Z0-9]+$/
+        },
+        confirm: {
+            required: true
+        },
+        phone: {
+            required: true,
+            pattern: /^\+[1-9]\d{0,2}?[\s]*\(?\d{1,4}\)?[-\s]?\d{1,3}[-\s]?\d{2}[-\s]?\d{2}$/
+        },
+        address: {
+            required: true,
+            pattern: /^[^#$%^*()']*$/
+        }
+    });
+</script>
+
+	<div aria-hidden="true" aria-labelledby="detailsModal" class="modal" id="detailsModal" role="dialog" tabindex="-1">
+		<div class="modal-dialog" style="line-height:160%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+					<h4 class="modal-title">Регистрация пользователя</h4>
+				</div>
+				<div class="modal-body">
+					<p>Функции</p>
+					<ol type="1">
+						<li>создание учётной записи;</li>
+						<li>получение и сохранение данных о покупателе;</li>
+						<li>проверка корректного вида введённых данных.</li>
+					</ol>
+					<hr/>
+					<p>Детали реализации</p>
+					<ol class="discharged" type="1">
+						<li>Пароль учётной записи не хранится в виде текста, при регистрации вычисляется его хэш-функция,
+							которая заносится в базу данных.
+						</li>
+						<li>Указанные пользователем телефон и адрес доставки будут использоваться в качестве контактных
+							данных по умолчанию. Позже они могут быть изменены в процессе оформления заказа.
+						</li>
+						<li>Проверка данных формы выполняется дважды: на стороне пользователя и на стороне сервера.
+							Подробности в разделе <a th:href="@{/inside#forms}">проверка форм</a>.
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</content>
+</body>
+</html>

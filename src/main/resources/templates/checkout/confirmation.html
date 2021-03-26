@@ -1,0 +1,78 @@
+<!--
+    Страница подтверждения приёма заказа (шаг 3 оформления заказа).
+-->
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/frontend/template :: frontend(~{}, ~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<h1>Заказ подтверждён</h1>
+
+	<div class="clearfix">
+		<div>
+			<div class="col-md-7" style="padding-right: 20px;">
+				<p th:if="${createdOrder.deliveryIncluded}">
+					<b>Ваш заказ будет скомплектован и доставлен в течение 24 часов.</b></p>
+				<p th:if="${!createdOrder.deliveryIncluded}">
+					<b>Ваш заказ будет скомплектован и доступен для получения в течение часа.</b></p>
+
+				<p>Номер счёта: <strong th:text="${createdOrder.billNumber}"></strong>.</p>
+				<p>Благодарим вас за заказ в нашем магазине!</p>
+				<br>
+				<p>Просмотреть все сделанные заказы вы можете в разделе
+					<a th:href="@{/customer/orders}">история заказов</a>.</p>
+			</div>
+			<div class="col-md-5">
+				<div class="panel panel-default">
+					<div class="panel-heading">Получатель</div>
+					<div class="panel-body">
+						<span th:text="${userAccount.name}"></span>
+						<br>
+						<span th:if="${createdOrder.deliveryIncluded}">
+						г. Санкт-Петербург<br>
+						<span th:text="${userContacts.address}"></span>
+						<hr/>
+					</span>
+						<span th:text="${userContacts.phone}"></span>
+						<br>
+						<span th:text="${userAccount.email}"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<br>
+
+	<center>
+		<a class="btn btn-primary" th:href="@{/}">вернуться в магазин</a>
+	</center>
+
+	<br>
+
+	<div aria-hidden="true" aria-labelledby="detailsModal" class="modal fade bs-modal-sm" id="detailsModal"
+		 role="dialog"
+		 tabindex="-1">
+		<div class="modal-dialog modal-sm" style="line-height:160%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+					<h4 class="modal-title">Благодарность покупателю</h4>
+				</div>
+				<div class="modal-body">
+					<p>Финальный этап оформления заказа.</p>
+					<p>Вся информация о заказе была сохранена в базе данных, теперь она доступна покупателю в истории
+					   заказов и администрации магазина &ndash; в панели управления.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</content>
+</body>
+</html>

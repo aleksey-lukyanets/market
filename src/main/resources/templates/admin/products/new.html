@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/backend/template :: backend(~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<h1>Добавление товара</h1>
+
+	<br>
+
+	<form class="form-horizontal" id="productForm"
+		  method="post"
+		  th:action="@{/admin/products/new}" th:object="${product}">
+
+		<div th:replace="~{_layouts/backend/product-form :: product-form}">product-form</div>
+
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-8">
+				<a class="btn btn-default" th:href="@{/admin/products}">
+					Вернуться
+				</a>
+				<button class="btn btn-primary" type="submit">
+					Создать
+				</button>
+			</div>
+		</div>
+	</form>
+
+</content>
+</body>
+</html>

@@ -13,13 +13,6 @@ spring:
     fallback-to-system-locale: false
     use-code-as-default-message: true
 
-server:
-  servlet:
-    context-parameters:
-      imagesPath: /resources/img/
-      regionImagePath: /resources/img/regions/
-      productImagePath: /resources/img/products/
-
 ---
 
 spring:
@@ -29,6 +22,13 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password:
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+  resources:
+    cache:
+      period: 0
 
 ---
 
@@ -39,3 +39,7 @@ spring:
     driverClassName: org.postgresql.Driver
     username: market
     password: market
+  thymeleaf:
+    cache: true
+    mode: HTML
+    encoding: UTF-8

@@ -1,0 +1,112 @@
+<!--
+    Страница входа в магазин.
+-->
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/frontend/template :: frontend(~{}, ~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+
+<body>
+<content>
+
+	<h1>Вход в магазин</h1>
+
+	<br>
+
+	<div class="bs-callout bs-callout-danger" th:if="${'true' eq param.error}">
+		<h4>Пользователя с таким сочетанием логина и пароля не существует.</h4>
+	</div>
+	<div class="bs-callout bs-callout-danger" th:if="${'true' eq param.secured}">
+		<h4>Для доступа к запрошенной странице у вас недостаточно прав.</h4>
+	</div>
+
+	<div style="margin-top:70px; margin-bottom:100px;">
+		<div>
+			<form class="form-horizontal" id="signupForm" method="post" th:action="@{/login}">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="email">
+						электронная почта
+					</label>
+					<div class="col-sm-5">
+						<input class="form-control"
+							   id="email"
+							   maxlength="45"
+							   name="email"
+							   size="31"
+							   type="text">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="password">
+						пароль
+					</label>
+					<div class="col-sm-5">
+						<input class="form-control"
+							   id="password"
+							   maxlength="45"
+							   name="password"
+							   size="31"
+							   type="password">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-5">
+						<div class="checkbox">
+							<label for="_spring_security_remember_me">
+								<input id="_spring_security_remember_me"
+									   name="_spring_security_remember_me"
+									   type="checkbox"> запомнить меня
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-5">
+						<button class="btn btn-success" type="submit">Войти</button>
+						<a class="btn btn-default" th:href="@{/customer/new}">Регистрация</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<div class="bs-callout bs-callout-success">
+		<h4>Готовая учётная запись</h4>
+		<p>Для простоты вы можете воспользоваться подготовленной заранее учётной записью покупателя: логин
+			<b>ivan.petrov@yandex.ru</b>,
+		   пароль <b>petrov</b>.</p>
+		<p>Если вам интересен процесс регистрации, вы можете создать новую самостоятельно.</p>
+	</div>
+	<div class="bs-callout bs-callout-success">
+		Учётная запись администратора: логин <b>admin</b>, пароль <b>password</b>.
+	</div>
+
+	<div aria-hidden="true" aria-labelledby="detailsModal" class="modal" id="detailsModal" role="dialog" tabindex="-1">
+		<div class="modal-dialog" style="line-height:160%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+					<h4 class="modal-title">Авторизация</h4>
+				</div>
+				<div class="modal-body">
+					<p>Детали реализации</p>
+					<ol class="discharged">
+						<li>Авторизация и контроль доступа реализованы средствами Spring Security.</li>
+						<li>После успешной аутентификации пользователь будет перенаправлен на различные страницы, в
+							зависимости от его уровня доступа:
+							<ul>
+								<li>на главную страницу магазина &ndash; для покупателя;</li>
+								<li>на страницу панели управления &ndash; для персонала магазина.</li>
+							</ul>
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</content>
+</body>
+</html>

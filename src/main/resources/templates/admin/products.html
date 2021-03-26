@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"
+	  th:replace="_layouts/backend/template :: backend(~{::content})"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:schemaLocation="http://www.thymeleaf.org">
+<body>
+
+<content>
+
+	<h1>Управление товарами</h1>
+
+	<br>
+
+	<div th:include="~{_layouts/backend/filters :: products-filter}" class="clearfix" style="margin-bottom: 20px;">filter</div>
+
+	<div class="table-responsive">
+		<table class="table table-small-text" width="100%">
+			<thead>
+			<tr>
+				<th>id</th>
+				<th>винокурня</th>
+				<th width="110">наименование<br>товара</th>
+				<th>возр.</th>
+				<th>регион</th>
+
+				<th>объём,<br>мл.</th>
+				<th>алк.<br>%&nbsp;об.</th>
+				<th>цена,<br>руб.</th>
+				<th width="160">описание</th>
+				<th></th>
+			</tr>
+			</thead>
+
+			<tr th:each="product : ${page.content}"
+				th:with="desc=${product.description},shortDesc=${desc.length() > 100 ? #strings.substring(desc, 0, 60) : desc}">
+
+				<td th:text="${product.productId}"></td>
+				<td th:text="${product.distillery}"></td>
+				<td th:text="${product.name}"></td>
+				<td th:text="${product.age}"></td>
+				<td th:text="${regionByDistillery[product.distillery]}"></td>
+
+				<td th:text="${product.volume}"></td>
+				<td th:text="${product.alcohol}"></td>
+				<td th:text="${product.price}"></td>
+				<td>
+					<span th:text="${shortDesc}"></span>
+					<span th:if="${desc.length() >= 60}">...</span>
+				</td>
+				<td>
+					<form method="post" th:action="@{products/{id}/delete(id=${product.productId})}">
+						<div class="pull-right">
+							<a class="btn btn-xs btn-default"
+							   th:href="@{products/{id}/edit(id=${product.productId})}">изменить</a>
+							<br>
+							<button class="btn btn-xs btn-default" type="submit">удалить</button>
+						</div>
+					</form>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="10">
+					<a class="btn btn-primary btn-sm" th:href="@{/admin/products/new}">
+						добавить товар
+					</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div th:insert="~{_layouts/pagination :: pagination}">pagination</div>
+
+</content>
+</body>
+</html>
