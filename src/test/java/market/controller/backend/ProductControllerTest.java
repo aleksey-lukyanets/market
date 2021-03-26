@@ -70,7 +70,7 @@ public class ProductControllerTest {
 	public void beforeEach() {
 		ProductController controller = new ProductController(productService, distilleryService, properties);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 
 		Region region = FixturesFactory.region().build();

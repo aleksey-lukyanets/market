@@ -84,7 +84,7 @@ public class CheckoutControllerTest {
 	public void beforeEach() {
 		CheckoutController controller = new CheckoutController(userAccountService, contactsService, orderService, cartService, marketProperties);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 
 		Contacts contacts = FixturesFactory.contacts().build();

@@ -72,7 +72,7 @@ public class CartControllerTest {
 		CartController controller = new CartController(cartService, productService, marketProperties);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
 			.addInterceptors(new SessionCartInterceptor())
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 
 		account = FixturesFactory.account().setEmail("user").build();

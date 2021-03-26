@@ -46,7 +46,7 @@ public class RegionControllerTest {
 	public void beforeEach() {
 		RegionController controller = new RegionController(regionService);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 		region = FixturesFactory.region().build();
 	}

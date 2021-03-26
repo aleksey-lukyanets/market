@@ -34,7 +34,7 @@ public class FrontendControllerTest {
 	public void beforeEach() {
 		FrontendController controller = new FrontendController(regionService);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 		region = FixturesFactory.region().build();
 	}

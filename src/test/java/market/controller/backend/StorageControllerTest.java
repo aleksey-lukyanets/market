@@ -55,7 +55,7 @@ public class StorageControllerTest {
 	public void beforeEach() {
 		StorageController controller = new StorageController(productService);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 
 		Region region = FixturesFactory.region().build();

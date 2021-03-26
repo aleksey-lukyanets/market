@@ -5,18 +5,14 @@
 ![build](https://github.com/aleksey-lukyanets/market/workflows/build/badge.svg)
 
 This project was started in 2014 as a study for Spring and related web technologies,
-partly modernized in 2020-21.
-
-<p>Since around 2014 professionally I am focused on backend development,
-a modernization/maintenance of this project continues as a hobby and is updated occasionally.
+partly modernized in 2020-21. Since around 2014 professionally I am focused on backend development,
+a modernization/maintenance of this project continues occasionally.
 This is not a perfectly finished project, so it may contain bugs, imperfection and some mess.
-
-<p>Nevertheless I hope you may find it useful and interesting. Bug reports are appreciated.
 
 <h2>Technologies</h2>
 
 <ul class="discharged">
-    <li>servlet: Spring MVC, JSP, Apache Tiles, jQuery, Spring Security</li>
+    <li>servlet: Spring MVC, Thymeleaf, jQuery, Spring Security</li>
     <li>data: H2, Spring Data JPA, Hibernate</li>
     <li>RESTful service: Spring MVC, Spring HATEOAS</li>
     <li>tests: JUnit, Hamcrest, Mockito, JSONPath</li>

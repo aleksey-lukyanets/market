@@ -65,7 +65,7 @@ public class OrdersControllerTest {
 	public void beforeEach() {
 		OrdersController controller = new OrdersController(orderService, properties);
 		mockMvc = MockMvcBuilders.standaloneSetup(controller)
-			.setViewResolvers(new InternalResourceViewResolver("/WEB-INF/view/", ".jsp"))
+			.setViewResolvers(new InternalResourceViewResolver("/templates/", ".html"))
 			.build();
 
 		Region region = FixturesFactory.region().build();

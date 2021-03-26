@@ -33,8 +33,6 @@ public class FixturesFactory {
 
 	private static final String BILL_CARD_NUMBER = "1111222233334444";
 
-	private static final int PAGINATION_BACKEND = 3;
-
 	private static long regionId = 123L;
 	private static long distilleryId = 234L;
 	private static long productId = 10L;
