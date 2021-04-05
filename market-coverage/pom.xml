@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<artifactId>market</artifactId>
+		<groupId>net.lukyanets</groupId>
+		<version>0.1.2</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>market-coverage</artifactId>
+
+	<properties>
+		<ant.run.plugin.version>1.8</ant.run.plugin.version>
+
+		<build.directory.market-core>../market-core/target</build.directory.market-core>
+		<build.directory.market-web>../market-web/target</build.directory.market-web>
+		<build.directory.market-rest>../market-rest/target</build.directory.market-rest>
+
+		<classes.directory.market-core>../market-core/target/classes</classes.directory.market-core>
+		<classes.directory.market-web>../market-web/target/classes</classes.directory.market-web>
+		<classes.directory.market-rest>../market-rest/target/classes</classes.directory.market-rest>
+
+		<sources.directory.market-core>../market-core/src/main/java</sources.directory.market-core>
+		<sources.directory.market-web>../market-web/src/main/java</sources.directory.market-web>
+		<sources.directory.market-rest>../market-rest/src/main/java</sources.directory.market-rest>
+
+		<generated-sources.directory.market-core>../market-core/target/generated-sources/annotations</generated-sources.directory.market-core>
+		<generated-sources.directory.market-web>../market-web/target/generated-sources/annotations</generated-sources.directory.market-web>
+		<generated-sources.directory.market-rest>../market-rest/target/generated-sources/annotations</generated-sources.directory.market-rest>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<!-- Copy the ant tasks jar. Needed for ts.jacoco.report-ant . -->
+					<execution>
+						<id>jacoco-dependency-ant</id>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<phase>process-test-resources</phase>
+						<inherited>false</inherited>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.jacoco</groupId>
+									<artifactId>org.jacoco.ant</artifactId>
+									<version>${jacoco.version}</version>
+								</artifactItem>
+							</artifactItems>
+							<stripVersion>true</stripVersion>
+							<outputDirectory>${basedir}/target/jacoco-jars</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${ant.run.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<!-- Execute an ant task within maven -->
+								<echo message="Generating JaCoCo Reports" />
+								<taskdef name="report" classname="org.jacoco.ant.ReportTask">
+									<classpath path="${basedir}/target/jacoco-jars/org.jacoco.ant.jar" />
+								</taskdef>
+								<mkdir dir="${basedir}/target/coverage-report" />
+								<report>
+									<executiondata>
+										<fileset dir="${build.directory.market-core}">
+											<include name="jacoco.exec" />
+										</fileset>
+										<fileset dir="${build.directory.market-web}">
+											<include name="jacoco.exec" />
+										</fileset>
+										<fileset dir="${build.directory.market-rest}">
+											<include name="jacoco.exec" />
+										</fileset>
+									</executiondata>
+									<structure name="jacoco-multi Coverage Project">
+										<group name="jacoco-multi">
+											<classfiles>
+												<fileset dir="${classes.directory.market-core}" />
+												<fileset dir="${classes.directory.market-web}" />
+												<fileset dir="${classes.directory.market-rest}" />
+											</classfiles>
+											<sourcefiles encoding="UTF-8">
+												<fileset dir="${sources.directory.market-core}" />
+												<fileset dir="${sources.directory.market-web}" />
+												<fileset dir="${sources.directory.market-rest}" />
+											</sourcefiles>
+										</group>
+									</structure>
+									<html destdir="${basedir}/target/coverage-report/html" />
+									<xml destfile="${basedir}/target/coverage-report/coverage-report.xml" />
+									<csv destfile="${basedir}/target/coverage-report/coverage-report.csv" />
+								</report>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+
+				<dependencies>
+					<dependency>
+						<groupId>org.jacoco</groupId>
+						<artifactId>org.jacoco.ant</artifactId>
+						<version>${jacoco.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+</project>

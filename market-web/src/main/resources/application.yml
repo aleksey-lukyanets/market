@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: market-web
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        hbm2ddl.auto: none
+  messages:
+    basename: messages
+    fallback-to-system-locale: false
+    use-code-as-default-message: true
+
+---
+
+spring:
+  profiles: default
+  datasource:
+    url: jdbc:h2:mem:market;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+  resources:
+    cache:
+      period: 0
+
+---
+
+spring:
+  profiles: prod
+  datasource:
+    url: jdbc:postgresql://localhost:5432/market
+    driverClassName: org.postgresql.Driver
+    username: market
+    password: market
+  thymeleaf:
+    cache: true
+    mode: HTML
+    encoding: UTF-8
