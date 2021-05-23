@@ -36,7 +36,7 @@ jobs:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
           if [ "$CODACY_PROJECT_TOKEN" != "" ] ; then
-            bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java -r target/site/jacoco/jacoco.xml
+            bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java -r market-coverage/target/coverage-report/coverage-report.xml
           else
             echo "No CODACY_PROJECT_TOKEN provided for Codacy report"
           fi

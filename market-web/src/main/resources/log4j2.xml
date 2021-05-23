@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+    <Properties>
+        <property name="AppName" value="market-web" />
+        <property name="LogDir" value="./logs" />
+        <property name="DefaultPattern" value="%d %-5level [%t] %c{1.} - %msg%n%throwable" />
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${DefaultPattern}" />
+        </Console>
+
+        <RandomAccessFile name="File" fileName="${LogDir}/${AppName}.log" immediateFlush="false" append="false">
+            <PatternLayout pattern="${DefaultPattern}" />
+        </RandomAccessFile>
+
+        <RandomAccessFile name="ErrorFile" fileName="${LogDir}/${AppName}.err" immediateFlush="false" append="false" >
+            <PatternLayout pattern="${DefaultPattern}" />
+        </RandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <AsyncLogger name="market" level="trace" />
+
+        <AsyncRoot level="info">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+            <AppenderRef ref="ErrorFile" level="warn" />
+        </AsyncRoot>
+    </Loggers>
+
+</Configuration>

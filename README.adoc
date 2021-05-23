@@ -1,0 +1,71 @@
+= Simple internet-market
+
+image:https://api.codacy.com/project/badge/Grade/8c0bd51bdba44e04bd2cbbfd7f643e9f[link=https://www.codacy.com/manual/aleksey-lukyanets/market?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=aleksey-lukyanets/market&amp;utm_campaign=Badge_Grade]
+image:https://api.codacy.com/project/badge/Coverage/8c0bd51bdba44e04bd2cbbfd7f643e9f[link=https://www.codacy.com/manual/aleksey-lukyanets/market?utm_source=github.com&utm_medium=referral&utm_content=aleksey-lukyanets/market&utm_campaign=Badge_Coverage]
+image:https://github.com/aleksey-lukyanets/market/workflows/build/badge.svg[link]
+
+This project was started in 2014 as a study for Spring and related web technologies,
+partly modernized in 2020-21. Since around 2014 professionally I am focused on backend development,
+a modernization/maintenance of this project continues occasionally.
+This is not a perfectly finished project, so it may contain bugs, imperfection and some mess.
+
+== Technologies
+
+* servlet: ``Spring MVC`` ``Thymeleaf`` ``jQuery`` ``Spring Security``
+* data: ``Spring Data JPA`` ``H2`` ``Hibernate``
+* RESTful service: ``Spring MVC`` ``Spring HATEOAS``
+* tests: ``JUnit`` ``Hamcrest`` ``Mockito`` ``JSONPath``
+
+== How to
+
+The project is divided to modules and includes two applications: web-application and RESTful service.
+Each of them may be run separately.
+
+[%header,cols=".^2,.^3,.^3",width=90%]
+|===
+| |Web application |RESTful service
+|*module* |market-web |market-rest
+|*Java version* 2+^|11
+|*built packages* 2+^|https://github.com/aleksey-lukyanets/market/packages/
+|*main class* |``WebApplication.java`` |``RestApplication.java``
+|*port* |8080 |8081
+|*basic URL* |``localhost:8080`` |``localhost:8081/products``
+|*user login* 2+|``admin/password`` ``ivan.petrov@yandex.ru/petrov``
+|*logs* 2+|``logs/``
+|*H2 console* |``localhost:8080/h2-console/`` |``localhost:8081/h2-console/``
+|*Swagger UI* |- |``localhost:8080/swagger-ui/#/``
+|===
+
+== Functionality
+
+* Visual representation of the product range
+* Customer's shopping cart
+** selecting a product: add, delete, change a quantity
+** viewing the contents of the cart
+** placing an order
+** storing in the database a shopping cart of a registered customer
+* Market control panel
+** products and categories: add, edit, delete
+** viewing information about placed orders
+** managing the availability of goods in stock
+** transfer orders from the "in progress" state to the "executed" state
+* Secured access to the application
+** registration and authorization of customers
+** restricted access to the control panel
+* Double check of form content: client-side and server-side
+
+== Databases
+
+By default applications use in-memory H2 database.
+Run application with Spring profile ``prod`` to connect to a standalone database (PostreSQL)
+with market/market username and password.
+
+== Legacy branches
+
+``jsp-2021`` - status with web views based on JSP and Apache Tiles, before moving to Thymeleaf
+
+``good-old-2014`` - status for 2014
+
+== Links
+
+For project description in Russian from good old 2014 refer to ``README_RU.md``
