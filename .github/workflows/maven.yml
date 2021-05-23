@@ -25,10 +25,7 @@ jobs:
         run: mvn --file pom.xml clean compile
 
       - name: Build
-        run: mvn --file pom.xml install -DskipTests
-
-      - name: Run tests and coverage
-        run: mvn test jacoco:report
+        run: mvn --file pom.xml install
 
       - name: Report coverage to Codacy
         shell: bash
