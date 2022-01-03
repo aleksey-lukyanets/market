@@ -18,8 +18,17 @@ This is not a perfectly finished project, so it may contain bugs, imperfection a
 
 == How to
 
-The project is divided to modules and includes two applications: web-application and RESTful service.
-Each of them may be run separately.
+The project is divided to modules and includes two applications:
+
+* a web-application, module ``market-web``
+* a RESTful service, module ``market-rest``
+
+Each of the two could be run separately by executing the following Maven command
+against specific module from the root directory of the project:
+
+``./mvnw spring-boot:run -pl <module-name, e.g. market-web>``
+
+You may also use ``mvn`` in case you prefer standalone Maven.
 
 [%header,cols=".^2,.^3,.^3",width=90%]
 |===
