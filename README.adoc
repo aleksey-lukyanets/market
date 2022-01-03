@@ -37,12 +37,12 @@ You may also use ``mvn`` in case you prefer standalone Maven.
 |*Java version* 2+^|11
 |*built packages* 2+^|https://github.com/aleksey-lukyanets/market/packages/
 |*main class* |``WebApplication.java`` |``RestApplication.java``
-|*port* |8080 |8081
+|*default port* |8080 |8081
 |*basic URL* |``localhost:8080`` |``localhost:8081/products``
 |*user login* 2+|``admin/password`` ``ivan.petrov@yandex.ru/petrov``
 |*logs* 2+|``logs/``
 |*H2 console* |``localhost:8080/h2-console/`` |``localhost:8081/h2-console/``
-|*Swagger UI* |- |``localhost:8080/swagger-ui/#/``
+|*Swagger UI* |- |``localhost:8081/swagger-ui/#/``
 |===
 
 == Functionality
