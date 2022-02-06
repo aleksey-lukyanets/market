@@ -8,9 +8,7 @@ import market.dto.CartItemDTO;
 import market.properties.MarketProperties;
 import market.service.ProductService;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
-import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,13 +26,6 @@ public class CartDtoAssembler implements RepresentationModelAssembler<Cart, Cart
 		CartDTO dto = toAnonymousResource(cart);
 		dto.setUser(cart.getUserAccount().getEmail());
 		return dto;
-	}
-
-	public CartDTO convertToModelAndUpdateAttributes(Cart cart, String attribute, Model model, HttpServletRequest request) {
-		CartDTO cartDTO = toModel(cart);
-		model.addAttribute(attribute, cartDTO);
-		request.getSession().setAttribute(attribute, cartDTO);
-		return cartDTO;
 	}
 
 	public CartDTO toAnonymousResource(Cart cart) {
