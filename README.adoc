@@ -34,9 +34,20 @@ Run application with active Spring profile ``prod`` to connect to a standalone h
 === Running with Maven
 
 Each application could be run separately by executing the following Maven command
-against a specific module from the root directory of the project:
+against a specific module.
 
-``./mvnw spring-boot:run -pl market-web``
+To run Web-application:
+
+* ``./mvnw spring-boot:run -pl market-web``
+* visit ``localhost:8080`` and ``localhost:8080/admin`` in your browser to enjoy the app
+* visit ``localhost:8080/h2-console/`` to access H2 console
+
+To run REST-service:
+
+* ``./mvnw spring-boot:run -pl market-rest``
+* visit ``localhost:8081/products`` to observe market products in your browser or REST-client
+* visit ``localhost:8081/swagger-ui/#/`` to observe Swagger API page
+* visit ``localhost:8081/h2-console/`` to access H2 console
 
 === Running with Docker
 
@@ -45,18 +56,13 @@ Both applications are packed into https://docs.docker.com/[Docker] images
 
 To run application via Docker it is required to have Docker installed and follow the steps below:
 
-* Pull the image from Docker Hub: ``docker pull alukyanets/market-web``
-* Run a container with application listening on port 8080: ``docker run -p 8080:8080 alukyanets/market-web``
-* Visit ``localhost:8080`` and ``localhost:8080/admin`` in your browser to enjoy the app
-* Visit ``localhost:8080/h2-console/`` to access H2 console
+* pull the image from Docker Hub: ``docker pull alukyanets/market-web``
+* run a container with application listening on port 8080: ``docker run -p 8080:8080 alukyanets/market-web``
 
 Quite similar for REST-service:
 
-* Pull the image from Docker Hub: ``docker pull alukyanets/market-rest``
-* Run a container with application listening on port 8081: ``docker run -p 8081:8081 alukyanets/market-rest``
-* Visit ``localhost:8081/products`` to observe market products in your browser or REST-client
-* Visit ``localhost:8081/swagger-ui/#/`` to observe Swagger API page
-* Visit ``localhost:8081/h2-console/`` to access H2 console
+* pull the image from Docker Hub: ``docker pull alukyanets/market-rest``
+* run a container with application listening on port 8081: ``docker run -p 8081:8081 alukyanets/market-rest``
 
 === Running with docker-compose
 
