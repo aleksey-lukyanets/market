@@ -1,3 +1,6 @@
+server:
+  port: ${PORT:8080}
+
 spring:
   application:
     name: market-web
@@ -37,7 +40,7 @@ spring:
 spring:
   profiles: prod
   datasource:
-    url: jdbc:postgresql://localhost:5432/market
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/market
     driverClassName: org.postgresql.Driver
     username: market
     password: market
