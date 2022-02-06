@@ -20,25 +20,71 @@ This is not a perfectly finished project, so it may contain bugs, imperfection a
 
 The project is divided to modules and includes two applications:
 
-* a web-application, module ``market-web``
-* a RESTful service, module ``market-rest``
+* Web-application, module ``market-web``
+* REST-service, module ``market-rest``
 
-Each of the two could be run separately by executing the following Maven command
-against specific module from the root directory of the project:
+These applications are designed to use similar database scheme and could be run together.
 
-``./mvnw spring-boot:run -pl <module-name, e.g. market-web>``
+You are able to open the project in your favourite IDE and simply run the main class of the application.
 
-You may also use ``mvn`` in case you prefer standalone Maven.
+By default an app is started with its own in-memory https://www.h2database.com[H2 database]
+and thus all the data is dropped after stopping the app.
+Run application with active Spring profile ``prod`` to connect to a standalone https://www.postgresql.org/[PostgreSQL] database.
+
+=== Running with Maven
+
+Each application could be run separately by executing the following Maven command
+against a specific module from the root directory of the project:
+
+``./mvnw spring-boot:run -pl market-web``
+
+=== Running with Docker
+
+Both applications are packed into https://docs.docker.com/[Docker] images
+(available https://hub.docker.com/u/alukyanets[on Docker Hub]).
+
+To run application via Docker it is required to have Docker installed and follow the steps below:
+
+* Pull the image from Docker Hub: ``docker pull alukyanets/market-web``
+* Run a container with application listening on port 8080: ``docker run -p 8080:8080 alukyanets/market-web``
+* Visit ``localhost:8080`` and ``localhost:8080/admin`` in your browser to enjoy the app
+* Visit ``localhost:8080/h2-console/`` to access H2 console
+
+Quite similar for REST-service:
+
+* Pull the image from Docker Hub: ``docker pull alukyanets/market-rest``
+* Run a container with application listening on port 8081: ``docker run -p 8081:8081 alukyanets/market-rest``
+* Visit ``localhost:8081/products`` to observe market products in your browser or REST-client
+* Visit ``localhost:8081/swagger-ui/#/`` to observe Swagger API page
+* Visit ``localhost:8081/h2-console/`` to access H2 console
+
+=== Running with docker-compose
+
+https://docs.docker.com/compose/[Docker-compose] makes possible starting with a single command
+both an application and a standalone PostgreSQL database volume:
+
+* ``docker-compose -f docker-compose-web.yaml up`` or ``docker-compose -f docker-compose-rest.yaml up``
+
+or running both applications sharing the same standalone PostgreSQL volume:
+
+* ``docker-compose -f docker-compose.yaml up``
+
+To stop the running containers use ``Ctrl + C``. You are able to remove all the containers, e.g.:
+
+* ``docker-compose -f docker-compose.yaml down``
+
+The created PostgreSQL volume will keep database state after stopping application.
+
+== Applications attributes
 
 [%header,cols=".^2,.^3,.^3",width=90%]
 |===
 | |Web application |RESTful service
 |*module* |market-web |market-rest
 |*Java version* 2+^|11
-|*built packages* 2+^|https://github.com/aleksey-lukyanets/market/packages/
 |*main class* |``WebApplication.java`` |``RestApplication.java``
 |*default port* |8080 |8081
-|*basic URL* |``localhost:8080`` |``localhost:8081/products``
+|*basic URL* |``localhost:8080``, ``localhost:8080/admin`` |``localhost:8081/products``
 |*user login* 2+|``admin/password`` ``ivan.petrov@yandex.ru/petrov``
 |*logs* 2+|``logs/``
 |*H2 console* |``localhost:8080/h2-console/`` |``localhost:8081/h2-console/``
@@ -63,11 +109,12 @@ You may also use ``mvn`` in case you prefer standalone Maven.
 ** restricted access to the control panel
 * Double check of form content: client-side and server-side
 
-== Databases
+== Building Docker images
 
-By default applications use in-memory H2 database.
-Run application with Spring profile ``prod`` to connect to a standalone database (PostreSQL)
-with market/market username and password.
+To build an image run:
+
+* ``docker build -t alukyanets/market-web --build-arg module=market-web .``
+* or ``docker build -t alukyanets/market-rest --build-arg module=market-rest .``
 
 == Legacy branches
 

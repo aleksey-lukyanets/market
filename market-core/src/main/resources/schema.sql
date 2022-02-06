@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS bill;
 CREATE TABLE bill (
-    id bigint auto_increment NOT NULL,
+    id bigserial NOT NULL,
     number integer,
     date_created date,
     total_cost integer,
@@ -10,7 +10,7 @@ CREATE TABLE bill (
 
 DROP TABLE IF EXISTS cart;
 CREATE TABLE cart (
-    id bigint auto_increment NOT NULL,
+    id bigserial NOT NULL,
     total_items integer,
     products_cost integer,
     delivery_included boolean
@@ -25,7 +25,7 @@ CREATE TABLE cart_item (
 
 DROP TABLE IF EXISTS contacts;
 CREATE TABLE contacts (
-    id bigint auto_increment NOT NULL,
+    id bigserial NOT NULL,
     phone character varying(20),
     address character varying(100),
     city_region character varying(50)
@@ -44,7 +44,7 @@ CREATE TABLE customer_order (
 
 DROP TABLE IF EXISTS distillery;
 CREATE TABLE distillery (
-    id bigint auto_increment NOT NULL,
+    id bigserial NOT NULL,
     title character varying(25),
     region_id bigint,
     description character varying(1000)
@@ -59,7 +59,7 @@ CREATE TABLE ordered_product (
 
 DROP TABLE IF EXISTS product;
 CREATE TABLE product (
-    id bigint auto_increment NOT NULL,
+    id bigserial NOT NULL,
     name character varying(45),
     distillery_id bigint,
     age smallint,
@@ -72,7 +72,7 @@ CREATE TABLE product (
 
 DROP TABLE IF EXISTS region;
 CREATE TABLE region (
-    id bigint auto_increment NOT NULL,
+    id bigserial NOT NULL,
     name character varying(20) NOT NULL,
     subtitle character varying(20),
     color character varying(10),
@@ -87,13 +87,13 @@ CREATE TABLE role (
 
 DROP TABLE IF EXISTS storage;
 CREATE TABLE storage (
-    id bigint auto_increment NOT NULL,
+    id bigserial NOT NULL,
     available boolean
 );
 
 DROP TABLE IF EXISTS user_account;
 CREATE TABLE user_account (
-    id bigint auto_increment NOT NULL,
+    id bigserial NOT NULL,
     email character varying(50),
     password character varying(255),
     name character varying(50),

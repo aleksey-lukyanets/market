@@ -1,0 +1,28 @@
+version: '3'
+services:
+    db:
+        container_name: db
+        image: postgres:9.6
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_DB=market
+            - POSTGRES_USER=market
+            - POSTGRES_PASSWORD=market
+        volumes:
+            - ./market-core/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/1_schema.sql
+            - ./market-core/src/main/resources/data.sql:/docker-entrypoint-initdb.d/2_data.sql
+            - postgres-data:/var/lib/postgresql/data
+    market-rest:
+        container_name: market-rest
+        image: alukyanets/market-rest
+        depends_on:
+            - db
+        ports:
+            - 8081:8081
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod
+            - DB_HOST=db
+volumes:
+    postgres-data:
+        driver: local

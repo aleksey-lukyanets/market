@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>net.lukyanets</groupId>
 			<artifactId>market-core</artifactId>
-			<version>0.1.2</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
