@@ -1,5 +1,6 @@
 package market.controller.frontend;
 
+import market.controller.CartModelHelper;
 import market.domain.Cart;
 import market.domain.Order;
 import market.domain.OrderedProduct;
@@ -60,6 +61,7 @@ public class CustomerController {
 	private final OrderedProductDtoAssembler orderedProductDtoAssembler = new OrderedProductDtoAssembler();
 	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
 	private final CartDtoAssembler cartDtoAssembler;
+	private final CartModelHelper cartModelHelper;
 
 	public CustomerController(UserAccountService userAccountService, OrderService orderService,
 	    AuthenticationService authenticationService, CartService cartService, ProductService productService,
@@ -71,6 +73,7 @@ public class CustomerController {
 		this.cartService = cartService;
 		this.productService = productService;
 		cartDtoAssembler = new CartDtoAssembler(marketProperties);
+		cartModelHelper = new CartModelHelper(cartDtoAssembler);
 	}
 
 	@Secured({"ROLE_USER"})
@@ -144,7 +147,7 @@ public class CustomerController {
 
 		Cart unauthorisedCart = cartDtoAssembler.toDomain(cartDto, productService);
 		Cart updatedCart = cartService.addAllToCart(newAccount.getEmail(), unauthorisedCart.getCartItems());
-		cartDtoAssembler.convertToModelAndUpdateAttributes(updatedCart, "cart", model, request);
+		cartModelHelper.convertAndUpdateAttributes(updatedCart, model, request);
 
 		return "redirect:" + ROOT;
 	}

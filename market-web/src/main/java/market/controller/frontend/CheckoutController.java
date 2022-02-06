@@ -1,5 +1,6 @@
 package market.controller.frontend;
 
+import market.controller.CartModelHelper;
 import market.domain.Cart;
 import market.domain.CartItem;
 import market.domain.Contacts;
@@ -57,8 +58,8 @@ public class CheckoutController {
 	private final ContactsDtoAssembler contactsDtoAssembler = new ContactsDtoAssembler();
 	private final UserAccountDtoAssembler accountDtoAssembler = new UserAccountDtoAssembler();
 	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
-	private final CartDtoAssembler cartDtoAssembler;
 	private final MarketProperties marketProperties;
+	private final CartModelHelper cartModelHelper;
 
 	public CheckoutController(UserAccountService userAccountService, ContactsService contactsService,
 		OrderService orderService, CartService cartService, MarketProperties marketProperties)
@@ -68,7 +69,7 @@ public class CheckoutController {
 		this.orderService = orderService;
 		this.cartService = cartService;
 		this.marketProperties = marketProperties;
-		cartDtoAssembler = new CartDtoAssembler(marketProperties);
+		cartModelHelper = new CartModelHelper(new CartDtoAssembler(marketProperties));
 	}
 
 	//--------------------------------------------- Changing contacts
@@ -141,7 +142,7 @@ public class CheckoutController {
 			model.addAttribute("createdOrder", orderDtoAssembler.toModel(order));
 
 			Cart cart = cartService.getCartOrCreate(login);
-			cartDtoAssembler.convertToModelAndUpdateAttributes(cart, "cart", model, request);
+			cartModelHelper.convertAndUpdateAttributes(cart, model, request);
 
 			return "redirect:/" + CHECKOUT_CONFIRMATION;
 		} catch (EmptyCartException ex) {

@@ -1,5 +1,6 @@
 package market.controller.frontend;
 
+import market.controller.CartModelHelper;
 import market.domain.Cart;
 import market.domain.CartItem;
 import market.domain.Product;
@@ -47,12 +48,14 @@ public class CartController {
 	private final CartDtoAssembler cartDtoAssembler;
 	private final ProductDtoAssembler productDtoAssembler = new ProductDtoAssembler();
 	private final MarketProperties marketProperties;
+	private final CartModelHelper cartModelHelper;
 
 	public CartController(CartService cartService, ProductService productService, MarketProperties marketProperties) {
 		this.cartService = cartService;
 		this.productService = productService;
 		this.marketProperties = marketProperties;
 		cartDtoAssembler = new CartDtoAssembler(marketProperties);
+		cartModelHelper = new CartModelHelper(cartDtoAssembler);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -62,7 +65,7 @@ public class CartController {
 	{
 		if (isAuthorized(principal)) {
 			Cart cart = cartService.getCartOrCreate(principal.getName());
-			cartDtoAssembler.convertToModelAndUpdateAttributes(cart, "cart", model, request);
+			cartModelHelper.convertAndUpdateAttributes(cart, model, request);
 			model.addAttribute("productsById", collectProductsMap(cart));
 		} else {
 			Map<Long, ProductDTO> productsById = cartDto.getCartItems().stream()
@@ -93,7 +96,7 @@ public class CartController {
 	{
 		if (isAuthorized(principal)) {
 			Cart clearedCart = cartService.clearCart(principal.getName());
-			cartDtoAssembler.convertToModelAndUpdateAttributes(clearedCart, "cart", model, request);
+			cartModelHelper.convertAndUpdateAttributes(clearedCart, model, request);
 		} else {
 			Cart cart = cartDtoAssembler.toDomain(cartDto, productService);
 			cart.clear();
@@ -164,7 +167,7 @@ public class CartController {
 		long productId = itemToAdd.getProductId();
 		int quantity = itemToAdd.getQuantity();
 		Cart updatedCart = cartService.addToCart(login, productId, quantity);
-		return cartDtoAssembler.convertToModelAndUpdateAttributes(updatedCart, "cart", model, request);
+		return cartModelHelper.convertAndUpdateAttributes(updatedCart, model, request);
 	}
 
 	private CartDTO updateGuestCart(CartDTO cartDto, CartItemDTO newCartItem) {
@@ -199,7 +202,7 @@ public class CartController {
 		if (isAuthorized(principal)) {
 			String login = principal.getName();
 			Cart updatedCart = cartService.setDelivery(login, included);
-			return cartDtoAssembler.convertToModelAndUpdateAttributes(updatedCart, "cart", model, request);
+			return cartModelHelper.convertAndUpdateAttributes(updatedCart, model, request);
 		} else {
 			cartDto.setDeliveryIncluded(included);
 			return cartDto;
