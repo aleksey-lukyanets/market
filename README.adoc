@@ -7,7 +7,7 @@ image:https://github.com/aleksey-lukyanets/market/workflows/build/badge.svg[link
 This project was started in 2014 as a study for Spring and related web technologies,
 partly modernized in 2020-21. Since around 2014 professionally I am focused on backend development,
 a modernization/maintenance of this project continues occasionally.
-This is not a perfectly finished project, so it may contain bugs, imperfection and some mess.
+This is not a perfectly finished project, so it may contain imperfection and some mess.
 
 == Technologies
 
@@ -20,8 +20,13 @@ This is not a perfectly finished project, so it may contain bugs, imperfection a
 
 The project is divided to modules and includes two applications:
 
-* Web-application, module ``market-web``
-* REST-service, module ``market-rest``
+* Web-application, module *market-web*, default port: 8080
+** visit ``localhost:8080`` and ``localhost:8080/admin`` in your browser to enjoy the app
+** visit ``localhost:8080/h2-console/`` to access H2 console
+* REST-service, module *market-rest*, default port: 8081
+** visit ``localhost:8081/products`` to observe market products
+** visit ``localhost:8081/swagger-ui/#/`` to observe Swagger API page
+** visit ``localhost:8081/h2-console/`` to access H2 console
 
 These applications are designed to use similar database scheme and could be run together.
 
@@ -29,37 +34,27 @@ You are able to open the project in your favourite IDE and simply run the main c
 
 By default an app is started with its own in-memory https://www.h2database.com[H2 database]
 and thus all the data is dropped after stopping the app.
-Run application with active Spring profile ``prod`` to connect to a standalone https://www.postgresql.org/[PostgreSQL] database.
+To connect to a standalone https://www.postgresql.org/[PostgreSQL] database run application with active Spring profile ``prod``.
 
 === Running with Maven
 
 Each application could be run separately by executing the following Maven command
-against a specific module.
+against a specific module:
 
-To run Web-application:
-
-* ``./mvnw spring-boot:run -pl market-web``
-* visit ``localhost:8080`` and ``localhost:8080/admin`` in your browser to enjoy the app
-* visit ``localhost:8080/h2-console/`` to access H2 console
-
-To run REST-service:
-
-* ``./mvnw spring-boot:run -pl market-rest``
-* visit ``localhost:8081/products`` to observe market products in your browser or REST-client
-* visit ``localhost:8081/swagger-ui/#/`` to observe Swagger API page
-* visit ``localhost:8081/h2-console/`` to access H2 console
+* Web-application: ``./mvnw spring-boot:run -pl market-web``
+* REST-service: ``./mvnw spring-boot:run -pl market-rest``
 
 === Running with Docker
 
 Both applications are packed into https://docs.docker.com/[Docker] images
 (available https://hub.docker.com/u/alukyanets[on Docker Hub]).
 
-To run application via Docker it is required to have Docker installed and follow the steps below:
+To run the Web-application with Docker you shoukd have Docker installed and follow the steps below:
 
 * pull the image from Docker Hub: ``docker pull alukyanets/market-web``
 * run a container with application listening on port 8080: ``docker run -p 8080:8080 alukyanets/market-web``
 
-Quite similar for REST-service:
+Quite similar for the REST-service:
 
 * pull the image from Docker Hub: ``docker pull alukyanets/market-rest``
 * run a container with application listening on port 8081: ``docker run -p 8081:8081 alukyanets/market-rest``
